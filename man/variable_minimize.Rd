@@ -16,8 +16,9 @@ A tibble without \code{values} and \code{codelists} columns.
 Remove nested columns for a compact variable overview
 }
 \examples{
-\dontrun{
+\donttest{
 scb <- px_api("scb", lang = "en")
-get_variables(scb, "TAB638") |> variable_minimize()
-}
+if (px_available(scb)) {
+  get_variables(scb, "TAB638") |> variable_minimize()
+}}
 }

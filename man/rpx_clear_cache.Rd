@@ -23,10 +23,12 @@ Removes cached API responses stored in the default or specified location.
 Can selectively clear by entity type and/or API.
 }
 \examples{
-\dontrun{
-rpx_clear_cache()
-rpx_clear_cache(entity = "tables")
-rpx_clear_cache(api = scb)
-rpx_clear_cache(entity = "enriched", api = scb)
-}
+\donttest{
+scb <- px_api("scb")
+if (px_available(scb)) {
+  rpx_clear_cache()
+  rpx_clear_cache(entity = "tables")
+  rpx_clear_cache(api = scb)
+  rpx_clear_cache(entity = "enriched", api = scb)
+}}
 }

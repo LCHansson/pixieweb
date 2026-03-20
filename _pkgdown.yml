@@ -1,0 +1,72 @@
+url: https://lchansson.github.io/rpx/
+template:
+  bootstrap: 5
+
+reference:
+  - title: Connect to a PX-Web API
+    desc: Create API connection objects and check availability.
+    contents:
+      - px_api
+      - px_api_catalogue
+      - px_available
+
+  - title: Discover tables
+    desc: Search, inspect, and filter statistical tables.
+    contents:
+      - get_tables
+      - table_search
+      - table_describe
+      - table_minimize
+      - table_extract_ids
+
+  - title: Explore variables
+    desc: Examine dimensions and available values within a table.
+    contents:
+      - get_variables
+      - variable_search
+      - variable_describe
+      - variable_minimize
+      - variable_extract_ids
+      - variable_values
+      - variable_name_to_code
+
+  - title: Codelists
+    desc: Alternative groupings and aggregations of variable values.
+    contents:
+      - get_codelists
+      - codelist_describe
+      - codelist_extract_ids
+      - codelist_values
+
+  - title: Prepare and fetch data
+    desc: Build queries with smart defaults and download data.
+    contents:
+      - prepare_query
+      - get_data
+      - starts_with("px_all")
+      - px_top
+      - px_bottom
+      - px_from
+      - px_to
+      - px_range
+
+  - title: Data utilities
+    desc: Post-processing helpers for downloaded data.
+    contents:
+      - data_minimize
+      - data_legend
+      - data_comments
+      - px_cite
+
+  - title: Advanced query composition
+    desc: Low-level functions for building and executing raw API queries.
+    contents:
+      - compose_table_query
+      - compose_data_query
+      - execute_query
+      - get_saved_query
+      - save_query
+
+  - title: Cache management
+    contents:
+      - rpx_clear_cache

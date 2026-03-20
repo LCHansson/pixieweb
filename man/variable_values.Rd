@@ -18,9 +18,10 @@ A tibble with columns \code{code} and \code{text}.
 Extract values for a specific variable
 }
 \examples{
-\dontrun{
+\donttest{
 scb <- px_api("scb", lang = "en")
-vars <- get_variables(scb, "TAB638")
-vars |> variable_values("Kon")
-}
+if (px_available(scb)) {
+  vars <- get_variables(scb, "TAB638")
+  vars |> variable_values("Kon")
+}}
 }

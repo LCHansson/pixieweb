@@ -16,9 +16,10 @@ A character string (formatted citation).
 Produces a citation string from metadata attached to data by \code{\link[=get_data]{get_data()}}.
 }
 \examples{
-\dontrun{
+\donttest{
 scb <- px_api("scb", lang = "en")
-d <- get_data(scb, "TAB638", Region = "0180", Tid = px_top(3))
-px_cite(d)
-}
+if (px_available(scb)) {
+  d <- get_data(scb, "TAB638", Region = "0180", Tid = px_top(3))
+  px_cite(d)
+}}
 }

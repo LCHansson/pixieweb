@@ -10,11 +10,12 @@
 #' @return A `<px_api>` object.
 #' @export
 #' @examples
-#' \dontrun{
-#' scb <- px_api("scb", lang = "en")
-#' ssb <- px_api("ssb", lang = "no")
-#' custom <- px_api("https://my.statbank.example/api/v2/", lang = "en")
-#' }
+#' \donttest{
+#' if (px_available(px_api("scb"))) {
+#'   scb <- px_api("scb", lang = "en")
+#'   ssb <- px_api("ssb", lang = "no")
+#'   custom <- px_api("https://my.statbank.example/api/v2/", lang = "en")
+#' }}
 px_api <- function(x, lang = NULL, version = "v2", verbose = FALSE) {
   stopifnot(is.character(x), length(x) == 1)
   stopifnot(version %in% c("v1", "v2"))
@@ -161,10 +162,11 @@ px_api_catalogue <- function() {
 #' @return Logical: `TRUE` if the API responds, `FALSE` otherwise.
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' scb <- px_api("scb")
-#' px_available(scb)
-#' }
+#' if (px_available(scb)) {
+#'   px_available(scb)
+#' }}
 px_available <- function(api) {
   check_px_api(api)
 

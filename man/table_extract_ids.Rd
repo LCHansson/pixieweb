@@ -16,8 +16,9 @@ A character vector of table IDs.
 Extract table IDs from a table tibble
 }
 \examples{
-\dontrun{
+\donttest{
 scb <- px_api("scb", lang = "en")
-get_tables(scb, query = "population") |> table_extract_ids()
-}
+if (px_available(scb)) {
+  get_tables(scb, query = "population") |> table_extract_ids()
+}}
 }

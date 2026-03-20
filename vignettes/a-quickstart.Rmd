@@ -77,6 +77,13 @@ vars |> variable_values("Region")
 Now you know which variables the table has and what values are
 available. Pass your selections to `get_data()`:
 
+- **ContentsCode** tells the API *what* to measure (population, deaths,
+  etc.). `"*"` means "all measures in this table".
+- Variables you **omit** are *eliminated* — the API returns a
+  pre-computed aggregate (e.g., omitting `Kon` gives totals for both
+  sexes). Not all variables allow this; see
+  `vignette("introduction-to-rpx")` for mandatory vs eliminable.
+
 ```{r}
 pop <- get_data(scb, "TAB638",
   Region = c("0180", "1480"),
@@ -87,12 +94,15 @@ pop
 ```
 
 Selection helpers like `px_top()`, `px_from()`, and `px_range()` let
-you select values without knowing exact codes.
+you select values without knowing exact codes. Use them when you want
+"the latest N periods" or "everything from 2020 onward" rather than
+typing out specific year codes.
 
-### The shortcut: `prepare_query()`
+### Optional shortcut: `prepare_query()`
 
-Don't want to specify every variable? `prepare_query()` inspects the
-table and fills in sensible defaults:
+You can skip this section if you prefer the direct approach above.
+`prepare_query()` inspects the table and fills in sensible defaults —
+handy when you don't want to specify every variable:
 
 ```{r}
 q <- prepare_query(scb, "TAB638", Region = c("0180", "1480"))
@@ -124,14 +134,22 @@ library(ggplot2)
 
 pop |>
   ggplot(aes(x = Tid, y = value, colour = Region_text)) +
+  # One line per region
   geom_line(aes(group = Region_text)) +
+  # Separate panel for each measure (Population, Deaths, etc.)
   facet_wrap(~ ContentsCode_text, scales = "free_y") +
+  # Rotate x-axis labels to avoid overlap
   theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)) +
   labs(
     title = "Population over time",
-    caption = px_cite(pop)
+    caption = px_cite(pop)  # Auto-generated data citation
   )
 ```
+
+Notice the `_text` suffix: `get_data()` returns both raw code columns
+(`Region = "0180"`) and human-readable label columns
+(`Region_text = "Stockholm"`). Use `_text` columns for display and
+plotting; use the raw codes for filtering and joining.
 
 Other useful helpers:
 
@@ -141,7 +159,10 @@ Other useful helpers:
 
 ## Next steps
 
-- See `vignette("introduction-to-rpx")` for the full design and
-  advanced features (codelists, saved queries, query composition).
-- See `vignette("multi-api")` for working with multiple statistical
-  agencies.
+- **Concepts & advanced features** — `vignette("introduction-to-rpx")`
+  covers the data model, codelists, saved queries, and query
+  composition.
+- **Multiple countries** — `vignette("multi-api")` shows how to compare
+  data across national statistics agencies.
+- **ggplot2 reference** — <https://ggplot2-book.org/> for more on
+  visualisation.

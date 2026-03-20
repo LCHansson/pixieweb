@@ -25,8 +25,9 @@ Persists a set of variable selections server-side so the query can be
 shared or re-used later.
 }
 \examples{
-\dontrun{
+\donttest{
 scb <- px_api("scb", lang = "en")
-query_id <- save_query(scb, "TAB638", Region = "0180", Tid = px_top(5))
-}
+if (px_available(scb)) {
+  query_id <- save_query(scb, "TAB638", Region = "0180", Tid = px_top(5))
+}}
 }

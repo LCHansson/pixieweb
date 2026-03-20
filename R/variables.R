@@ -10,10 +10,11 @@
 #'   `time`, `values`, `codelists`, `table_id`.
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' scb <- px_api("scb", lang = "en")
-#' get_variables(scb, "TAB638")
-#' }
+#' if (px_available(scb)) {
+#'   get_variables(scb, "TAB638")
+#' }}
 get_variables <- function(api, table_id, verbose = FALSE) {
   check_px_api(api)
   stopifnot(is.character(table_id), length(table_id) == 1)
@@ -135,11 +136,12 @@ empty_variables_tibble <- function(table_id) {
 #' @return A filtered tibble.
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' scb <- px_api("scb", lang = "en")
-#' vars <- get_variables(scb, "TAB638")
-#' vars |> variable_search("region")
-#' }
+#' if (px_available(scb)) {
+#'   vars <- get_variables(scb, "TAB638")
+#'   vars |> variable_search("region")
+#' }}
 variable_search <- function(var_df, query, column = NULL) {
   column <- column %||% c("code", "text")
   entity_search(var_df, query, column, caller = "variable_search")
@@ -154,10 +156,11 @@ variable_search <- function(var_df, query, column = NULL) {
 #' @return `var_df` invisibly (for piping).
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' scb <- px_api("scb", lang = "en")
-#' get_variables(scb, "TAB638") |> variable_describe()
-#' }
+#' if (px_available(scb)) {
+#'   get_variables(scb, "TAB638") |> variable_describe()
+#' }}
 variable_describe <- function(var_df, max_n = 10, format = "inline",
                               heading_level = 2) {
   if (is.null(var_df) || nrow(var_df) == 0) {
@@ -205,10 +208,11 @@ variable_describe <- function(var_df, max_n = 10, format = "inline",
 #' @return A character vector of variable codes.
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' scb <- px_api("scb", lang = "en")
-#' get_variables(scb, "TAB638") |> variable_extract_ids()
-#' }
+#' if (px_available(scb)) {
+#'   get_variables(scb, "TAB638") |> variable_extract_ids()
+#' }}
 variable_extract_ids <- function(var_df) {
   if (is.null(var_df) || nrow(var_df) == 0) return(character())
   var_df$code
@@ -220,10 +224,11 @@ variable_extract_ids <- function(var_df) {
 #' @return A tibble without `values` and `codelists` columns.
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' scb <- px_api("scb", lang = "en")
-#' get_variables(scb, "TAB638") |> variable_minimize()
-#' }
+#' if (px_available(scb)) {
+#'   get_variables(scb, "TAB638") |> variable_minimize()
+#' }}
 variable_minimize <- function(var_df) {
   var_df |>
     dplyr::select(-dplyr::any_of(c("values", "codelists")))
@@ -236,11 +241,12 @@ variable_minimize <- function(var_df) {
 #' @return A named character vector: names are the input names, values are codes.
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' scb <- px_api("scb", lang = "en")
-#' vars <- get_variables(scb, "TAB638")
-#' variable_name_to_code(vars, "Region")
-#' }
+#' if (px_available(scb)) {
+#'   vars <- get_variables(scb, "TAB638")
+#'   variable_name_to_code(vars, "Region")
+#' }}
 variable_name_to_code <- function(var_df, name) {
   matches <- var_df$code[match(tolower(name), tolower(var_df$text))]
   stats::setNames(matches, name)
@@ -253,11 +259,12 @@ variable_name_to_code <- function(var_df, name) {
 #' @return A tibble with columns `code` and `text`.
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' scb <- px_api("scb", lang = "en")
-#' vars <- get_variables(scb, "TAB638")
-#' vars |> variable_values("Kon")
-#' }
+#' if (px_available(scb)) {
+#'   vars <- get_variables(scb, "TAB638")
+#'   vars |> variable_values("Kon")
+#' }}
 variable_values <- function(var_df, variable_code) {
   row <- var_df[var_df$code == variable_code, ]
   if (nrow(row) == 0) {

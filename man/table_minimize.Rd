@@ -18,8 +18,9 @@ A tibble.
 Remove monotonous columns from a table tibble
 }
 \examples{
-\dontrun{
+\donttest{
 scb <- px_api("scb", lang = "en")
-get_tables(scb, query = "population") |> table_minimize()
-}
+if (px_available(scb)) {
+  get_tables(scb, query = "population") |> table_minimize()
+}}
 }

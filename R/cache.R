@@ -92,12 +92,14 @@ cache_handler <- function(entity, cache, cache_location, key_params = list()) {
 #' @return `invisible(NULL)`
 #' @export
 #' @examples
-#' \dontrun{
-#' rpx_clear_cache()
-#' rpx_clear_cache(entity = "tables")
-#' rpx_clear_cache(api = scb)
-#' rpx_clear_cache(entity = "enriched", api = scb)
-#' }
+#' \donttest{
+#' scb <- px_api("scb")
+#' if (px_available(scb)) {
+#'   rpx_clear_cache()
+#'   rpx_clear_cache(entity = "tables")
+#'   rpx_clear_cache(api = scb)
+#'   rpx_clear_cache(entity = "enriched", api = scb)
+#' }}
 rpx_clear_cache <- function(entity = NULL, api = NULL,
                             cache_location = rpx_cache_dir()) {
   # Build pattern: rpx_{entity}_{alias}_{hash}_{date}.rds

@@ -22,8 +22,9 @@ Retrieves the variable structure of a PX-Web table, including available
 values and codelists. This is the key discovery step before fetching data.
 }
 \examples{
-\dontrun{
+\donttest{
 scb <- px_api("scb", lang = "en")
-get_variables(scb, "TAB638")
-}
+if (px_available(scb)) {
+  get_variables(scb, "TAB638")
+}}
 }

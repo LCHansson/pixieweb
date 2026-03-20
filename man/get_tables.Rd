@@ -47,16 +47,17 @@ A tibble with columns: \code{id}, \code{title}, \code{description}, \code{catego
 Search for and list statistical tables available on a PX-Web instance.
 }
 \examples{
-\dontrun{
+\donttest{
 scb <- px_api("scb", lang = "en")
+if (px_available(scb)) {
 
-# Server-side search
-get_tables(scb, query = "population")
+  # Server-side search
+  get_tables(scb, query = "population")
 
-# Fetch specific tables by ID
-get_tables(scb, id = c("TAB638", "TAB1278"))
+  # Fetch specific tables by ID
+  get_tables(scb, id = c("TAB638", "TAB1278"))
 
-# Tables updated in the last 30 days
-get_tables(scb, updated_since = 30)
-}
+  # Tables updated in the last 30 days
+  get_tables(scb, updated_since = 30)
+}}
 }

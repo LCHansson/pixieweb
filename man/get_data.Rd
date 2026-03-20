@@ -85,17 +85,18 @@ the most values and batches its values so each request fits under the limit.
 Requests are paced to respect the API's rate limit.
 }
 \examples{
-\dontrun{
+\donttest{
 scb <- px_api("scb", lang = "en")
+if (px_available(scb)) {
 
-# Fetch with explicit selections
-get_data(scb, "TAB638",
-  Region = c("0180", "1480"),
-  Tid = px_top(5)
-)
+  # Fetch with explicit selections
+  get_data(scb, "TAB638",
+    Region = c("0180", "1480"),
+    Tid = px_top(5)
+  )
 
-# Fetch from a prepared query
-q <- prepare_query(scb, "TAB638", Region = c("0180"))
-get_data(scb, query = q)
-}
+  # Fetch from a prepared query
+  q <- prepare_query(scb, "TAB638", Region = c("0180"))
+  get_data(scb, query = q)
+}}
 }

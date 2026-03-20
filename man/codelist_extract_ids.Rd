@@ -16,8 +16,9 @@ A character vector of codelist IDs.
 Extract codelist IDs
 }
 \examples{
-\dontrun{
+\donttest{
 scb <- px_api("scb", lang = "en")
-get_codelists(scb, "TAB638", "Region") |> codelist_extract_ids()
-}
+if (px_available(scb)) {
+  get_codelists(scb, "TAB638", "Region") |> codelist_extract_ids()
+}}
 }

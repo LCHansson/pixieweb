@@ -51,7 +51,7 @@ Default selection strategy:
 \item \strong{ContentsCode}: all values (\code{"*"})
 \item \strong{Time variable}: most recent 10 periods (\code{px_top(10)})
 \item \strong{Eliminable variables}: omitted (API aggregates automatically)
-\item \strong{Small mandatory variables} (≤ \code{max_default_values} values): all (\code{"*"})
+\item \strong{Small mandatory variables} (<= \code{max_default_values} values): all (\code{"*"})
 \item \strong{Large mandatory variables}: first value only (\code{px_top(1)})
 }
 
@@ -64,20 +64,21 @@ was selected for each variable and why. Modify selections before passing
 to \code{get_data()} by assigning to the \verb{$selections} list.
 }
 \examples{
-\dontrun{
+\donttest{
 scb <- px_api("scb", lang = "en")
+if (px_available(scb)) {
 
-# Prepare with defaults
-q <- prepare_query(scb, "TAB638")
-q
+  # Prepare with defaults
+  q <- prepare_query(scb, "TAB638")
+  q
 
-# Override specific variables, let defaults handle the rest
-q <- prepare_query(scb, "TAB638", Region = c("0180", "1480"))
+  # Override specific variables, let defaults handle the rest
+  q <- prepare_query(scb, "TAB638", Region = c("0180", "1480"))
 
-# Maximize data within API limits
-q <- prepare_query(scb, "TAB638", maximize_selection = TRUE)
+  # Maximize data within API limits
+  q <- prepare_query(scb, "TAB638", maximize_selection = TRUE)
 
-# Fetch data from a prepared query
-get_data(scb, query = q)
-}
+  # Fetch data from a prepared query
+  get_data(scb, query = q)
+}}
 }

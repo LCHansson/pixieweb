@@ -1,14 +1,14 @@
 Package: rpx
 Title: Access PX-Web Statistical Data from R
-Version: 0.0.0.9000
+Version: 0.1.0
 Authors@R:
     person("Love", "Hansson", , email = "love.hansson@gmail.com",
-           role = c("aut", "cre"))
+           role = c("aut", "cre", "cph"))
 Description: A pipe-friendly R client for PX-Web statistical APIs.
     Provides a search-then-fetch workflow for discovering and downloading
     data from national statistics agencies (SCB, SSB, Statistics Finland,
     etc.) using a consistent tibble-based interface.
-License: AGPL (>= 3)
+License: AGPL (>= 3) + file LICENSE
 URL: https://lchansson.github.io/rpx, https://github.com/lchansson/rpx
 BugReports: https://github.com/lchansson/rpx/issues
 Depends:
@@ -18,8 +18,6 @@ Imports:
     dplyr,
     httr2,
     jsonlite,
-    lifecycle,
-    purrr,
     rlang (>= 1.1.0),
     tibble,
     tidyr
@@ -36,4 +34,4 @@ Config/testthat/edition: 3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
-LazyData: true
+

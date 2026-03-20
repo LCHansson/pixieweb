@@ -16,9 +16,10 @@ A tibble with columns \code{variable}, \code{value}, \code{comment}, or \code{NU
 Extract comments from data
 }
 \examples{
-\dontrun{
+\donttest{
 scb <- px_api("scb", lang = "en")
-d <- get_data(scb, "TAB638", Region = "0180", Tid = px_top(3), .comments = TRUE)
-data_comments(d)
-}
+if (px_available(scb)) {
+  d <- get_data(scb, "TAB638", Region = "0180", Tid = px_top(3), .comments = TRUE)
+  data_comments(d)
+}}
 }

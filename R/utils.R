@@ -217,7 +217,7 @@ entity_search <- function(df, query, column = NULL, caller = "search") {
 #' @return Tibble with monotonous columns removed.
 #' @noRd
 remove_monotonous <- function(df, remove_monotonous_data = TRUE) {
-  if (!remove_monotonous_data || nrow(df) <= 1) return(df)
+  if (is.null(df) || !remove_monotonous_data || nrow(df) <= 1) return(df)
 
   keep <- vapply(df, function(col) {
     length(unique(col)) > 1

@@ -4,3 +4,10 @@
 ^\.claude$
 ^LICENSE\.md$
 ^CODE_OF_CONDUCT\.md$
+^_pkgdown\.yml$
+^docs$
+^\.github$
+^cran-comments\.md$
+^CRAN-SUBMISSION$
+^CLAUDE\.md$
+^README\.Rmd$

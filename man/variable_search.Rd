@@ -20,9 +20,10 @@ A filtered tibble.
 Searches across variable codes, texts, and optionally nested value texts.
 }
 \examples{
-\dontrun{
+\donttest{
 scb <- px_api("scb", lang = "en")
-vars <- get_variables(scb, "TAB638")
-vars |> variable_search("region")
-}
+if (px_available(scb)) {
+  vars <- get_variables(scb, "TAB638")
+  vars |> variable_search("region")
+}}
 }

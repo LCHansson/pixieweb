@@ -6,11 +6,12 @@
 #' @return A character string (formatted citation).
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' scb <- px_api("scb", lang = "en")
-#' d <- get_data(scb, "TAB638", Region = "0180", Tid = px_top(3))
-#' px_cite(d)
-#' }
+#' if (px_available(scb)) {
+#'   d <- get_data(scb, "TAB638", Region = "0180", Tid = px_top(3))
+#'   px_cite(d)
+#' }}
 px_cite <- function(data_df) {
   source <- attr(data_df, "px_source")
 

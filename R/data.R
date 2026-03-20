@@ -50,19 +50,20 @@
 #'
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' scb <- px_api("scb", lang = "en")
+#' if (px_available(scb)) {
 #'
-#' # Fetch with explicit selections
-#' get_data(scb, "TAB638",
-#'   Region = c("0180", "1480"),
-#'   Tid = px_top(5)
-#' )
+#'   # Fetch with explicit selections
+#'   get_data(scb, "TAB638",
+#'     Region = c("0180", "1480"),
+#'     Tid = px_top(5)
+#'   )
 #'
-#' # Fetch from a prepared query
-#' q <- prepare_query(scb, "TAB638", Region = c("0180"))
-#' get_data(scb, query = q)
-#' }
+#'   # Fetch from a prepared query
+#'   q <- prepare_query(scb, "TAB638", Region = c("0180"))
+#'   get_data(scb, query = q)
+#' }}
 get_data <- function(api,
                      table_id,
                      ...,
@@ -598,11 +599,12 @@ parse_comments <- function(comments) {
 #' @return A tibble.
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' scb <- px_api("scb", lang = "en")
-#' d <- get_data(scb, "TAB638", Region = "0180", Tid = px_top(3))
-#' d |> data_minimize()
-#' }
+#' if (px_available(scb)) {
+#'   d <- get_data(scb, "TAB638", Region = "0180", Tid = px_top(3))
+#'   d |> data_minimize()
+#' }}
 data_minimize <- function(data_df, remove_monotonous_data = TRUE) {
   remove_monotonous(data_df, remove_monotonous_data)
 }
@@ -614,12 +616,13 @@ data_minimize <- function(data_df, remove_monotonous_data = TRUE) {
 #' @return A character string suitable for plot captions.
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' scb <- px_api("scb", lang = "en")
-#' vars <- get_variables(scb, "TAB638")
-#' d <- get_data(scb, "TAB638", Region = "0180", Tid = px_top(3))
-#' data_legend(d, vars)
-#' }
+#' if (px_available(scb)) {
+#'   vars <- get_variables(scb, "TAB638")
+#'   d <- get_data(scb, "TAB638", Region = "0180", Tid = px_top(3))
+#'   data_legend(d, vars)
+#' }}
 data_legend <- function(data_df, var_df) {
   if (is.null(var_df) || nrow(var_df) == 0) return("")
 
@@ -643,11 +646,12 @@ data_legend <- function(data_df, var_df) {
 #' @return A tibble with columns `variable`, `value`, `comment`, or `NULL`.
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' scb <- px_api("scb", lang = "en")
-#' d <- get_data(scb, "TAB638", Region = "0180", Tid = px_top(3), .comments = TRUE)
-#' data_comments(d)
-#' }
+#' if (px_available(scb)) {
+#'   d <- get_data(scb, "TAB638", Region = "0180", Tid = px_top(3), .comments = TRUE)
+#'   data_comments(d)
+#' }}
 data_comments <- function(data_df) {
   attr(data_df, "comments")
 }

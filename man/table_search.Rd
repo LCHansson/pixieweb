@@ -22,11 +22,12 @@ Filter an already-fetched table tibble by regex. Complements
 further refinement on cached results.
 }
 \examples{
-\dontrun{
+\donttest{
 scb <- px_api("scb", lang = "en")
-tables <- get_tables(scb, query = "population")
+if (px_available(scb)) {
+  tables <- get_tables(scb, query = "population")
 
-# Further filter by regex
-tables |> table_search("municipality")
-}
+  # Further filter by regex
+  tables |> table_search("municipality")
+}}
 }

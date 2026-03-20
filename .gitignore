@@ -3,3 +3,8 @@
 .RData
 .Ruserdata
 inst/doc
+docs/
+rpx.Rcheck/
+rpx*.tar.gz
+rpx*.tgz
+.claude/

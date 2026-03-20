@@ -18,9 +18,10 @@ A tibble with columns \code{code} and \code{text}.
 Extract values for a specific codelist
 }
 \examples{
-\dontrun{
+\donttest{
 scb <- px_api("scb", lang = "en")
-cls <- get_codelists(scb, "TAB638", "Region")
-codelist_values(cls, cls$id[1])
-}
+if (px_available(scb)) {
+  cls <- get_codelists(scb, "TAB638", "Region")
+  codelist_values(cls, cls$id[1])
+}}
 }

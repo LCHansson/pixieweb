@@ -22,8 +22,9 @@ variable_describe(var_df, max_n = 10, format = "inline", heading_level = 2)
 Print human-readable variable summaries
 }
 \examples{
-\dontrun{
+\donttest{
 scb <- px_api("scb", lang = "en")
-get_variables(scb, "TAB638") |> variable_describe()
-}
+if (px_available(scb)) {
+  get_variables(scb, "TAB638") |> variable_describe()
+}}
 }

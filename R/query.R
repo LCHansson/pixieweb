@@ -11,10 +11,11 @@
 #' @return A character URL string.
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' scb <- px_api("scb", lang = "en")
-#' compose_table_query(scb, query = "population")
-#' }
+#' if (px_available(scb)) {
+#'   compose_table_query(scb, query = "population")
+#' }}
 compose_table_query <- function(api, query = NULL, id = NULL,
                                 updated_since = NULL,
                                 page = NA, per_page = NA) {
@@ -54,12 +55,13 @@ compose_table_query <- function(api, query = NULL, id = NULL,
 #' @return A list with `$url` (character) and `$body` (list, JSON-serializable).
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' scb <- px_api("scb", lang = "en")
-#' q <- compose_data_query(scb, "TAB638", Region = c("0180"), Tid = px_top(5))
-#' str(q$url)
-#' str(q$body)
-#' }
+#' if (px_available(scb)) {
+#'   q <- compose_data_query(scb, "TAB638", Region = c("0180"), Tid = px_top(5))
+#'   str(q$url)
+#'   str(q$body)
+#' }}
 compose_data_query <- function(api, table_id, ..., .codelist = NULL) {
   check_px_api(api)
   stopifnot(is.character(table_id), length(table_id) == 1)
@@ -136,11 +138,12 @@ build_query_body_v1 <- function(selections, codelist) {
 #' @return Parsed JSON as a list, or `NULL` on failure.
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' scb <- px_api("scb", lang = "en")
-#' q <- compose_data_query(scb, "TAB638", Region = "0180", Tid = px_top(3))
-#' raw <- execute_query(scb, q$url, q$body)
-#' }
+#' if (px_available(scb)) {
+#'   q <- compose_data_query(scb, "TAB638", Region = "0180", Tid = px_top(3))
+#'   raw <- execute_query(scb, q$url, q$body)
+#' }}
 execute_query <- function(api, url, body = NULL, verbose = FALSE) {
   check_px_api(api)
 

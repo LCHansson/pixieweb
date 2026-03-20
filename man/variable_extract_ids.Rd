@@ -16,8 +16,9 @@ A character vector of variable codes.
 Extract variable codes from a variable tibble
 }
 \examples{
-\dontrun{
+\donttest{
 scb <- px_api("scb", lang = "en")
-get_variables(scb, "TAB638") |> variable_extract_ids()
-}
+if (px_available(scb)) {
+  get_variables(scb, "TAB638") |> variable_extract_ids()
+}}
 }

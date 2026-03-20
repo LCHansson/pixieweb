@@ -16,8 +16,9 @@ Logical: \code{TRUE} if the API responds, \code{FALSE} otherwise.
 Check if a PX-Web API is reachable
 }
 \examples{
-\dontrun{
+\donttest{
 scb <- px_api("scb")
-px_available(scb)
-}
+if (px_available(scb)) {
+  px_available(scb)
+}}
 }

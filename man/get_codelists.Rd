@@ -23,8 +23,9 @@ Codelists provide alternative groupings of variable values
 (e.g. municipalities grouped into counties).
 }
 \examples{
-\dontrun{
+\donttest{
 scb <- px_api("scb", lang = "en")
-get_codelists(scb, "TAB638", "Region")
-}
+if (px_available(scb)) {
+  get_codelists(scb, "TAB638", "Region")
+}}
 }

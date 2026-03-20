@@ -31,9 +31,10 @@ Creates a \verb{<px_api>} connection object used by all other rpx functions.
 You can pass a known alias (e.g. \code{"scb"}, \code{"ssb"}) or a full base URL.
 }
 \examples{
-\dontrun{
-scb <- px_api("scb", lang = "en")
-ssb <- px_api("ssb", lang = "no")
-custom <- px_api("https://my.statbank.example/api/v2/", lang = "en")
-}
+\donttest{
+if (px_available(px_api("scb"))) {
+  scb <- px_api("scb", lang = "en")
+  ssb <- px_api("ssb", lang = "no")
+  custom <- px_api("https://my.statbank.example/api/v2/", lang = "en")
+}}
 }

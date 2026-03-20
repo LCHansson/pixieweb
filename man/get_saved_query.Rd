@@ -31,8 +31,9 @@ PX-Web v2 saved queries are server-side stored query definitions
 (table + variable selections) that can be shared via ID/URL.
 }
 \examples{
-\dontrun{
+\donttest{
 scb <- px_api("scb", lang = "en")
-get_saved_query(scb, "some-query-id")
-}
+if (px_available(scb)) {
+  get_saved_query(scb, "some-query-id")
+}}
 }

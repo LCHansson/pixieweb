@@ -33,8 +33,9 @@ A character URL string.
 Build the URL for querying the tables endpoint (advanced use).
 }
 \examples{
-\dontrun{
+\donttest{
 scb <- px_api("scb", lang = "en")
-compose_table_query(scb, query = "population")
-}
+if (px_available(scb)) {
+  compose_table_query(scb, query = "population")
+}}
 }

@@ -15,6 +15,9 @@ knitr::opts_chunk$set(
 )
 ```
 
+> **New to rpx?** Start with `vignette("a-quickstart")` for a hands-on
+> walkthrough. This vignette covers the design and advanced features.
+
 ## Background
 
 PX-Web is the statistical database platform used by national statistics
@@ -105,8 +108,10 @@ vars |> variable_describe()
 ```
 
 Important variable properties:
-- **elimination**: can this variable be omitted from queries? The API
-  then returns an aggregate.
+- **elimination**: can this variable be left out of your `get_data()`
+  call? If `TRUE`, omitting it means the API returns a pre-computed
+  total (e.g., omitting "Sex" gives the total for all sexes). If
+  `FALSE`, the variable is **mandatory** — you must include it.
 - **time**: is this the time dimension?
 - **values**: the available codes and their human-readable labels.
 - **codelists**: alternative groupings (e.g. municipalities → counties).
@@ -184,11 +189,17 @@ Then fetch:
 pop <- get_data(scb, query = q)
 ```
 
+### Advanced features
+
+The sections below cover features you may not need on your first query,
+but that become essential for complex tables or cross-country work.
+
 ## Codelists
 
-Codelists provide alternative groupings of variable values. For
-example, a "Region" variable with 290 municipalities might have a
-codelist that groups them into 21 counties:
+Codelists provide alternative groupings of variable values. They are
+useful when you want data at a different aggregation level than the
+table's default. For example, a "Region" variable with 290
+municipalities might have a codelist that groups them into 21 counties:
 
 ```{r}
 cls <- get_codelists(scb, "TAB638", "Region")
@@ -206,7 +217,9 @@ get_data(scb, "TAB638",
 ## Wide output and multiple contents
 
 When a table has multiple content variables (e.g. both Population and
-Deaths), use `.output = "wide"` to pivot them into separate columns:
+Deaths), use `.output = "wide"` to pivot them into separate columns.
+This is useful when you want to *compute* with multiple measures (e.g.
+death rate = Deaths / Population):
 
 ```{r}
 demo <- get_data(scb, "TAB638",
@@ -220,7 +233,9 @@ demo
 
 ## Advanced: query composition
 
-For full control, use the low-level query composers:
+For full control over the HTTP request — useful for debugging or when
+you need to inspect/modify the exact query before sending it — use the
+low-level query composers:
 
 ```{r}
 q <- compose_data_query(scb, "TAB638",
@@ -239,7 +254,8 @@ raw <- execute_query(scb, q$url, q$body)
 
 ## Saved queries (v2 only)
 
-PX-Web v2 supports server-side stored queries:
+PX-Web v2 supports server-side stored queries. Useful for recurring
+reports — save a query once, then retrieve it by ID later:
 
 ```{r}
 # Save a query

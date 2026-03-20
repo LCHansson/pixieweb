@@ -22,8 +22,9 @@ codelist_describe(cl_df, max_n = 5, format = "inline", heading_level = 2)
 Print human-readable codelist summaries
 }
 \examples{
-\dontrun{
+\donttest{
 scb <- px_api("scb", lang = "en")
-get_codelists(scb, "TAB638", "Region") |> codelist_describe()
-}
+if (px_available(scb)) {
+  get_codelists(scb, "TAB638", "Region") |> codelist_describe()
+}}
 }

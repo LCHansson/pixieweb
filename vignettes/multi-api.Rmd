@@ -21,6 +21,15 @@ One of rpx's strengths is its ability to connect to any PX-Web
 instance with the same interface. This vignette shows how to compare
 data across national statistics agencies.
 
+**The honest truth about cross-country comparison:** The rpx functions
+work identically across APIs, but the *data* is not harmonised. Table
+IDs, variable names, and code systems differ between countries. The
+workflow is: find a comparable table in each country (the hard part),
+then use identical rpx code to fetch and combine the results.
+
+> **Prerequisite:** This vignette assumes you are comfortable with the
+> basics from `vignette("a-quickstart")`.
+
 ## Available APIs
 
 ```{r}
@@ -82,6 +91,11 @@ scb_tables |> table_describe(max_n = 3)
 ssb_tables |> table_describe(max_n = 3)
 ```
 
+Note that table IDs are completely different between countries, and
+variable names may also differ ("Region" in SCB vs other names
+elsewhere). Always run `variable_describe()` on each table before
+building your query:
+
 ```{r}
 # Fetch data using prepare_query() for quick exploration
 scb_q <- prepare_query(scb, "TAB638",
@@ -109,19 +123,33 @@ results <- list(
   )
 )
 
-# Each tibble has a table_id column for traceability
+# .id = "country" adds a column tracking which list element each row
+# came from — essential for traceability after binding
 bind_rows(results, .id = "country")
+# NOTE: column names may differ between countries. If so, you may need
+# to rename() before bind_rows() to align them.
 ```
 
 ## Tips for cross-agency work
 
-- **Language matters.** Variable codes are often language-dependent.
-  Use `lang = "en"` for the most consistent experience across
-  countries.
+- **Language matters.** Codes are often language-dependent. `lang = "en"`
+  gives the most consistent *labels* across countries, but codes and
+  table IDs are language-independent.
 - **Table structure varies.** Swedish tables may have "Region" while
-  Finnish tables have "Alue". Use `variable_describe()` to
-  understand each table before querying.
-- **API limits differ.** Use `api$config$max_cells` to check each
-  API's cell limit. `prepare_query()` respects this automatically.
-- **v1 vs v2.** Not all agencies have migrated to v2 yet. Check
-  `api$version` and the catalogue's `versions` column.
+  Finnish tables have "Alue". Run
+  `get_variables() |> variable_describe()` on each table before writing
+  queries.
+- **API limits differ.** SCB allows ~100 000 cells per request; other
+  agencies may allow less. Use `api$config$max_cells` to check.
+  `prepare_query()` respects the limit automatically.
+- **v1 vs v2.** Not all agencies have migrated to v2. Selection helpers
+  `px_from()`, `px_range()` etc. raise an informative error if used
+  against a v1 API. Check `api$version` and the catalogue's `versions`
+  column.
+
+## Next steps
+
+- **Data model & advanced features** — `vignette("introduction-to-rpx")`
+  covers codelists, wide output, and query composition.
+- **Quick refresher** — `vignette("a-quickstart")` for the single-API
+  basics.

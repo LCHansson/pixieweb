@@ -18,10 +18,11 @@ A character string suitable for plot captions.
 Generate a plot legend from variable metadata
 }
 \examples{
-\dontrun{
+\donttest{
 scb <- px_api("scb", lang = "en")
-vars <- get_variables(scb, "TAB638")
-d <- get_data(scb, "TAB638", Region = "0180", Tid = px_top(3))
-data_legend(d, vars)
-}
+if (px_available(scb)) {
+  vars <- get_variables(scb, "TAB638")
+  d <- get_data(scb, "TAB638", Region = "0180", Tid = px_top(3))
+  data_legend(d, vars)
+}}
 }

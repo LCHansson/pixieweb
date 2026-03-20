@@ -22,8 +22,9 @@ table_describe(table_df, max_n = 5, format = "inline", heading_level = 2)
 Print human-readable table summaries
 }
 \examples{
-\dontrun{
+\donttest{
 scb <- px_api("scb", lang = "en")
-get_tables(scb, query = "population") |> table_describe(max_n = 3)
-}
+if (px_available(scb)) {
+  get_tables(scb, query = "population") |> table_describe(max_n = 3)
+}}
 }

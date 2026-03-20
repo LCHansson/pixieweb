@@ -19,18 +19,19 @@
 #'   `subject_code`, `subject_path`, `source`, `discontinued`.
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' scb <- px_api("scb", lang = "en")
+#' if (px_available(scb)) {
 #'
-#' # Server-side search
-#' get_tables(scb, query = "population")
+#'   # Server-side search
+#'   get_tables(scb, query = "population")
 #'
-#' # Fetch specific tables by ID
-#' get_tables(scb, id = c("TAB638", "TAB1278"))
+#'   # Fetch specific tables by ID
+#'   get_tables(scb, id = c("TAB638", "TAB1278"))
 #'
-#' # Tables updated in the last 30 days
-#' get_tables(scb, updated_since = 30)
-#' }
+#'   # Tables updated in the last 30 days
+#'   get_tables(scb, updated_since = 30)
+#' }}
 get_tables <- function(api,
                        query = NULL,
                        id = NULL,
@@ -452,13 +453,14 @@ parse_table_v1 <- function(raw, table_id, api) {
 #' @return A filtered tibble.
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' scb <- px_api("scb", lang = "en")
-#' tables <- get_tables(scb, query = "population")
+#' if (px_available(scb)) {
+#'   tables <- get_tables(scb, query = "population")
 #'
-#' # Further filter by regex
-#' tables |> table_search("municipality")
-#' }
+#'   # Further filter by regex
+#'   tables |> table_search("municipality")
+#' }}
 table_search <- function(table_df, query, column = NULL) {
   api <- attr(table_df, "px_api")
   result <- entity_search(table_df, query, column, caller = "table_search")
@@ -475,10 +477,11 @@ table_search <- function(table_df, query, column = NULL) {
 #' @return `table_df` invisibly (for piping).
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' scb <- px_api("scb", lang = "en")
-#' get_tables(scb, query = "population") |> table_describe(max_n = 3)
-#' }
+#' if (px_available(scb)) {
+#'   get_tables(scb, query = "population") |> table_describe(max_n = 3)
+#' }}
 table_describe <- function(table_df, max_n = 5, format = "inline",
                            heading_level = 2) {
   if (is.null(table_df) || nrow(table_df) == 0) {
@@ -580,18 +583,19 @@ table_describe <- function(table_df, max_n = 5, format = "inline",
 #'   `subject_area`, `official_statistics`, `contact`.
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' scb <- px_api("scb", lang = "en")
+#' if (px_available(scb)) {
 #'
-#' # API is picked up automatically from the tibble
-#' get_tables(scb, query = "population", max_results = 5) |>
-#'   table_enrich() |>
-#'   table_describe()
+#'   # API is picked up automatically from the tibble
+#'   get_tables(scb, query = "population", max_results = 5) |>
+#'     table_enrich() |>
+#'     table_describe()
 #'
-#' # Cache enriched results for offline use
-#' get_tables(scb, query = "population", cache = TRUE) |>
-#'   table_enrich(cache = TRUE)
-#' }
+#'   # Cache enriched results for offline use
+#'   get_tables(scb, query = "population", cache = TRUE) |>
+#'     table_enrich(cache = TRUE)
+#' }}
 table_enrich <- function(table_df, api = NULL, cache = FALSE,
                          cache_location = rpx_cache_dir, verbose = FALSE) {
   if (is.null(api)) {
@@ -739,10 +743,11 @@ fetch_table_metadata <- function(api, table_id, verbose = FALSE) {
 #' @return A tibble.
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' scb <- px_api("scb", lang = "en")
-#' get_tables(scb, query = "population") |> table_minimize()
-#' }
+#' if (px_available(scb)) {
+#'   get_tables(scb, query = "population") |> table_minimize()
+#' }}
 table_minimize <- function(table_df, remove_monotonous_data = TRUE) {
   api <- attr(table_df, "px_api")
   result <- remove_monotonous(table_df, remove_monotonous_data)
@@ -756,10 +761,11 @@ table_minimize <- function(table_df, remove_monotonous_data = TRUE) {
 #' @return A character vector of table IDs.
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' scb <- px_api("scb", lang = "en")
-#' get_tables(scb, query = "population") |> table_extract_ids()
-#' }
+#' if (px_available(scb)) {
+#'   get_tables(scb, query = "population") |> table_extract_ids()
+#' }}
 table_extract_ids <- function(table_df) {
   if (is.null(table_df) || nrow(table_df) == 0) return(character())
   table_df$id

@@ -18,7 +18,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Love Hansson \email{love.hansson@gmail.com}
+\strong{Maintainer}: Love Hansson \email{love.hansson@gmail.com} [copyright holder]
 
 }
 \keyword{internal}

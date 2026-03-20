@@ -10,10 +10,11 @@
 #' @return A tibble with columns: `id`, `text`, `type`, `values`.
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' scb <- px_api("scb", lang = "en")
-#' get_codelists(scb, "TAB638", "Region")
-#' }
+#' if (px_available(scb)) {
+#'   get_codelists(scb, "TAB638", "Region")
+#' }}
 get_codelists <- function(api, table_id, variable_code, verbose = FALSE) {
   check_px_api(api)
   stopifnot(is.character(table_id), length(table_id) == 1)
@@ -107,10 +108,11 @@ get_codelists_v1 <- function(api, table_id, variable_code, verbose) {
 #' @return `cl_df` invisibly (for piping).
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' scb <- px_api("scb", lang = "en")
-#' get_codelists(scb, "TAB638", "Region") |> codelist_describe()
-#' }
+#' if (px_available(scb)) {
+#'   get_codelists(scb, "TAB638", "Region") |> codelist_describe()
+#' }}
 codelist_describe <- function(cl_df, max_n = 5, format = "inline",
                               heading_level = 2) {
   if (is.null(cl_df) || nrow(cl_df) == 0) {
@@ -148,10 +150,11 @@ codelist_describe <- function(cl_df, max_n = 5, format = "inline",
 #' @return A character vector of codelist IDs.
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' scb <- px_api("scb", lang = "en")
-#' get_codelists(scb, "TAB638", "Region") |> codelist_extract_ids()
-#' }
+#' if (px_available(scb)) {
+#'   get_codelists(scb, "TAB638", "Region") |> codelist_extract_ids()
+#' }}
 codelist_extract_ids <- function(cl_df) {
   if (is.null(cl_df) || nrow(cl_df) == 0) return(character())
   cl_df$id
@@ -164,11 +167,12 @@ codelist_extract_ids <- function(cl_df) {
 #' @return A tibble with columns `code` and `text`.
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' scb <- px_api("scb", lang = "en")
-#' cls <- get_codelists(scb, "TAB638", "Region")
-#' codelist_values(cls, cls$id[1])
-#' }
+#' if (px_available(scb)) {
+#'   cls <- get_codelists(scb, "TAB638", "Region")
+#'   codelist_values(cls, cls$id[1])
+#' }}
 codelist_values <- function(cl_df, codelist_id) {
   row <- cl_df[cl_df$id == codelist_id, ]
   if (nrow(row) == 0) {

@@ -23,9 +23,10 @@ Low-level function to execute a query built with \code{\link[=compose_data_query
 Handles rate limiting, retries, and error handling.
 }
 \examples{
-\dontrun{
+\donttest{
 scb <- px_api("scb", lang = "en")
-q <- compose_data_query(scb, "TAB638", Region = "0180", Tid = px_top(3))
-raw <- execute_query(scb, q$url, q$body)
-}
+if (px_available(scb)) {
+  q <- compose_data_query(scb, "TAB638", Region = "0180", Tid = px_top(3))
+  raw <- execute_query(scb, q$url, q$body)
+}}
 }

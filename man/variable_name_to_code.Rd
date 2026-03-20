@@ -18,9 +18,10 @@ A named character vector: names are the input names, values are codes.
 Convert variable names to codes
 }
 \examples{
-\dontrun{
+\donttest{
 scb <- px_api("scb", lang = "en")
-vars <- get_variables(scb, "TAB638")
-variable_name_to_code(vars, "Region")
-}
+if (px_available(scb)) {
+  vars <- get_variables(scb, "TAB638")
+  variable_name_to_code(vars, "Region")
+}}
 }

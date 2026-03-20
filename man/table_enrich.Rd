@@ -37,16 +37,17 @@ an extra API call per table, so it's separated from \code{\link[=get_tables]{get
 give users control over when the cost is incurred.
 }
 \examples{
-\dontrun{
+\donttest{
 scb <- px_api("scb", lang = "en")
+if (px_available(scb)) {
 
-# API is picked up automatically from the tibble
-get_tables(scb, query = "population", max_results = 5) |>
-  table_enrich() |>
-  table_describe()
+  # API is picked up automatically from the tibble
+  get_tables(scb, query = "population", max_results = 5) |>
+    table_enrich() |>
+    table_describe()
 
-# Cache enriched results for offline use
-get_tables(scb, query = "population", cache = TRUE) |>
-  table_enrich(cache = TRUE)
-}
+  # Cache enriched results for offline use
+  get_tables(scb, query = "population", cache = TRUE) |>
+    table_enrich(cache = TRUE)
+}}
 }

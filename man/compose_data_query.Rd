@@ -23,10 +23,11 @@ Build the URL and JSON body for a data request without executing it.
 Useful for inspecting or modifying queries before sending them.
 }
 \examples{
-\dontrun{
+\donttest{
 scb <- px_api("scb", lang = "en")
-q <- compose_data_query(scb, "TAB638", Region = c("0180"), Tid = px_top(5))
-str(q$url)
-str(q$body)
-}
+if (px_available(scb)) {
+  q <- compose_data_query(scb, "TAB638", Region = c("0180"), Tid = px_top(5))
+  str(q$url)
+  str(q$body)
+}}
 }

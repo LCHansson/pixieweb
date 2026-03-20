@@ -11,10 +11,11 @@
 #' @return A tibble in the same format as [get_data()].
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' scb <- px_api("scb", lang = "en")
-#' get_saved_query(scb, "some-query-id")
-#' }
+#' if (px_available(scb)) {
+#'   get_saved_query(scb, "some-query-id")
+#' }}
 get_saved_query <- function(api,
                             query_id,
                             .output = "long",
@@ -58,10 +59,11 @@ get_saved_query <- function(api,
 #' @return A character string: the saved query ID.
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' scb <- px_api("scb", lang = "en")
-#' query_id <- save_query(scb, "TAB638", Region = "0180", Tid = px_top(5))
-#' }
+#' if (px_available(scb)) {
+#'   query_id <- save_query(scb, "TAB638", Region = "0180", Tid = px_top(5))
+#' }}
 save_query <- function(api,
                        table_id,
                        ...,
