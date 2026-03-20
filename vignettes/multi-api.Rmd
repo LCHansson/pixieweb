@@ -1,0 +1,127 @@
+---
+title: "Working with multiple APIs"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Working with multiple APIs}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+One of rpx's strengths is its ability to connect to any PX-Web
+instance with the same interface. This vignette shows how to compare
+data across national statistics agencies.
+
+## Available APIs
+
+```{r}
+library(rpx)
+
+px_api_catalogue()
+```
+
+rpx ships with a catalogue of known PX-Web instances. You can also
+connect to any PX-Web API by providing a full URL.
+
+## Connecting to multiple agencies
+
+```{r}
+scb <- px_api("scb", lang = "en")      # Sweden (v2)
+ssb <- px_api("ssb", lang = "en")      # Norway (v2)
+statfi <- px_api("statfi", lang = "en") # Finland (v1)
+```
+
+Each API object stores the base URL, language, API version, and
+configuration (cell limits, rate limits):
+
+```{r}
+scb
+ssb
+```
+
+## API version differences
+
+PX-Web has two API versions:
+- **v1**: Legacy, POST-only data queries, no search endpoint.
+  Table discovery requires walking a folder hierarchy.
+- **v2**: Modern, GET+POST data queries, full-text search, codelists
+  endpoint, saved queries.
+
+rpx handles both versions transparently. The user-facing functions
+have the same signatures — only the internal request building differs.
+
+Some selection helpers are v2-only: `px_bottom()`, `px_from()`,
+`px_to()`, and `px_range()` will raise an informative error if used
+against a v1 API.
+
+## Cross-country comparison example
+
+Suppose you want to compare population data across Sweden and Norway.
+The table IDs and variable codes will differ, but the workflow is
+identical:
+
+```{r}
+library(dplyr)
+library(purrr)
+
+# Find population tables in each country
+scb_tables <- get_tables(scb, query = "population")
+ssb_tables <- get_tables(ssb, query = "population")
+
+# Explore a table from each
+scb_tables |> table_describe(max_n = 3)
+ssb_tables |> table_describe(max_n = 3)
+```
+
+```{r}
+# Fetch data using prepare_query() for quick exploration
+scb_q <- prepare_query(scb, "TAB638",
+  Region = "00",       # "Riket" (whole country)
+  Tid = px_top(5),
+  ContentsCode = "BE0101N1" # Population
+)
+
+# Norwegian table IDs are different — explore to find the right one
+ssb_vars <- get_variables(ssb, "05803")
+ssb_vars |> variable_describe()
+```
+
+## Combining results
+
+Since `get_data()` returns standard tibbles with a `table_id` column,
+you can bind results from different APIs:
+
+```{r}
+results <- list(
+  sweden = get_data(scb, query = scb_q),
+  norway = get_data(ssb, "05803",
+    ContentsCode = "Personer",
+    Tid = px_top(5)
+  )
+)
+
+# Each tibble has a table_id column for traceability
+bind_rows(results, .id = "country")
+```
+
+## Tips for cross-agency work
+
+- **Language matters.** Variable codes are often language-dependent.
+  Use `lang = "en"` for the most consistent experience across
+  countries.
+- **Table structure varies.** Swedish tables may have "Region" while
+  Finnish tables have "Alue". Use `variable_describe()` to
+  understand each table before querying.
+- **API limits differ.** Use `api$config$max_cells` to check each
+  API's cell limit. `prepare_query()` respects this automatically.
+- **v1 vs v2.** Not all agencies have migrated to v2 yet. Check
+  `api$version` and the catalogue's `versions` column.

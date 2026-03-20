@@ -1,0 +1,147 @@
+---
+title: "Quick start guide to rpx"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Quick start guide to rpx}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+rpx makes it easy to download open statistical data from PX-Web APIs
+— the platform used by Statistics Sweden (SCB), Statistics Norway (SSB),
+Statistics Finland, and many others. This vignette walks you from zero
+to a tidy tibble in five steps.
+
+## Step 1: Connect to an API
+
+```{r}
+library(rpx)
+
+scb <- px_api("scb", lang = "en")
+scb
+```
+
+`px_api()` accepts a short alias (`"scb"`, `"ssb"`, `"statfi"`) or a
+full URL. Use `px_api_catalogue()` to list known instances.
+
+## Step 2: Find a table
+
+PX-Web organises data into **tables**. Each table holds a data cube
+with one or more dimensions (called **variables**). Use `get_tables()`
+to search:
+
+```{r}
+tables <- get_tables(scb, query = "population")
+tables
+```
+
+The result is a tibble. You can narrow it further on the client side
+with `table_search()`, and inspect tables with `table_describe()`:
+
+```{r}
+tables |>
+  table_search("municipal") |>
+  table_describe(max_n = 3, format = "md")
+```
+
+`table_describe()` now shows the subject path, time period range, and
+data source alongside the title — making it much easier to pick the
+right table.
+
+## Step 3: Explore variables
+
+Once you have a table ID, inspect what variables (dimensions) it has:
+
+```{r}
+vars <- get_variables(scb, "TAB683")
+vars |> variable_describe()
+```
+
+Each variable has a set of available **values** (codes). Look at a
+specific variable's values:
+
+```{r}
+vars |> variable_values("Region")
+```
+
+## Step 4: Fetch data
+
+Now you know which variables the table has and what values are
+available. Pass your selections to `get_data()`:
+
+```{r}
+pop <- get_data(scb, "TAB638",
+  Region = c("0180", "1480"),
+  ContentsCode = "*",
+  Tid = px_top(5)
+)
+pop
+```
+
+Selection helpers like `px_top()`, `px_from()`, and `px_range()` let
+you select values without knowing exact codes.
+
+### The shortcut: `prepare_query()`
+
+Don't want to specify every variable? `prepare_query()` inspects the
+table and fills in sensible defaults:
+
+```{r}
+q <- prepare_query(scb, "TAB638", Region = c("0180", "1480"))
+```
+
+It prints a summary of what was chosen and why. When you're happy,
+pass the query to `get_data()`:
+
+```{r}
+pop <- get_data(scb, query = q)
+```
+
+Set `maximize_selection = TRUE` to automatically include as many
+variables as the API's cell limit allows:
+
+```{r}
+q <- prepare_query(scb, "TAB638",
+  Region = c("0180"),
+  maximize_selection = TRUE
+)
+```
+
+## Step 5: Work with the result
+
+The result is a standard tibble. Use your favourite tidyverse tools:
+
+```{r}
+library(ggplot2)
+
+pop |>
+  ggplot(aes(x = Tid, y = value, colour = Region_text)) +
+  geom_line(aes(group = Region_text)) +
+  facet_wrap(~ ContentsCode_text, scales = "free_y") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)) +
+  labs(
+    title = "Population over time",
+    caption = px_cite(pop)
+  )
+```
+
+Other useful helpers:
+
+- `data_minimize()` — remove columns where all values are identical
+- `data_legend()` — generate a caption string from variable metadata
+- `px_cite()` — create a citation for the downloaded data
+
+## Next steps
+
+- See `vignette("introduction-to-rpx")` for the full design and
+  advanced features (codelists, saved queries, query composition).
+- See `vignette("multi-api")` for working with multiple statistical
+  agencies.

@@ -1,0 +1,119 @@
+[
+  {
+    "alias": "scb",
+    "description": "Statistics Sweden (SCB)",
+    "url": "https://api.scb.se/ov0104/v2beta/api/v2",
+    "url_v1": "https://api.scb.se/OV0104/v1/doris",
+    "versions": ["v1", "v2"],
+    "langs": ["sv", "en"],
+    "default_lang": "sv"
+  },
+  {
+    "alias": "ssb",
+    "description": "Statistics Norway (SSB)",
+    "url": "https://data.ssb.no/api/pxwebapi/v2",
+    "url_v1": "https://data.ssb.no/api/v0",
+    "versions": ["v1", "v2"],
+    "langs": ["no", "en"],
+    "default_lang": "no"
+  },
+  {
+    "alias": "statfi",
+    "description": "Statistics Finland",
+    "url": "https://pxdata.stat.fi/PXWeb/api/v1",
+    "url_v1": "https://pxdata.stat.fi/PXWeb/api/v1",
+    "versions": ["v1"],
+    "langs": ["fi", "sv", "en"],
+    "default_lang": "fi"
+  },
+  {
+    "alias": "statis",
+    "description": "Statistics Iceland",
+    "url": "https://px.hagstofa.is/pxen/api/v1",
+    "url_v1": "https://px.hagstofa.is/pxen/api/v1",
+    "versions": ["v1"],
+    "langs": ["en"],
+    "default_lang": "en"
+  },
+  {
+    "alias": "hagstova",
+    "description": "Statistics Faroe Islands",
+    "url": "https://statbank.hagstova.fo/api/v1",
+    "url_v1": "https://statbank.hagstova.fo/api/v1",
+    "versions": ["v1"],
+    "langs": ["fo", "en"],
+    "default_lang": "fo"
+  },
+  {
+    "alias": "statgl",
+    "description": "Statistics Greenland",
+    "url": "https://bank.stat.gl/api/v1",
+    "url_v1": "https://bank.stat.gl/api/v1",
+    "versions": ["v1"],
+    "langs": ["da", "en", "kl"],
+    "default_lang": "da"
+  },
+  {
+    "alias": "asub",
+    "description": "Statistics Åland (ÅSUB)",
+    "url": "https://pxweb.asub.ax/PXWeb/api/v1",
+    "url_v1": "https://pxweb.asub.ax/PXWeb/api/v1",
+    "versions": ["v1"],
+    "langs": ["sv"],
+    "default_lang": "sv"
+  },
+  {
+    "alias": "sjv",
+    "description": "Swedish Board of Agriculture (Jordbruksverket)",
+    "url": "https://statistik.sjv.se/PXWeb/api/v1",
+    "url_v1": "https://statistik.sjv.se/PXWeb/api/v1",
+    "versions": ["v1"],
+    "langs": ["sv"],
+    "default_lang": "sv"
+  },
+  {
+    "alias": "energi",
+    "description": "Swedish Energy Agency (Energimyndigheten)",
+    "url": "https://pxexternal.energimyndigheten.se/api/v1",
+    "url_v1": "https://pxexternal.energimyndigheten.se/api/v1",
+    "versions": ["v1"],
+    "langs": ["sv"],
+    "default_lang": "sv"
+  },
+  {
+    "alias": "fohm",
+    "description": "Public Health Agency of Sweden (Folkhälsomyndigheten)",
+    "url": "https://fohm-app.folkhalsomyndigheten.se/Folkhalsodata/api/v1",
+    "url_v1": "https://fohm-app.folkhalsomyndigheten.se/Folkhalsodata/api/v1",
+    "versions": ["v1"],
+    "langs": ["sv"],
+    "default_lang": "sv"
+  },
+  {
+    "alias": "konj",
+    "description": "National Institute of Economic Research (Konjunkturinstitutet)",
+    "url": "https://statistik.konj.se/PXWeb/api/v1",
+    "url_v1": "https://statistik.konj.se/PXWeb/api/v1",
+    "versions": ["v1"],
+    "langs": ["sv"],
+    "default_lang": "sv"
+  },
+  {
+    "alias": "msb",
+    "description": "Swedish Civil Contingencies Agency (MSB)",
+    "url": "https://statistik.msb.se/PXWeb/api/v1",
+    "url_v1": "https://statistik.msb.se/PXWeb/api/v1",
+    "versions": ["v1"],
+    "langs": ["sv"],
+    "default_lang": "sv"
+  },
+  {
+    "alias": "slu",
+    "description": "Swedish University of Agricultural Sciences (SLU)",
+    "url": "https://skogsstatistik.slu.se/api/v1",
+    "url_v1": "https://skogsstatistik.slu.se/api/v1",
+    "versions": ["v1"],
+    "langs": ["sv"],
+    "default_lang": "sv"
+  }
+]

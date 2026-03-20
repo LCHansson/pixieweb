@@ -1,0 +1,258 @@
+---
+title: "Introduction to rpx"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to rpx}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+## Background
+
+PX-Web is the statistical database platform used by national statistics
+agencies across the Nordic countries and beyond. Each agency runs its
+own instance (Statistics Sweden at [scb.se](https://www.scb.se),
+Statistics Norway at [ssb.no](https://www.ssb.no), etc.), but they all
+share the same underlying API.
+
+rpx provides a consistent, pipe-friendly R interface to all these
+APIs. It follows the same design principles as
+[rKolada](https://github.com/lchansson/rKolada): **tibbles
+everywhere**, **search-then-fetch**, and **progressive disclosure**.
+
+## Design principles
+
+1. **Tibbles everywhere.** Every function returns a tibble (or a vector
+   extracted from one).
+2. **Pipe-friendly.** First argument is always a tibble or API object;
+   output is always pipeable.
+3. **Search-then-fetch.** Users discover metadata before downloading
+   data.
+4. **NULL on failure.** API errors return NULL with a warning, never
+   `stop()`.
+5. **Progressive disclosure.** Simple things are simple; complex things
+   are possible.
+
+## The data model
+
+PX-Web tables are *multi-dimensional data cubes*. Unlike Kolada — where
+the dimensions are always KPI, municipality, and period — each PX-Web
+table defines its own set of dimensions. rpx calls these **variables**.
+
+| rpx entity   | What it represents              | rKolada analog        |
+|--------------|---------------------------------|-----------------------|
+| **api**      | A PX-Web instance (SCB, SSB...) | *(implicit — single)* |
+| **table**    | A statistical table             | kpi                   |
+| **variable** | A dimension within a table      | *(municipality/year)* |
+| **codelist** | An aggregation/value set        | kpi_groups            |
+| **data**     | Downloaded values               | values                |
+
+## Connecting to an API
+
+```{r}
+library(rpx)
+
+# Known aliases
+scb <- px_api("scb", lang = "en")
+ssb <- px_api("ssb", lang = "en")
+
+# Or a custom URL
+custom <- px_api("https://my.statbank.example/api/v2/", lang = "en")
+
+# See all known APIs
+px_api_catalogue()
+```
+
+## Discovering tables
+
+Tables are the central entity. `get_tables()` sends a server-side
+search query. The result is a tibble with rich metadata:
+
+```{r}
+tables <- get_tables(scb, query = "income") |>
+  table_search("taxable")
+
+tables |> table_describe(max_n = 3)
+```
+
+The table tibble includes subject path, time period range, time unit,
+and data source — all of which are searchable by `table_search()`.
+
+### Table helper functions
+
+| Function              | Purpose                          |
+|-----------------------|----------------------------------|
+| `table_search()`      | Filter by regex (client-side)    |
+| `table_describe()`    | Print human-readable summaries   |
+| `table_minimize()`    | Remove constant columns          |
+| `table_extract_ids()` | Extract ID vector for piping     |
+
+## Exploring variables
+
+Each table has its own set of variables (dimensions). The key
+discovery step is `get_variables()`:
+```{r}
+vars <- get_variables(scb, "TAB638")
+vars |> variable_describe()
+```
+
+Important variable properties:
+- **elimination**: can this variable be omitted from queries? The API
+  then returns an aggregate.
+- **time**: is this the time dimension?
+- **values**: the available codes and their human-readable labels.
+- **codelists**: alternative groupings (e.g. municipalities → counties).
+
+```{r}
+# See what values a variable has
+vars |> variable_values("Kon")
+
+# Look up variable codes by name
+variable_name_to_code(vars, "sex")
+```
+
+## Fetching data
+
+### Direct approach
+
+If you know exactly what you want:
+
+```{r}
+pop <- get_data(scb, "TAB638",
+  Region = c("0180", "1480"),
+  Kon = c("1", "2"),
+  ContentsCode = "*",
+  Tid = px_top(5)
+)
+```
+
+Variables you omit are **eliminated** (aggregated) if the API allows
+it. If a variable is mandatory, you must include it.
+
+### Selection helpers
+
+| Helper            | Meaning                  | Example         |
+|-------------------|--------------------------|-----------------|
+| `c("0180")`      | Specific values          | Item selection  |
+| `"*"`             | All values               | Wildcard        |
+| `px_top(5)`       | First N values           | Most recent     |
+| `px_bottom(3)`    | Last N values (v2 only)  |                 |
+| `px_from("2020")` | From value onward (v2)   |                 |
+| `px_to("2023")`   | Up to value (v2)         |                 |
+| `px_range(a, b)`  | Inclusive range (v2)     |                 |
+
+### The `prepare_query()` shortcut
+
+For interactive exploration, `prepare_query()` inspects the table
+metadata and builds a query with sensible defaults:
+
+```{r}
+q <- prepare_query(scb, "TAB638")
+```
+
+Default strategy:
+- **ContentsCode**: all values (`"*"`)
+- **Time variable**: latest 10 periods (`px_top(10)`)
+- **Eliminable variables**: omitted (API aggregates)
+- **Small mandatory variables** (≤ 22 values): all (`"*"`)
+- **Large mandatory variables**: first value (`px_top(1)`)
+
+Override specific variables while letting defaults handle the rest:
+
+```{r}
+q <- prepare_query(scb, "TAB638",
+  Region = c("0180", "1480"),
+  maximize_selection = TRUE
+)
+```
+
+With `maximize_selection = TRUE`, the function expands unspecified
+variables to include as many values as possible while staying under
+the API's cell limit.
+
+Then fetch:
+
+```{r}
+pop <- get_data(scb, query = q)
+```
+
+## Codelists
+
+Codelists provide alternative groupings of variable values. For
+example, a "Region" variable with 290 municipalities might have a
+codelist that groups them into 21 counties:
+
+```{r}
+cls <- get_codelists(scb, "TAB638", "Region")
+cls |> codelist_describe(max_n = 5)
+
+# Use a codelist in a query
+get_data(scb, "TAB638",
+  Region = "*",
+  Tid = px_top(5),
+  ContentsCode = "*",
+  .codelist = list(Region = "vs_RegionLän07")
+)
+```
+
+## Wide output and multiple contents
+
+When a table has multiple content variables (e.g. both Population and
+Deaths), use `.output = "wide"` to pivot them into separate columns:
+
+```{r}
+demo <- get_data(scb, "TAB638",
+  Region = "0180",
+  Tid = px_top(5),
+  ContentsCode = "*",
+  .output = "wide"
+)
+demo
+```
+
+## Advanced: query composition
+
+For full control, use the low-level query composers:
+
+```{r}
+q <- compose_data_query(scb, "TAB638",
+  Region = c("0180"),
+  ContentsCode = "*",
+  Tid = px_top(3)
+)
+
+# Inspect the query
+q$url
+q$body
+
+# Modify and execute
+raw <- execute_query(scb, q$url, q$body)
+```
+
+## Saved queries (v2 only)
+
+PX-Web v2 supports server-side stored queries:
+
+```{r}
+# Save a query
+id <- save_query(scb, "TAB638", Region = "0180", Tid = px_top(5), ContentsCode = "*")
+
+# Retrieve later
+get_saved_query(scb, id)
+```
+
+## Citation
+
+Always cite your data sources:
+
+```{r}
+px_cite(pop)
+```
