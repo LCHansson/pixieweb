@@ -1,8 +1,8 @@
 ---
-title: "Introduction to rpx"
+title: "Introduction to pixieweb"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Introduction to rpx}
+  %\VignetteIndexEntry{Introduction to pixieweb}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-> **New to rpx?** Start with `vignette("a-quickstart")` for a hands-on
+> **New to pixieweb?** Start with `vignette("a-quickstart")` for a hands-on
 > walkthrough. This vignette covers the design and advanced features.
 
 ## Background
@@ -26,7 +26,7 @@ own instance (Statistics Sweden at [scb.se](https://www.scb.se),
 Statistics Norway at [ssb.no](https://www.ssb.no), etc.), but they all
 share the same underlying API.
 
-rpx provides a consistent, pipe-friendly R interface to all these
+pixieweb provides a consistent, pipe-friendly R interface to all these
 APIs. It follows the same design principles as
 [rKolada](https://github.com/lchansson/rKolada): **tibbles
 everywhere**, **search-then-fetch**, and **progressive disclosure**.
@@ -48,9 +48,9 @@ everywhere**, **search-then-fetch**, and **progressive disclosure**.
 
 PX-Web tables are *multi-dimensional data cubes*. Unlike Kolada — where
 the dimensions are always KPI, municipality, and period — each PX-Web
-table defines its own set of dimensions. rpx calls these **variables**.
+table defines its own set of dimensions. pixieweb calls these **variables**.
 
-| rpx entity   | What it represents              | rKolada analog        |
+| pixieweb entity | What it represents           | rKolada analog        |
 |--------------|---------------------------------|-----------------------|
 | **api**      | A PX-Web instance (SCB, SSB...) | *(implicit — single)* |
 | **table**    | A statistical table             | kpi                   |
@@ -61,7 +61,7 @@ table defines its own set of dimensions. rpx calls these **variables**.
 ## Connecting to an API
 
 ```{r}
-library(rpx)
+library(pixieweb)
 
 # Known aliases
 scb <- px_api("scb", lang = "en")

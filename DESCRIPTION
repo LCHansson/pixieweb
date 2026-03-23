@@ -1,4 +1,4 @@
-Package: rpx
+Package: pixieweb
 Title: Access PX-Web Statistical Data from R
 Version: 0.1.0
 Authors@R:
@@ -9,8 +9,8 @@ Description: A pipe-friendly R client for PX-Web statistical APIs.
     data from national statistics agencies (SCB, SSB, Statistics Finland,
     etc.) using a consistent tibble-based interface.
 License: AGPL (>= 3) + file LICENSE
-URL: https://lchansson.github.io/rpx, https://github.com/lchansson/rpx
-BugReports: https://github.com/lchansson/rpx/issues
+URL: https://lchansson.github.io/pixieweb, https://github.com/lchansson/pixieweb
+BugReports: https://github.com/lchansson/pixieweb/issues
 Depends:
     R (>= 4.1.0)
 Imports:

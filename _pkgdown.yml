@@ -1,4 +1,4 @@
-url: https://lchansson.github.io/rpx/
+url: https://lchansson.github.io/pixieweb/
 template:
   bootstrap: 5
 
@@ -70,5 +70,5 @@ reference:
 
   - title: Cache management
     contents:
-      - rpx_cache_dir
-      - rpx_clear_cache
+      - pixieweb_cache_dir
+      - pixieweb_clear_cache

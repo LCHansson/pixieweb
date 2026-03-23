@@ -23,6 +23,6 @@ px_cite <- function(data_df) {
   paste0(
     source$api, ". ",
     "Table: ", source$table_id, ". ",
-    "Retrieved via rpx on ", format(source$fetched, "%Y-%m-%d"), "."
+    "Retrieved via pixieweb on ", format(source$fetched, "%Y-%m-%d"), "."
   )
 }

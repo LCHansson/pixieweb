@@ -63,7 +63,7 @@ test_that("px_cite generates citation from metadata", {
   expect_match(result, "Statistics Sweden")
   expect_match(result, "TAB638")
   expect_match(result, "2024-06-15")
-  expect_match(result, "rpx")
+  expect_match(result, "pixieweb")
 })
 
 test_that("px_cite warns when no source metadata", {
@@ -80,7 +80,7 @@ test_that("pivot_data_wide pivots ContentsCode", {
     value = c(100, 5, 200, 10)
   )
 
-  result <- rpx:::pivot_data_wide(df)
+  result <- pixieweb:::pivot_data_wide(df)
   expect_true("Pop" %in% names(result) || "Deaths" %in% names(result))
   expect_equal(nrow(result), 2)
 })

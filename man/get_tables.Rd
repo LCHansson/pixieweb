@@ -12,7 +12,7 @@ get_tables(
   max_results = NULL,
   .timeout = 15,
   cache = FALSE,
-  cache_location = rpx_cache_dir,
+  cache_location = pixieweb_cache_dir,
   verbose = FALSE
 )
 }
@@ -34,7 +34,7 @@ large APIs. Has no effect on v2 APIs (which have native search).}
 
 \item{cache}{Logical, cache results locally.}
 
-\item{cache_location}{Cache directory. Defaults to \code{\link[=rpx_cache_dir]{rpx_cache_dir()}}.}
+\item{cache_location}{Cache directory. Defaults to \code{\link[=pixieweb_cache_dir]{pixieweb_cache_dir()}}.}
 
 \item{verbose}{Print request details.}
 }

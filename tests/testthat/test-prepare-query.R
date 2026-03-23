@@ -155,7 +155,7 @@ test_that("compute_selection_sizes handles all selection types", {
     D = px_top(3)           # top N
   )
 
-  sizes <- rpx:::compute_selection_sizes(selections, vars)
+  sizes <- pixieweb:::compute_selection_sizes(selections, vars)
   expect_equal(sizes$A, 1)   # eliminated = 1
   expect_equal(sizes$B, 20)  # wildcard = n_values
   expect_equal(sizes$C, 3)   # 3 items

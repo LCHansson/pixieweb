@@ -54,38 +54,38 @@ test_that("print.px_selection produces output", {
 
 # resolve_selection tests (internal)
 test_that("resolve_selection_v2 handles character vectors", {
-  result <- rpx:::resolve_selection_v2(c("0180", "1480"))
+  result <- pixieweb:::resolve_selection_v2(c("0180", "1480"))
   expect_equal(result, list("0180", "1480"))
 })
 
 test_that("resolve_selection_v2 handles wildcard", {
-  result <- rpx:::resolve_selection_v2("*")
+  result <- pixieweb:::resolve_selection_v2("*")
   expect_equal(result, list("*"))
 })
 
 test_that("resolve_selection_v2 handles px_top", {
-  result <- rpx:::resolve_selection_v2(px_top(3))
+  result <- pixieweb:::resolve_selection_v2(px_top(3))
   expect_equal(result, list("top(3)"))
 })
 
 test_that("resolve_selection_v2 handles px_range", {
-  result <- rpx:::resolve_selection_v2(px_range("2020", "2023"))
+  result <- pixieweb:::resolve_selection_v2(px_range("2020", "2023"))
   expect_equal(result, list("range(2020,2023)"))
 })
 
 test_that("resolve_selection_v1 rejects v2-only types", {
-  expect_error(rpx:::resolve_selection_v1(px_bottom(3)), "v2")
-  expect_error(rpx:::resolve_selection_v1(px_from("2020")), "v2")
-  expect_error(rpx:::resolve_selection_v1(px_range("2020", "2023")), "v2")
+  expect_error(pixieweb:::resolve_selection_v1(px_bottom(3)), "v2")
+  expect_error(pixieweb:::resolve_selection_v1(px_from("2020")), "v2")
+  expect_error(pixieweb:::resolve_selection_v1(px_range("2020", "2023")), "v2")
 })
 
 test_that("resolve_selection_v1 handles item selection", {
-  result <- rpx:::resolve_selection_v1(c("0180", "1480"))
+  result <- pixieweb:::resolve_selection_v1(c("0180", "1480"))
   expect_equal(result$filter, "item")
   expect_equal(result$values, list("0180", "1480"))
 })
 
 test_that("resolve_selection_v1 handles wildcard", {
-  result <- rpx:::resolve_selection_v1("*")
+  result <- pixieweb:::resolve_selection_v1("*")
   expect_equal(result$filter, "all")
 })

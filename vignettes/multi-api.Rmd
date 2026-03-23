@@ -17,15 +17,15 @@ knitr::opts_chunk$set(
 )
 ```
 
-One of rpx's strengths is its ability to connect to any PX-Web
+One of pixieweb's strengths is its ability to connect to any PX-Web
 instance with the same interface. This vignette shows how to compare
 data across national statistics agencies.
 
-**The honest truth about cross-country comparison:** The rpx functions
+**The honest truth about cross-country comparison:** The pixieweb functions
 work identically across APIs, but the *data* is not harmonised. Table
 IDs, variable names, and code systems differ between countries. The
 workflow is: find a comparable table in each country (the hard part),
-then use identical rpx code to fetch and combine the results.
+then use identical pixieweb code to fetch and combine the results.
 
 > **Prerequisite:** This vignette assumes you are comfortable with the
 > basics from `vignette("a-quickstart")`.
@@ -33,12 +33,12 @@ then use identical rpx code to fetch and combine the results.
 ## Available APIs
 
 ```{r}
-library(rpx)
+library(pixieweb)
 
 px_api_catalogue()
 ```
 
-rpx ships with a catalogue of known PX-Web instances. You can also
+pixieweb ships with a catalogue of known PX-Web instances. You can also
 connect to any PX-Web API by providing a full URL.
 
 ## Connecting to multiple agencies
@@ -65,7 +65,7 @@ PX-Web has two API versions:
 - **v2**: Modern, GET+POST data queries, full-text search, codelists
   endpoint, saved queries.
 
-rpx handles both versions transparently. The user-facing functions
+pixieweb handles both versions transparently. The user-facing functions
 have the same signatures — only the internal request building differs.
 
 Some selection helpers are v2-only: `px_bottom()`, `px_from()`,
@@ -149,7 +149,7 @@ bind_rows(results, .id = "country")
 
 ## Next steps
 
-- **Data model & advanced features** — `vignette("introduction-to-rpx")`
+- **Data model & advanced features** — `vignette("introduction-to-pixieweb")`
   covers codelists, wide output, and query composition.
 - **Quick refresher** — `vignette("a-quickstart")` for the single-API
   basics.

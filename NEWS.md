@@ -1,4 +1,4 @@
-# rpx 0.1.0
+# pixieweb 0.1.0
 
 Initial CRAN release.
 
@@ -23,7 +23,7 @@ Initial CRAN release.
 * **Table helpers**: `table_search()`, `table_describe()`, `table_enrich()`, `table_minimize()`, `table_extract_ids()` for working with table metadata.
 * **Variable helpers**: `variable_search()`, `variable_describe()`, `variable_minimize()`, `variable_extract_ids()`, `variable_name_to_code()`, `variable_values()` for working with variables.
 * **Data helpers**: `data_minimize()`, `data_comments()`, `data_legend()` for working with downloaded data.
-* **Persistent caching**: `rpx_cache_dir()` and `rpx_clear_cache()` for managing cached API responses using `tools::R_user_dir()`.
+* **Persistent caching**: `pixieweb_cache_dir()` and `pixieweb_clear_cache()` for managing cached API responses using `tools::R_user_dir()`.
 * **Citations**: `px_cite()` generates citations for downloaded data.
 * **HTTP resilience**: Automatic retry with exponential backoff for transient errors and rate limiting (HTTP 429).
 * **Built-in API catalogue**: Ships with a catalogue of known PX-Web APIs for Nordic and European statistical agencies.

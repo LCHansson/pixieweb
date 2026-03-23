@@ -1,8 +1,8 @@
 ---
-title: "Quick start guide to rpx"
+title: "Quick start guide to pixieweb"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Quick start guide to rpx}
+  %\VignetteIndexEntry{Quick start guide to pixieweb}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-rpx makes it easy to download open statistical data from PX-Web APIs
+pixieweb makes it easy to download open statistical data from PX-Web APIs
 — the platform used by Statistics Sweden (SCB), Statistics Norway (SSB),
 Statistics Finland, and many others. This vignette walks you from zero
 to a tidy tibble in five steps.
@@ -23,7 +23,7 @@ to a tidy tibble in five steps.
 ## Step 1: Connect to an API
 
 ```{r}
-library(rpx)
+library(pixieweb)
 
 scb <- px_api("scb", lang = "en")
 scb
@@ -82,7 +82,7 @@ available. Pass your selections to `get_data()`:
 - Variables you **omit** are *eliminated* — the API returns a
   pre-computed aggregate (e.g., omitting `Kon` gives totals for both
   sexes). Not all variables allow this; see
-  `vignette("introduction-to-rpx")` for mandatory vs eliminable.
+  `vignette("introduction-to-pixieweb")` for mandatory vs eliminable.
 
 ```{r}
 pop <- get_data(scb, "TAB638",
@@ -159,7 +159,7 @@ Other useful helpers:
 
 ## Next steps
 
-- **Concepts & advanced features** — `vignette("introduction-to-rpx")`
+- **Concepts & advanced features** — `vignette("introduction-to-pixieweb")`
   covers the data model, codelists, saved queries, and query
   composition.
 - **Multiple countries** — `vignette("multi-api")` shows how to compare

@@ -27,7 +27,7 @@ px_api(x, lang = NULL, version = "v2", verbose = FALSE)
 A \verb{<px_api>} object.
 }
 \description{
-Creates a \verb{<px_api>} connection object used by all other rpx functions.
+Creates a \verb{<px_api>} connection object used by all other pixieweb functions.
 You can pass a known alias (e.g. \code{"scb"}, \code{"ssb"}) or a full base URL.
 }
 \examples{

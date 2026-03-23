@@ -8,7 +8,7 @@ table_enrich(
   table_df,
   api = NULL,
   cache = FALSE,
-  cache_location = rpx_cache_dir,
+  cache_location = pixieweb_cache_dir,
   verbose = FALSE
 )
 }
@@ -22,7 +22,7 @@ stored by \code{\link[=get_tables]{get_tables()}} is used automatically.}
 loads it on subsequent calls instead of re-fetching metadata. Useful
 for building local databases or working offline.}
 
-\item{cache_location}{Directory for cache files. Defaults to \code{\link[=rpx_cache_dir]{rpx_cache_dir()}}.}
+\item{cache_location}{Directory for cache files. Defaults to \code{\link[=pixieweb_cache_dir]{pixieweb_cache_dir()}}.}
 
 \item{verbose}{Print request details.}
 }

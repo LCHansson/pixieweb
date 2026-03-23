@@ -1,6 +1,6 @@
 #' Connect to a PX-Web API
 #'
-#' Creates a `<px_api>` connection object used by all other rpx functions.
+#' Creates a `<px_api>` connection object used by all other pixieweb functions.
 #' You can pass a known alias (e.g. `"scb"`, `"ssb"`) or a full base URL.
 #'
 #' @param x An API alias from `px_api_catalogue()` or a full base URL.
@@ -145,7 +145,7 @@ format.px_api <- function(x, ...) {
 #' @examples
 #' px_api_catalogue()
 px_api_catalogue <- function() {
-  path <- system.file("extdata", "api_catalogue.json", package = "rpx")
+  path <- system.file("extdata", "api_catalogue.json", package = "pixieweb")
 
   if (path == "") {
     # Fallback: try relative path (dev mode)

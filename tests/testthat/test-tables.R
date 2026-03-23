@@ -22,7 +22,7 @@ test_that("parse_table_v2 captures all metadata fields", {
 
   api <- structure(list(alias = "scb", base_url = "https://api.scb.se"),
                    class = "px_api")
-  result <- rpx:::parse_table_v2(raw, api)
+  result <- pixieweb:::parse_table_v2(raw, api)
 
   expect_equal(nrow(result), 1)
   expect_equal(result$id, "TAB638")
@@ -41,7 +41,7 @@ test_that("parse_table_v2 handles missing fields gracefully", {
   raw <- list(id = "TAB1", label = "Minimal table")
   api <- structure(list(alias = "test", base_url = "https://example.com"),
                    class = "px_api")
-  result <- rpx:::parse_table_v2(raw, api)
+  result <- pixieweb:::parse_table_v2(raw, api)
 
   expect_equal(result$id, "TAB1")
   expect_true(is.na(result$description))
@@ -87,7 +87,7 @@ test_that("table_describe returns input invisibly", {
 })
 
 test_that("table_describe warns on empty input", {
-  df <- rpx:::empty_tables_tibble()
+  df <- pixieweb:::empty_tables_tibble()
   expect_warning(table_describe(df), "No tables")
 })
 

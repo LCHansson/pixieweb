@@ -10,7 +10,7 @@
 #'   - codelist_var: variable code with codelists (NULL if unknown)
 #'
 #' All table paths verified against live APIs on 2026-03-19.
-rpx_test_apis <- function() {
+pixieweb_test_apis <- function() {
   list(
     # --- Nordic national statistics ---
     list(

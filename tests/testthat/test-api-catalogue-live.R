@@ -3,7 +3,7 @@
 
 skip_on_cran()
 
-apis <- rpx_test_apis()
+apis <- pixieweb_test_apis()
 
 for (spec in apis) {
   for (ver in names(spec$versions)) {

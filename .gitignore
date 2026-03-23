@@ -4,7 +4,7 @@
 .Ruserdata
 inst/doc
 docs/
-rpx.Rcheck/
-rpx*.tar.gz
-rpx*.tgz
+pixieweb.Rcheck/
+pixieweb*.tar.gz
+pixieweb*.tgz
 .claude/

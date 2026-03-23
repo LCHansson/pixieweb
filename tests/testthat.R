@@ -1,4 +1,4 @@
 library(testthat)
-library(rpx)
+library(pixieweb)
 
-test_check("rpx")
+test_check("pixieweb")

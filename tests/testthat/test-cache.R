@@ -1,5 +1,5 @@
-test_that("rpx_cache_dir() returns a valid path", {
-  dir <- rpx_cache_dir()
+test_that("pixieweb_cache_dir() returns a valid path", {
+  dir <- pixieweb_cache_dir()
   expect_type(dir, "character")
   expect_true(dir.exists(dir))
 })
@@ -49,7 +49,7 @@ test_that("no-op handler when cache = FALSE", {
   expect_equal(result, df)
 })
 
-test_that("rpx_clear_cache() selective clearing by entity", {
+test_that("pixieweb_clear_cache() selective clearing by entity", {
   tmp <- withr::local_tempdir()
 
   # Create two cache files with different entities
@@ -64,13 +64,13 @@ test_that("rpx_clear_cache() selective clearing by entity", {
   expect_length(list.files(tmp, pattern = "\\.rds$"), 2)
 
   # Clear only tables
-  rpx_clear_cache(entity = "tables", cache_location = tmp)
+  pixieweb_clear_cache(entity = "tables", cache_location = tmp)
   remaining <- list.files(tmp, pattern = "\\.rds$")
   expect_length(remaining, 1)
   expect_true(grepl("enriched", remaining))
 })
 
-test_that("rpx_clear_cache() selective clearing by API alias", {
+test_that("pixieweb_clear_cache() selective clearing by API alias", {
   tmp <- withr::local_tempdir()
 
   ch_scb <- cache_handler("tables", TRUE, tmp,
@@ -85,13 +85,13 @@ test_that("rpx_clear_cache() selective clearing by API alias", {
 
   # Clear only scb — pass a mock api object with $alias
   mock_api <- list(alias = "scb")
-  rpx_clear_cache(api = mock_api, cache_location = tmp)
+  pixieweb_clear_cache(api = mock_api, cache_location = tmp)
   remaining <- list.files(tmp, pattern = "\\.rds$")
   expect_length(remaining, 1)
   expect_true(grepl("ssb", remaining))
 })
 
-test_that("rpx_clear_cache() clears all when no filters", {
+test_that("pixieweb_clear_cache() clears all when no filters", {
   tmp <- withr::local_tempdir()
 
   ch1 <- cache_handler("tables", TRUE, tmp,
@@ -102,6 +102,6 @@ test_that("rpx_clear_cache() clears all when no filters", {
   ch1("store", tibble::tibble(x = 1))
   ch2("store", tibble::tibble(x = 2))
 
-  rpx_clear_cache(cache_location = tmp)
+  pixieweb_clear_cache(cache_location = tmp)
   expect_length(list.files(tmp, pattern = "\\.rds$"), 0)
 })

@@ -12,7 +12,7 @@
 #'   fall back to walking the folder tree. Increase for exhaustive searches on
 #'   large APIs. Has no effect on v2 APIs (which have native search).
 #' @param cache Logical, cache results locally.
-#' @param cache_location Cache directory. Defaults to [rpx_cache_dir()].
+#' @param cache_location Cache directory. Defaults to [pixieweb_cache_dir()].
 #' @param verbose Print request details.
 #' @return A tibble with columns: `id`, `title`, `description`, `category`,
 #'   `updated`, `first_period`, `last_period`, `time_unit`, `variables`,
@@ -39,7 +39,7 @@ get_tables <- function(api,
                        max_results = NULL,
                        .timeout = 15,
                        cache = FALSE,
-                       cache_location = rpx_cache_dir,
+                       cache_location = pixieweb_cache_dir,
                        verbose = FALSE) {
   check_px_api(api)
 
@@ -577,7 +577,7 @@ table_describe <- function(table_df, max_n = 5, format = "inline",
 #' @param cache Logical. If `TRUE`, stores the enriched result locally and
 #'   loads it on subsequent calls instead of re-fetching metadata. Useful
 #'   for building local databases or working offline.
-#' @param cache_location Directory for cache files. Defaults to [rpx_cache_dir()].
+#' @param cache_location Directory for cache files. Defaults to [pixieweb_cache_dir()].
 #' @param verbose Print request details.
 #' @return The input tibble with additional columns: `notes`, `contents`,
 #'   `subject_area`, `official_statistics`, `contact`.
@@ -597,7 +597,7 @@ table_describe <- function(table_df, max_n = 5, format = "inline",
 #'     table_enrich(cache = TRUE)
 #' }}
 table_enrich <- function(table_df, api = NULL, cache = FALSE,
-                         cache_location = rpx_cache_dir, verbose = FALSE) {
+                         cache_location = pixieweb_cache_dir, verbose = FALSE) {
   if (is.null(api)) {
     api <- attr(table_df, "px_api")
   }

@@ -35,7 +35,7 @@ test_that("get_tables_v2 parses mocked response correctly", {
     px_get = function(url, verbose = FALSE) mock_response
   )
 
-  result <- rpx:::get_tables_v2(api, query = "test", id = NULL,
+  result <- pixieweb:::get_tables_v2(api, query = "test", id = NULL,
                                  updated_since = NULL, max_results = 100,
                                  verbose = FALSE)
 
@@ -98,7 +98,7 @@ test_that("get_variables_v2 parses json-stat metadata", {
     px_get = function(url, verbose = FALSE) mock_metadata
   )
 
-  result <- rpx:::get_variables_v2(api, "TAB1", verbose = FALSE)
+  result <- pixieweb:::get_variables_v2(api, "TAB1", verbose = FALSE)
 
   expect_s3_class(result, "tbl_df")
   expect_equal(nrow(result), 2)
