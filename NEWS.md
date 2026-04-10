@@ -1,3 +1,37 @@
+# pixieweb (development version)
+
+## New features
+
+- **`data_legend()` gains `lang`, `omit_varname` and `omit_desc`
+  arguments**, mirroring the same API in the sibling package `rTrafa`.
+  `lang` (default `"EN"`, settable via `getOption("pixieweb.lang",
+  "EN")`) toggles the source prefix between `"Source: …, table X"` and
+  `"Källa: …, tabell X"`. `omit_varname` drops the raw variable codes
+  from the variable list; `omit_desc` shows only the codes.
+- **`data_legend()`'s `var_df` argument is now optional.** When
+  omitted, the caption contains only the source line derived from the
+  `px_source` attribute attached by `get_data()`.
+
+## Documentation
+
+- **Vignette data is now pre-cached on disk** via `data-raw/vignette-data.R`
+  and `R/sysdata.rda`, mirroring the approach used in `rKolada` and
+  `rTrafa`. Vignettes render offline and show real API output for
+  tables, variables, prepared queries, codelists and plots.
+- **Introduction vignette rewritten**: the `Kolada`-comparison table in
+  the "data model" section is replaced with a dedicated, pedagogical
+  explanation of the PX-Web data cube (API → table → variables →
+  content codes → codelists → data), following the same structure as
+  the `rKolada` and `rTrafa` introduction vignettes.
+- Vignette plots now convert `Tid` to `Date` before plotting and use
+  `scale_x_date(date_breaks = "1 year", date_labels = "%Y")`, so axis
+  breaks land on whole years rather than on decimal years like `2020,
+  2022.5, 2025`. This pattern is explained inline and is consistent
+  with the sibling packages `rKolada` and `rTrafa`.
+- README and all vignettes now cross-link to the sibling packages
+  `rKolada` and `rTrafa`, and list `install.packages("pixieweb")` as
+  the primary install path.
+
 # pixieweb 0.1.0
 
 Initial CRAN release.

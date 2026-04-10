@@ -4,7 +4,18 @@
 [![R-CMD-check](https://github.com/lchansson/pixieweb/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/lchansson/pixieweb/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-pixieweb is an R client for [PX-Web](https://www.scb.se/px-web) statistical APIs. It provides a pipe-friendly, tibble-based interface for discovering and downloading data from national statistics agencies — including SCB (Sweden), SSB (Norway), Statistics Finland, and more.
+[`pixieweb`](https://lchansson.github.io/pixieweb/index.html) is an R client for [PX-Web](https://www.scb.se/px-web) statistical APIs. It provides a pipe-friendly, tibble-based interface for *discovering*, *inspecting* and *downloading* data from national statistics agencies — including SCB (Sweden), SSB (Norway), Statistics Finland, and more.
+
+To learn more about using `pixieweb`, it is recommended you use the following resources in order:
+
+## Getting started with pixieweb
+
+1.  To get up and running quickly with pixieweb, please see the vignette [A quick start guide to pixieweb](https://lchansson.github.io/pixieweb/articles/a-quickstart.html).
+2.  For an introduction to pixieweb and the design principles of functions included, please see [Introduction to pixieweb](https://lchansson.github.io/pixieweb/articles/introduction-to-pixieweb.html).
+3.  For cross-country comparisons and multi-API workflows, see [Working with multiple APIs](https://lchansson.github.io/pixieweb/articles/multi-api.html).
+4.  See the [Reference section of the package homepage](https://lchansson.github.io/pixieweb/reference/index.html) to learn about the full set of functionality included with the package.
+
+`pixieweb` is open source licensed under the Affero Gnu Public License version 3. This means you are free to download the source, modify and redistribute it as you please, but any copies or modifications must retain the original license. Please see the file LICENSE.md for further information.
 
 > **Note on pxweb:** The excellent [pxweb](https://cran.r-project.org/package=pxweb) package by
 > rOpenGov already provides comprehensive R access to PX-Web APIs.
@@ -15,11 +26,17 @@ pixieweb is an R client for [PX-Web](https://www.scb.se/px-web) statistical APIs
 
 ## Installation
 
-Install the development version from GitHub:
+pixieweb is on CRAN. To install it, run the following code in R:
 
-```r
-# install.packages("pak")
-pak::pak("lchansson/pixieweb")
+``` r
+install.packages("pixieweb")
+```
+
+To install the latest development version from GitHub, use the `remotes` package:
+
+``` r
+library("remotes")
+remotes::install_github("LCHansson/pixieweb")
 ```
 
 ## Quick start
@@ -49,10 +66,26 @@ data <- get_data(scb, tables$id[1])
 - **Persistent caching**: Cache responses to disk with `pixieweb_cache_dir()`
 - **v1 and v2 support**: Works with both PX-Web API versions
 
+## Contributing
+
+You are welcome to contribute to the further development of the pixieweb package in any of the following ways:
+
+-   Open an [issue](https://github.com/LCHansson/pixieweb/issues)
+-   Clone this repo, make modifications and create a pull request
+-   Spread the word!
+
 ## Related packages
 
-- [rKolada](https://lchansson.github.io/rKolada/) — R client for the Kolada API (Swedish municipality statistics). Sibling package with the same design principles.
-- [pxweb](https://cran.r-project.org/package=pxweb) — the original and established PX-Web client for R, by rOpenGov
+`pixieweb` is part of a family of R packages for Swedish and Nordic open statistics that share the same design philosophy — tibble-based, pipe-friendly, and offline-safe:
+
+- [rKolada](https://lchansson.github.io/rKolada/) — R client for the [Kolada](https://kolada.se/) database of Swedish municipal and regional Key Performance Indicators
+- [rTrafa](https://lchansson.github.io/rTrafa/) — R client for the [Trafa](https://api.trafa.se/) API of Swedish transport statistics
+
+See also [pxweb](https://cran.r-project.org/package=pxweb) — the original and established PX-Web client for R, by rOpenGov.
+
+### Code of Conduct
+
+Please note that the pixieweb project is released with a [Contributor Code of Conduct](https://contributor-covenant.org/version/2/0/CODE_OF_CONDUCT.html). By contributing to this project, you agree to abide by its terms.
 
 ## License
 
