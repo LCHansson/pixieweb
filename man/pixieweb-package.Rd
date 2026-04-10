@@ -11,7 +11,7 @@ A pipe-friendly R client for PX-Web statistical APIs. Provides a search-then-fet
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://lchansson.github.io/pixieweb}
+  \item \url{https://lchansson.github.io/pixieweb/}
   \item \url{https://github.com/lchansson/pixieweb}
   \item Report bugs at \url{https://github.com/lchansson/pixieweb/issues}
 }
