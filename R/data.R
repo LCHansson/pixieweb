@@ -609,11 +609,40 @@ data_minimize <- function(data_df, remove_monotonous_data = TRUE) {
   remove_monotonous(data_df, remove_monotonous_data)
 }
 
-#' Generate a plot legend from variable metadata
+#' Generate a source caption for plots
+#'
+#' Builds a human-readable source attribution string from a data tibble
+#' returned by [get_data()] and, optionally, a variable tibble returned
+#' by [get_variables()]. The string is suitable for use as a `caption`
+#' in `ggplot2::labs()`.
+#'
+#' By default the caption shows the API and table that the data came
+#' from, and — if `var_df` is supplied — the variables included in the
+#' table with both a human-readable label and the raw code, e.g.
+#'
+#' \preformatted{
+#' Source: Statistics Sweden (SCB), table TAB638
+#' Region (Region) | Marital status (Civilstand) | Year (Tid)
+#' }
+#'
+#' Use `omit_varname` to drop the codes, `omit_desc` to drop the labels,
+#' and `lang` to switch between English and Swedish wording of the
+#' source prefix.
 #'
 #' @param data_df A tibble returned by [get_data()].
-#' @param var_df A tibble returned by [get_variables()].
-#' @return A character string suitable for plot captions.
+#' @param var_df Optional tibble returned by [get_variables()]. If
+#'   supplied, a line listing the table's variables is added below the
+#'   source line.
+#' @param lang Language for the caption wording: `"EN"` (English,
+#'   default) or `"SV"` (Swedish). Defaults to
+#'   `getOption("pixieweb.lang", "EN")`. PX-Web variable labels are
+#'   returned by the API in whichever language was requested in
+#'   [px_api()] regardless of this setting.
+#' @param omit_varname Logical. If `TRUE`, omit the raw variable codes
+#'   (the parenthesised IDs like `Region`) and show only the labels.
+#' @param omit_desc Logical. If `TRUE`, omit the human-readable labels
+#'   and show only the codes.
+#' @return A single character string suitable for plot captions.
 #' @export
 #' @examples
 #' \donttest{
@@ -622,22 +651,61 @@ data_minimize <- function(data_df, remove_monotonous_data = TRUE) {
 #'   vars <- get_variables(scb, "TAB638")
 #'   d <- get_data(scb, "TAB638", Region = "0180", Tid = px_top(3))
 #'   data_legend(d, vars)
+#'   data_legend(d, vars, lang = "SV")
+#'   data_legend(d, vars, omit_varname = TRUE)
+#'   data_legend(d, vars, omit_desc = TRUE)
 #' }}
-data_legend <- function(data_df, var_df) {
-  if (is.null(var_df) || nrow(var_df) == 0) return("")
+data_legend <- function(data_df,
+                        var_df = NULL,
+                        lang = NULL,
+                        omit_varname = FALSE,
+                        omit_desc = FALSE) {
 
-  parts <- vapply(seq_len(nrow(var_df)), function(i) {
-    paste0(var_df$text[i], " (", var_df$code[i], ")")
-  }, character(1))
+  lang <- resolve_lang(lang)
+  s <- legend_strings(lang)
 
   source_info <- attr(data_df, "px_source")
-  source_text <- if (!is.null(source_info)) {
-    paste0("Source: ", source_info$api, ", table ", source_info$table_id)
+  source_line <- if (!is.null(source_info)) {
+    paste0(
+      s$source, ": ", source_info$api, ", ",
+      s$table, " ", source_info$table_id
+    )
   } else {
-    ""
+    NULL
   }
 
-  paste(c(paste(parts, collapse = " | "), source_text), collapse = "\n")
+  var_line <- if (!is.null(var_df) && nrow(var_df) > 0) {
+    parts <- vapply(seq_len(nrow(var_df)), function(i) {
+      format_legend_field(var_df$text[i], var_df$code[i],
+                          omit_varname, omit_desc)
+    }, character(1))
+    paste(parts, collapse = " | ")
+  } else {
+    NULL
+  }
+
+  parts <- c(source_line, var_line)
+  if (length(parts) == 0) return("")
+  paste(parts, collapse = "\n")
+}
+
+#' Localized strings for data_legend
+#' @noRd
+legend_strings <- function(lang) {
+  switch(lang,
+    SV = list(source = "K\u00e4lla", table = "tabell"),
+    EN = list(source = "Source", table = "table")
+  )
+}
+
+#' Format a single variable entry for the legend
+#' @noRd
+format_legend_field <- function(label, code, omit_varname, omit_desc) {
+  has_label <- !is.null(label) && !is.na(label) && nzchar(label)
+
+  if (omit_varname) return(if (has_label) label else code)
+  if (omit_desc || !has_label) return(code)
+  paste0(label, " (", code, ")")
 }
 
 #' Extract comments from data

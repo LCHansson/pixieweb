@@ -234,3 +234,16 @@ check_px_api <- function(api) {
     abort("Expected a <px_api> object. Create one with px_api().")
   }
 }
+
+#' Resolve a lang parameter, falling back to option
+#' @param lang User-supplied lang or NULL.
+#' @return Character: "SV" or "EN".
+#' @noRd
+resolve_lang <- function(lang = NULL) {
+  lang <- lang %||% getOption("pixieweb.lang", "EN")
+  lang <- toupper(lang)
+  if (!lang %in% c("SV", "EN")) {
+    abort("`lang` must be \"SV\" or \"EN\".")
+  }
+  lang
+}

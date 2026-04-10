@@ -2,20 +2,57 @@
 % Please edit documentation in R/data.R
 \name{data_legend}
 \alias{data_legend}
-\title{Generate a plot legend from variable metadata}
+\title{Generate a source caption for plots}
 \usage{
-data_legend(data_df, var_df)
+data_legend(
+  data_df,
+  var_df = NULL,
+  lang = NULL,
+  omit_varname = FALSE,
+  omit_desc = FALSE
+)
 }
 \arguments{
 \item{data_df}{A tibble returned by \code{\link[=get_data]{get_data()}}.}
 
-\item{var_df}{A tibble returned by \code{\link[=get_variables]{get_variables()}}.}
+\item{var_df}{Optional tibble returned by \code{\link[=get_variables]{get_variables()}}. If
+supplied, a line listing the table's variables is added below the
+source line.}
+
+\item{lang}{Language for the caption wording: \code{"EN"} (English,
+default) or \code{"SV"} (Swedish). Defaults to
+\code{getOption("pixieweb.lang", "EN")}. PX-Web variable labels are
+returned by the API in whichever language was requested in
+\code{\link[=px_api]{px_api()}} regardless of this setting.}
+
+\item{omit_varname}{Logical. If \code{TRUE}, omit the raw variable codes
+(the parenthesised IDs like \code{Region}) and show only the labels.}
+
+\item{omit_desc}{Logical. If \code{TRUE}, omit the human-readable labels
+and show only the codes.}
 }
 \value{
-A character string suitable for plot captions.
+A single character string suitable for plot captions.
 }
 \description{
-Generate a plot legend from variable metadata
+Builds a human-readable source attribution string from a data tibble
+returned by \code{\link[=get_data]{get_data()}} and, optionally, a variable tibble returned
+by \code{\link[=get_variables]{get_variables()}}. The string is suitable for use as a \code{caption}
+in \code{ggplot2::labs()}.
+}
+\details{
+By default the caption shows the API and table that the data came
+from, and — if \code{var_df} is supplied — the variables included in the
+table with both a human-readable label and the raw code, e.g.
+
+\preformatted{
+Source: Statistics Sweden (SCB), table TAB638
+Region (Region) | Marital status (Civilstand) | Year (Tid)
+}
+
+Use \code{omit_varname} to drop the codes, \code{omit_desc} to drop the labels,
+and \code{lang} to switch between English and Swedish wording of the
+source prefix.
 }
 \examples{
 \donttest{
@@ -24,5 +61,8 @@ if (px_available(scb)) {
   vars <- get_variables(scb, "TAB638")
   d <- get_data(scb, "TAB638", Region = "0180", Tid = px_top(3))
   data_legend(d, vars)
+  data_legend(d, vars, lang = "SV")
+  data_legend(d, vars, omit_varname = TRUE)
+  data_legend(d, vars, omit_desc = TRUE)
 }}
 }
