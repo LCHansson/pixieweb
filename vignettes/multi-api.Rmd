@@ -9,11 +9,10 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r setup, include = FALSE}
+```{r opts, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>",
-  eval = FALSE
+  comment = "#>"
 )
 ```
 
@@ -32,10 +31,16 @@ then use identical pixieweb code to fetch and combine the results.
 
 ## Available APIs
 
-```{r}
-library(pixieweb)
+```{r setup}
+library("pixieweb")
+```
 
+```{r catalogue_mock, eval = FALSE}
 px_api_catalogue()
+```
+
+```{r catalogue, echo = FALSE}
+pixieweb:::vd_catalogue
 ```
 
 pixieweb ships with a catalogue of known PX-Web instances. You can also
@@ -43,10 +48,14 @@ connect to any PX-Web API by providing a full URL.
 
 ## Connecting to multiple agencies
 
-```{r}
+```{r connect_mock, eval = FALSE}
 scb <- px_api("scb", lang = "en")      # Sweden (v2)
 ssb <- px_api("ssb", lang = "en")      # Norway (v2)
 statfi <- px_api("statfi", lang = "en") # Finland (v1)
+```
+
+```{r connect, echo = FALSE}
+scb <- pixieweb:::vd_scb
 ```
 
 Each API object stores the base URL, language, API version, and
@@ -54,7 +63,6 @@ configuration (cell limits, rate limits):
 
 ```{r}
 scb
-ssb
 ```
 
 ## API version differences
@@ -78,9 +86,8 @@ Suppose you want to compare population data across Sweden and Norway.
 The table IDs and variable codes will differ, but the workflow is
 identical:
 
-```{r}
-library(dplyr)
-library(purrr)
+```{r cc_mock, eval = FALSE}
+library("dplyr")
 
 # Find population tables in each country
 scb_tables <- get_tables(scb, query = "population")
@@ -96,7 +103,7 @@ variable names may also differ ("Region" in SCB vs other names
 elsewhere). Always run `variable_describe()` on each table before
 building your query:
 
-```{r}
+```{r cc_fetch, eval = FALSE}
 # Fetch data using prepare_query() for quick exploration
 scb_q <- prepare_query(scb, "TAB638",
   Region = "00",       # "Riket" (whole country)
@@ -111,10 +118,10 @@ ssb_vars |> variable_describe()
 
 ## Combining results
 
-Since `get_data()` returns standard tibbles with a `table_id` column,
+Since `get_data()` returns standard tibbles with a `table_id` attribute,
 you can bind results from different APIs:
 
-```{r}
+```{r cc_combine, eval = FALSE}
 results <- list(
   sweden = get_data(scb, query = scb_q),
   norway = get_data(ssb, "05803",
@@ -125,7 +132,7 @@ results <- list(
 
 # .id = "country" adds a column tracking which list element each row
 # came from — essential for traceability after binding
-bind_rows(results, .id = "country")
+dplyr::bind_rows(results, .id = "country")
 # NOTE: column names may differ between countries. If so, you may need
 # to rename() before bind_rows() to align them.
 ```
@@ -153,3 +160,14 @@ bind_rows(results, .id = "country")
   covers codelists, wide output, and query composition.
 - **Quick refresher** — `vignette("a-quickstart")` for the single-API
   basics.
+
+## Related packages
+
+`pixieweb` is part of a family of R packages for Swedish and Nordic
+open statistics that share the same design philosophy:
+
+- [rKolada](https://lchansson.github.io/rKolada/) — R client for the
+  [Kolada](https://kolada.se/) database of Swedish municipal and
+  regional Key Performance Indicators
+- [rTrafa](https://lchansson.github.io/rTrafa/) — R client for the
+  [Trafa](https://api.trafa.se/) API of Swedish transport statistics

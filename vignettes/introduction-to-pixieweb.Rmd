@@ -5,64 +5,78 @@ vignette: >
   %\VignetteIndexEntry{Introduction to pixieweb}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+editor_options:
+  chunk_output_type: console
 ---
 
-```{r setup, include = FALSE}
+```{r opts, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>",
-  eval = FALSE
+  comment = "#>"
 )
 ```
 
-> **New to pixieweb?** Start with `vignette("a-quickstart")` for a hands-on
-> walkthrough. This vignette covers the design and advanced features.
+`pixieweb` is an R package for *discovering*, *inspecting* and *downloading* statistical data from [PX-Web](https://www.scb.se/px-web) APIs — the platform used by Statistics Sweden (SCB), Statistics Norway (SSB), Statistics Finland, and many other national statistics agencies. This vignette provides an overview of the methods included in the `pixieweb` package and the design principles of the package API. To learn more about the specifics of functions and to see a full list of the functions included, please see the [Reference section of the package homepage](https://lchansson.github.io/pixieweb/reference/index.html) or run `??pixieweb`. For a quick introduction to the package see the vignette [Quick start guide to pixieweb](a-quickstart.html).
 
-## Background
+> **Note on pxweb:** The excellent [pxweb](https://cran.r-project.org/package=pxweb)
+> package by rOpenGov already provides comprehensive R access to
+> PX-Web APIs. `pixieweb` is not a replacement — it offers an
+> *alternative paradigm* built around search-then-fetch discovery and
+> progressive disclosure. Choose the workflow that fits your needs.
 
-PX-Web is the statistical database platform used by national statistics
-agencies across the Nordic countries and beyond. Each agency runs its
-own instance (Statistics Sweden at [scb.se](https://www.scb.se),
-Statistics Norway at [ssb.no](https://www.ssb.no), etc.), but they all
-share the same underlying API.
+The design of `pixieweb` functions is inspired by the design and functionality provided by several packages in the `tidyverse` family. pixieweb uses the base R pipe (`|>`) throughout. Some vignette examples use `dplyr`, `tidyr`, and `ggplot2` for data wrangling and visualisation:
 
-pixieweb provides a consistent, pipe-friendly R interface to all these
-APIs. It follows the same design principles as
-[rKolada](https://github.com/lchansson/rKolada): **tibbles
-everywhere**, **search-then-fetch**, and **progressive disclosure**.
+```{r install, eval = FALSE}
+install.packages("pixieweb")
+```
 
-## Design principles
+## PX-Web, a platform for national statistical databases
 
-1. **Tibbles everywhere.** Every function returns a tibble (or a vector
-   extracted from one).
-2. **Pipe-friendly.** First argument is always a tibble or API object;
-   output is always pipeable.
-3. **Search-then-fetch.** Users discover metadata before downloading
-   data.
-4. **NULL on failure.** API errors return NULL with a warning, never
-   `stop()`.
-5. **Progressive disclosure.** Simple things are simple; complex things
-   are possible.
+[PX-Web](https://www.scb.se/px-web) is the statistical database platform used by national statistics agencies across the Nordic countries and beyond. Each agency runs its own instance — Statistics Sweden at [scb.se](https://www.scb.se), Statistics Norway at [ssb.no](https://www.ssb.no), Statistics Finland at [stat.fi](https://www.stat.fi), and many more — but they all share the same underlying API, which comes in two versions:
 
-## The data model
+- **v1** — the legacy API, still widely deployed. POST-only data queries, no search endpoint, table discovery requires walking a folder hierarchy.
+- **v2** — the modern API, launched by SCB in 2024. GET+POST data queries, full-text search, codelists endpoint, server-side saved queries.
 
-PX-Web tables are *multi-dimensional data cubes*. Unlike Kolada — where
-the dimensions are always KPI, municipality, and period — each PX-Web
-table defines its own set of dimensions. pixieweb calls these **variables**.
+`pixieweb` handles both versions transparently — the user-facing functions have the same signatures, and only the internal request building differs.
 
-| pixieweb entity | What it represents           | rKolada analog        |
-|--------------|---------------------------------|-----------------------|
-| **api**      | A PX-Web instance (SCB, SSB...) | *(implicit — single)* |
-| **table**    | A statistical table             | kpi                   |
-| **variable** | A dimension within a table      | *(municipality/year)* |
-| **codelist** | An aggregation/value set        | kpi_groups            |
-| **data**     | Downloaded values               | values                |
+To get started with PX-Web you might want to visit the web frontend of any participating agency, or read through the [PxWebApi2 documentation](https://github.com/PxTools/PxApiSpecs) (English). However, you can also use the `pixieweb` package to explore data without prior knowledge of the database.
 
-## Connecting to an API
+```{r setup}
+library("pixieweb")
+```
 
-```{r}
-library(pixieweb)
+### The data model
 
+Data in PX-Web are stored as *multi-dimensional data cubes*. Each agency publishes hundreds or thousands of **tables**, and each table defines its own set of **variables** (dimensions) along which observations are indexed. A typical population table might, for instance, be indexed by region, sex, age and year — while a foreign trade table might be indexed by partner country, commodity group and month.
+
+When downloading data, the user needs to specify which values to include along each variable — or omit the variable entirely, in which case the API returns a pre-computed aggregate (this is called *elimination*). Every table has its own rules for which variables are *mandatory* and which are *eliminable*.
+
+In summary, a PX-Web table is organised along four basic concepts:
+
+- An **API instance** — a particular agency's PX-Web database (e.g. SCB, SSB)
+- A **table** — a single statistical data cube published by that agency
+- A set of **variables** — the dimensions of the cube (region, time, sex, product, etc.); each variable has a set of valid **values**
+- One or more **content codes** — what is actually being measured in each cell (population count, deaths, tax revenue, GDP, ...)
+
+Tables with multiple content codes can return data in either *long* format (one row per observation, one column for the content code) or *wide* format (one column per content code) — see the section on wide output below.
+
+Additionally, many variables come with one or more **codelists** — alternative groupings of the values that can be used to aggregate data on the fly. For example, a "Region" variable with 290 municipalities might offer codelists that group them into 21 counties, or into eight NUTS-2 regions.
+
+`pixieweb` provides a function family for each of these concepts:
+
+| Level        | Discover               | Search             | Describe             | Extract               | Values                |
+|--------------|------------------------|--------------------|----------------------|-----------------------|-----------------------|
+| API instance | `px_api_catalogue()`   | —                  | —                    | —                     | —                     |
+| Table        | `get_tables()`         | `table_search()`   | `table_describe()`   | `table_extract_ids()` | —                     |
+| Variable     | `get_variables()`      | `variable_search()`| `variable_describe()`| `variable_extract_ids()`| `variable_values()` |
+| Codelist     | `get_codelists()`      | —                  | `codelist_describe()`| `codelist_extract_ids()`| `codelist_values()` |
+| Data         | `get_data()`           | —                  | —                    | —                     | —                     |
+
+### Connecting to an API
+
+All `pixieweb` workflows start by connecting to a PX-Web instance. `px_api()` accepts a short alias (`"scb"`, `"ssb"`, `"statfi"`, ...) or a full URL:
+
+```{r api_mock, eval = FALSE}
 # Known aliases
 scb <- px_api("scb", lang = "en")
 ssb <- px_api("ssb", lang = "en")
@@ -74,138 +88,155 @@ custom <- px_api("https://my.statbank.example/api/v2/", lang = "en")
 px_api_catalogue()
 ```
 
-## Discovering tables
-
-Tables are the central entity. `get_tables()` sends a server-side
-search query. The result is a tibble with rich metadata:
-
-```{r}
-tables <- get_tables(scb, query = "income") |>
-  table_search("taxable")
-
-tables |> table_describe(max_n = 3)
+```{r api, echo = FALSE}
+scb <- pixieweb:::vd_scb
+catalogue <- pixieweb:::vd_catalogue
+catalogue
 ```
 
-The table tibble includes subject path, time period range, time unit,
-and data source — all of which are searchable by `table_search()`.
+For cross-country comparison and a fuller tour of the multi-API catalogue, see `vignette("multi-api")`.
 
-### Table helper functions
+### Discovering tables: `get_tables()`
 
-| Function              | Purpose                          |
-|-----------------------|----------------------------------|
-| `table_search()`      | Filter by regex (client-side)    |
-| `table_describe()`    | Print human-readable summaries   |
-| `table_minimize()`    | Remove constant columns          |
-| `table_extract_ids()` | Extract ID vector for piping     |
+Tables are the central entity. On v2 APIs, `get_tables()` sends a server-side search query; on v1 APIs, it walks the folder tree. In both cases the result is a tibble with rich metadata, one row per table:
 
-## Exploring variables
+```{r tables_mock, eval = FALSE}
+# Search the SCB catalogue for population-related tables
+tables <- get_tables(scb, query = "population")
 
-Each table has its own set of variables (dimensions). The key
-discovery step is `get_variables()`:
-```{r}
+head(tables)
+```
+
+```{r tables, echo = FALSE}
+tables <- pixieweb:::vd_tables
+tibble::tibble(head(tables))
+```
+
+The table tibble includes subject path, time period range, time unit, and data source — all of which are searchable by `table_search()` (a client-side filter, analogous to `kpi_search()` in `rKolada`).
+
+```{r table_search}
+# Narrow down to tables about municipalities
+tables |>
+  table_search("municipal") |>
+  table_describe(max_n = 2, format = "md", heading_level = 4)
+```
+
+`table_describe()` prints a human-readable summary of each table. As with all `describe` functions in the `pixieweb`/`rKolada`/`rTrafa` family, you can set `format = "md"` to produce Markdown output that can be embedded directly in an R Markdown document by setting the chunk option `results = 'asis'`.
+
+### Exploring variables: `get_variables()`
+
+Once you have chosen a table, inspect its variables with `get_variables()`:
+
+```{r variables_mock, eval = FALSE}
 vars <- get_variables(scb, "TAB638")
 vars |> variable_describe()
 ```
 
-Important variable properties:
-- **elimination**: can this variable be left out of your `get_data()`
-  call? If `TRUE`, omitting it means the API returns a pre-computed
-  total (e.g., omitting "Sex" gives the total for all sexes). If
-  `FALSE`, the variable is **mandatory** — you must include it.
-- **time**: is this the time dimension?
-- **values**: the available codes and their human-readable labels.
-- **codelists**: alternative groupings (e.g. municipalities → counties).
-
-```{r}
-# See what values a variable has
-vars |> variable_values("Kon")
-
-# Look up variable codes by name
-variable_name_to_code(vars, "sex")
+```{r variables, echo = FALSE}
+vars <- pixieweb:::vd_variables
+vars |> variable_describe()
 ```
 
-## Fetching data
+Each variable has a number of important properties worth knowing about:
 
-### Direct approach
+- **`elimination`** — can this variable be left out of your `get_data()` call? If `TRUE`, omitting the variable means the API returns a pre-computed total (e.g. omitting "Sex" gives the total for all sexes). If `FALSE`, the variable is **mandatory** and must be included in the query.
+- **`time`** — is this the time dimension of the cube? (There is always exactly one.)
+- **`values`** — the set of available codes and their human-readable labels.
+- **`codelists`** — alternative groupings of the values (see the "Codelists" section below).
 
-If you know exactly what you want:
+To inspect the available values for a specific variable, use `variable_values()`:
 
-```{r}
+```{r variable_values_mock, eval = FALSE}
+vars |> variable_values("Region")
+```
+
+```{r variable_values, echo = FALSE}
+pixieweb:::vd_region_values
+```
+
+### Downloading data: `get_data()`
+
+`get_data()` is the workhorse function. Provide an API object, a table ID, and one argument per variable you want to include in the query:
+
+```{r get_data_mock, eval = FALSE}
 pop <- get_data(scb, "TAB638",
-  Region = c("0180", "1480"),
-  Kon = c("1", "2"),
+  Region = c("0180", "1480", "1280"),
   ContentsCode = "*",
   Tid = px_top(5)
 )
+
+head(pop)
 ```
 
-Variables you omit are **eliminated** (aggregated) if the API allows
-it. If a variable is mandatory, you must include it.
-
-### Selection helpers
-
-| Helper            | Meaning                  | Example         |
-|-------------------|--------------------------|-----------------|
-| `c("0180")`      | Specific values          | Item selection  |
-| `"*"`             | All values               | Wildcard        |
-| `px_top(5)`       | First N values           | Most recent     |
-| `px_bottom(3)`    | Last N values (v2 only)  |                 |
-| `px_from("2020")` | From value onward (v2)   |                 |
-| `px_to("2023")`   | Up to value (v2)         |                 |
-| `px_range(a, b)`  | Inclusive range (v2)     |                 |
-
-### The `prepare_query()` shortcut
-
-For interactive exploration, `prepare_query()` inspects the table
-metadata and builds a query with sensible defaults:
-
-```{r}
-q <- prepare_query(scb, "TAB638")
+```{r get_data, echo = FALSE}
+pop <- pixieweb:::vd_pop
+tibble::tibble(head(pop))
 ```
 
-Default strategy:
-- **ContentsCode**: all values (`"*"`)
+Variables you **omit** are *eliminated* (aggregated) if the API allows it. If a variable is mandatory, you must include it — `get_data()` will raise an informative error otherwise.
+
+#### Selection helpers
+
+Often you don't want to hardcode specific codes. `pixieweb` provides a family of selection helpers that translate common wishes into API-compatible arguments:
+
+| Helper            | Meaning                          | API versions |
+|-------------------|----------------------------------|--------------|
+| `c("0180")`       | Specific values                  | v1, v2       |
+| `"*"`             | All values                       | v1, v2       |
+| `px_top(5)`       | First N values (e.g. most recent)| v1, v2       |
+| `px_bottom(3)`    | Last N values                    | v2 only      |
+| `px_from("2020")` | From value onward                | v2 only      |
+| `px_to("2023")`   | Up to value                      | v2 only      |
+| `px_range(a, b)`  | Inclusive range                  | v2 only      |
+
+### Metadata-driven queries: `prepare_query()`
+
+An alternative approach to downloading data using known codes is to use the metadata tables to construct queries. For interactive exploration, `prepare_query()` inspects the table's variable metadata and builds a query with sensible defaults, so that you only need to specify the variables you care about:
+
+```{r prepare_query_mock, eval = FALSE}
+q <- prepare_query(scb, "TAB638",
+  Region = c("0180", "1480", "1280")
+)
+q
+```
+
+```{r prepare_query, echo = FALSE}
+q <- pixieweb:::vd_prepared_query
+q
+```
+
+The default strategy is:
+
+- **Content code**: all values (`"*"`)
 - **Time variable**: latest 10 periods (`px_top(10)`)
 - **Eliminable variables**: omitted (API aggregates)
 - **Small mandatory variables** (≤ 22 values): all (`"*"`)
 - **Large mandatory variables**: first value (`px_top(1)`)
 
-Override specific variables while letting defaults handle the rest:
+With `maximize_selection = TRUE`, the function expands unspecified variables to include as many values as possible while staying under the API's cell limit. Once you're happy, pass the validated query to `get_data()`:
 
-```{r}
-q <- prepare_query(scb, "TAB638",
-  Region = c("0180", "1480"),
-  maximize_selection = TRUE
-)
-```
-
-With `maximize_selection = TRUE`, the function expands unspecified
-variables to include as many values as possible while staying under
-the API's cell limit.
-
-Then fetch:
-
-```{r}
+```{r get_data_from_query, eval = FALSE}
 pop <- get_data(scb, query = q)
 ```
 
-### Advanced features
-
-The sections below cover features you may not need on your first query,
-but that become essential for complex tables or cross-country work.
-
 ## Codelists
 
-Codelists provide alternative groupings of variable values. They are
-useful when you want data at a different aggregation level than the
-table's default. For example, a "Region" variable with 290
-municipalities might have a codelist that groups them into 21 counties:
+Codelists provide alternative groupings of variable values. They are useful when you want data at a different aggregation level than the table's default. For example, a "Region" variable with 290 Swedish municipalities might have a codelist that groups them into 21 counties (`vs_RegionLän07`):
 
-```{r}
+```{r codelists_mock, eval = FALSE}
 cls <- get_codelists(scb, "TAB638", "Region")
-cls |> codelist_describe(max_n = 5)
+cls |> codelist_describe(max_n = 3)
+```
 
-# Use a codelist in a query
+```{r codelists, echo = FALSE}
+cls <- pixieweb:::vd_codelists
+cls |> codelist_describe(max_n = 3)
+```
+
+Apply a codelist in a query via the `.codelist` argument:
+
+```{r codelist_use, eval = FALSE}
+# Fetch data aggregated to counties instead of municipalities
 get_data(scb, "TAB638",
   Region = "*",
   Tid = px_top(5),
@@ -214,14 +245,11 @@ get_data(scb, "TAB638",
 )
 ```
 
-## Wide output and multiple contents
+## Wide output and multiple content codes
 
-When a table has multiple content variables (e.g. both Population and
-Deaths), use `.output = "wide"` to pivot them into separate columns.
-This is useful when you want to *compute* with multiple measures (e.g.
-death rate = Deaths / Population):
+When a table has multiple content codes (e.g. both Population and Deaths), the default long format has one row per content code per observation. Use `.output = "wide"` to pivot the content codes into separate columns — useful when you want to compute with several measures (e.g. death rate = Deaths / Population):
 
-```{r}
+```{r wide_mock, eval = FALSE}
 demo <- get_data(scb, "TAB638",
   Region = "0180",
   Tid = px_top(5),
@@ -231,13 +259,51 @@ demo <- get_data(scb, "TAB638",
 demo
 ```
 
+```{r wide, echo = FALSE}
+pixieweb:::vd_wide
+```
+
+## Visualising results
+
+To explore results we can plot the downloaded data using `ggplot2`. Note that we convert the time column to a `Date` first — years as integer can produce awkward ggplot breaks like "2020, 2022.5, 2025", and a proper `Date` column lets `scale_x_date()` place tick marks on whole years. This is a pattern you will want to use for any time-series analysis across all three sibling packages (`rKolada`, `pixieweb`, `rTrafa`):
+
+```{r plot, fig.width = 7, fig.height = 4}
+library("ggplot2")
+
+pop_plot <- pop |>
+  # Keep only the Population content code (the table also has
+  # "Population growth"); convert year to Date for nice axis breaks
+  dplyr::filter(ContentsCode == "BE0101N1") |>
+  dplyr::mutate(year = as.Date(paste0(Tid, "-01-01")))
+
+ggplot(pop_plot, aes(year, value, colour = Region_text)) +
+  # One line per region; linetype adds distinction in B/W print
+  geom_line(aes(linetype = Region_text), linewidth = 1) +
+  geom_point(size = 2) +
+  # Years as dates, one tick per year
+  scale_x_date(date_breaks = "1 year", date_labels = "%Y") +
+  scale_y_continuous(labels = scales::comma) +
+  # Colour-blind-friendly palette
+  scale_colour_viridis_d(option = "B", end = 0.8) +
+  labs(
+    title = "Population, Sweden's three most populous municipalities",
+    x = "Year",
+    y = "Population",
+    colour = NULL,
+    linetype = NULL,
+    caption = px_cite(pop)
+  ) +
+  theme_minimal() +
+  theme(legend.position = "top")
+```
+
+> **More on ggplot2?** See <https://ggplot2-book.org/>.
+
 ## Advanced: query composition
 
-For full control over the HTTP request — useful for debugging or when
-you need to inspect/modify the exact query before sending it — use the
-low-level query composers:
+For full control over the HTTP request — useful for debugging or when you need to inspect/modify the exact query before sending it — use the low-level query composers:
 
-```{r}
+```{r compose, eval = FALSE}
 q <- compose_data_query(scb, "TAB638",
   Region = c("0180"),
   ContentsCode = "*",
@@ -254,12 +320,15 @@ raw <- execute_query(scb, q$url, q$body)
 
 ## Saved queries (v2 only)
 
-PX-Web v2 supports server-side stored queries. Useful for recurring
-reports — save a query once, then retrieve it by ID later:
+PX-Web v2 supports server-side stored queries — useful for recurring reports. Save a query once, then retrieve it by ID later:
 
-```{r}
+```{r saved, eval = FALSE}
 # Save a query
-id <- save_query(scb, "TAB638", Region = "0180", Tid = px_top(5), ContentsCode = "*")
+id <- save_query(scb, "TAB638",
+  Region = "0180",
+  Tid = px_top(5),
+  ContentsCode = "*"
+)
 
 # Retrieve later
 get_saved_query(scb, id)
@@ -267,8 +336,26 @@ get_saved_query(scb, id)
 
 ## Citation
 
-Always cite your data sources:
+Always cite your data sources. `px_cite()` generates a citation string from the metadata attached to a downloaded data frame:
 
-```{r}
+```{r cite_mock, eval = FALSE}
 px_cite(pop)
 ```
+
+```{r cite, echo = FALSE}
+pixieweb:::vd_citation
+```
+
+## Related packages
+
+`pixieweb` is part of a family of R packages for Swedish and Nordic
+open statistics that share the same design philosophy:
+
+- [rKolada](https://lchansson.github.io/rKolada/) — R client for the
+  [Kolada](https://kolada.se/) database of Swedish municipal and
+  regional Key Performance Indicators
+- [rTrafa](https://lchansson.github.io/rTrafa/) — R client for the
+  [Trafa](https://api.trafa.se/) API of Swedish transport statistics
+
+See also [pxweb](https://cran.r-project.org/package=pxweb) — the
+original and established PX-Web client for R, by rOpenGov.
