@@ -8,8 +8,8 @@ Description: A pipe-friendly R client for PX-Web statistical APIs.
     Provides a search-then-fetch workflow for discovering and downloading
     data from national statistics agencies (SCB, SSB, Statistics Finland,
     etc.) using a consistent tibble-based interface.
-License: AGPL (>= 3) + file LICENSE
-URL: https://lchansson.github.io/pixieweb, https://github.com/lchansson/pixieweb
+License: AGPL (>= 3)
+URL: https://lchansson.github.io/pixieweb/, https://github.com/lchansson/pixieweb
 BugReports: https://github.com/lchansson/pixieweb/issues
 Depends:
     R (>= 4.1.0)
