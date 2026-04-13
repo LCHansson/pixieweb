@@ -32,7 +32,7 @@ install.packages("pixieweb")
 
 ## PX-Web, a platform for national statistical databases
 
-[PX-Web](https://www.scb.se/px-web) is the statistical database platform used by national statistics agencies across the Nordic countries and beyond. Each agency runs its own instance — Statistics Sweden at [scb.se](https://www.scb.se), Statistics Norway at [ssb.no](https://www.ssb.no), Statistics Finland at [stat.fi](https://www.stat.fi), and many more — but they all share the same underlying API, which comes in two versions:
+[PX-Web](https://www.scb.se/px-web) is the statistical database platform used by national statistics agencies across the Nordic countries and beyond. Each agency runs its own instance — Statistics Sweden at [scb.se](https://www.scb.se), Statistics Norway at [ssb.no](https://www.ssb.no), Statistics Finland at [stat.fi](https://stat.fi/), and many more — but they all share the same underlying API, which comes in two versions:
 
 - **v1** — the legacy API, still widely deployed. POST-only data queries, no search endpoint, table discovery requires walking a folder hierarchy.
 - **v2** — the modern API, launched by SCB in 2024. GET+POST data queries, full-text search, codelists endpoint, server-side saved queries.

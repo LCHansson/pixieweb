@@ -1,3 +1,11 @@
+# Resubmission
+
+In this resubmission I have:
+
+- Fixed a faulty URL in the documentation
+- Removed the 'Remotes' field from DESCRIPTION
+
+
 ## R CMD check results
 
 0 errors | 0 warnings | 0 notes
