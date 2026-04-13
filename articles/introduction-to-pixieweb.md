@@ -37,8 +37,8 @@ used by national statistics agencies across the Nordic countries and
 beyond. Each agency runs its own instance — Statistics Sweden at
 [scb.se](https://www.scb.se), Statistics Norway at
 [ssb.no](https://www.ssb.no), Statistics Finland at
-[stat.fi](https://www.stat.fi), and many more — but they all share the
-same underlying API, which comes in two versions:
+[stat.fi](https://stat.fi/), and many more — but they all share the same
+underlying API, which comes in two versions:
 
 - **v1** — the legacy API, still widely deployed. POST-only data
   queries, no search endpoint, table discovery requires walking a folder
