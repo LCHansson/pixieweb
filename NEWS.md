@@ -1,4 +1,4 @@
-# pixieweb (development version)
+# pixieweb 0.1.1
 
 ## New features
 
@@ -11,6 +11,14 @@
 - **`data_legend()`'s `var_df` argument is now optional.** When
   omitted, the caption contains only the source line derived from the
   `px_source` attribute attached by `get_data()`.
+- **Optional SQLite-backed caching via nordstatExtras.** `get_data()`,
+  `get_tables()`, and `table_enrich()` now accept `cache = TRUE` with a
+  `.sqlite` `cache_location` for shared, multi-process cache backed by
+  the [nordstatExtras](https://github.com/LoveHansson/nordstatExtras)
+  package. Cell-level deduplication for data; per-table incremental
+  enrichment with resume-on-crash and `async = TRUE` support for
+  `table_enrich()`. Falls back to the existing `.rds` cache when
+  nordstatExtras is not installed.
 
 ## Documentation
 
@@ -31,6 +39,7 @@
 - README and all vignettes now cross-link to the sibling packages
   `rKolada` and `rTrafa`, and list `install.packages("pixieweb")` as
   the primary install path.
+- README now includes a section on enhanced caching with nordstatExtras.
 
 # pixieweb 0.1.0
 
