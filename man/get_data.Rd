@@ -15,6 +15,8 @@ get_data(
   simplify = TRUE,
   auto_chunk = TRUE,
   max_results = NULL,
+  cache = FALSE,
+  cache_location = NULL,
   verbose = FALSE
 )
 }
@@ -56,6 +58,14 @@ the limit. A progress bar is shown. Set to \code{FALSE} to error instead.}
 \item{max_results}{Override the API's cell limit. When set, this value is
 used instead of the limit reported by the API's config endpoint. Useful
 for keeping result size manageable or for testing chunking behavior.}
+
+\item{cache}{Logical. If \code{TRUE} and \code{cache_location} points at a SQLite
+file (or an \code{nxt_handle} from nordstatExtras), the data is cached at
+cell granularity in that database. Supports concurrent multi-process
+read/write and cross-query cell reuse. Requires \code{nordstatExtras}.}
+
+\item{cache_location}{Either a path to a \code{.sqlite} file or an \code{nxt_handle}
+from \code{nordstatExtras::nxt_open()}. Ignored unless \code{cache = TRUE}.}
 
 \item{verbose}{Print request details.}
 }

@@ -9,6 +9,7 @@ table_enrich(
   api = NULL,
   cache = FALSE,
   cache_location = pixieweb_cache_dir,
+  async = FALSE,
   verbose = FALSE
 )
 }
@@ -19,10 +20,20 @@ table_enrich(
 stored by \code{\link[=get_tables]{get_tables()}} is used automatically.}
 
 \item{cache}{Logical. If \code{TRUE}, stores the enriched result locally and
-loads it on subsequent calls instead of re-fetching metadata. Useful
-for building local databases or working offline.}
+loads it on subsequent calls instead of re-fetching metadata.}
 
-\item{cache_location}{Directory for cache files. Defaults to \code{\link[=pixieweb_cache_dir]{pixieweb_cache_dir()}}.}
+\item{cache_location}{Either a directory path (legacy \code{.rds} cache), a
+path to a \code{.sqlite} file, or an \code{nxt_handle} from
+\code{nordstatExtras::nxt_open()}. Defaults to \code{\link[=pixieweb_cache_dir]{pixieweb_cache_dir()}}.}
+
+\item{async}{Logical. When \code{TRUE} (and \code{cache_location} is a SQLite
+backend), missing rows are fetched in a background \code{mirai} task;
+\code{table_enrich()} returns immediately with the currently-cached subset
+plus NA placeholders for pending rows. The return value carries
+\code{attr(x, "nxt_pending_ids")} (IDs still fetching) and
+\code{attr(x, "nxt_promise")} (a \code{mirai} task the caller can await or
+bridge to \code{promises::then()}). Ignored when the backend is not
+SQLite or when \code{cache = FALSE}.}
 
 \item{verbose}{Print request details.}
 }
@@ -36,6 +47,16 @@ notes, contents description, contact information, and more. This is
 an extra API call per table, so it's separated from \code{\link[=get_tables]{get_tables()}} to
 give users control over when the cost is incurred.
 }
+\details{
+When \code{cache_location} points at a SQLite file (or \code{nxt_handle} from the
+nordstatExtras package) the cache is \strong{per table} rather than per
+enrich call. That gives three properties you don't get from the legacy
+\code{.rds} path: (1) enrichment results are reused across any
+\code{table_enrich()} call that touches the same \code{table_id}; (2) a long
+enrich run can be interrupted and resumes from where it left off; and
+(3) with \code{async = TRUE}, the call returns immediately with whatever is
+already cached and keeps fetching in the background.
+}
 \examples{
 \donttest{
 scb <- px_api("scb", lang = "en")
@@ -46,8 +67,14 @@ if (px_available(scb)) {
     table_enrich() |>
     table_describe()
 
-  # Cache enriched results for offline use
+  # Cache enriched results for offline use (legacy .rds path)
   get_tables(scb, query = "population", cache = TRUE) |>
     table_enrich(cache = TRUE)
+
+  # Per-table cache in a shared SQLite file
+  handle <- nordstatExtras::nxt_open("cache.sqlite")
+  get_tables(scb, query = "population", cache = TRUE,
+             cache_location = handle) |>
+    table_enrich(cache = TRUE, cache_location = handle)
 }}
 }

@@ -66,6 +66,45 @@ data <- get_data(scb, tables$id[1])
 - **Persistent caching**: Cache responses to disk with `pixieweb_cache_dir()`
 - **v1 and v2 support**: Works with both PX-Web API versions
 
+## Enhanced caching with nordstatExtras
+
+For multi-user web applications or workflows that benefit from a shared,
+persistent cache, pixieweb integrates with the
+[nordstatExtras](https://github.com/LoveHansson/nordstatExtras) package.
+When installed, `get_data()`, `get_tables()`, `table_enrich()`, and
+other functions can write to a shared SQLite file instead of per-session
+`.rds` files:
+
+```r
+# install.packages("devtools")
+devtools::install_github("LoveHansson/nordstatExtras")
+
+library(nordstatExtras)
+handle <- nxt_open("cache.sqlite")
+
+scb <- px_api("scb")
+
+# Metadata and data cached in the same SQLite file
+tables <- get_tables(scb, cache = TRUE, cache_location = handle)
+data <- get_data(scb, "TAB638",
+  Region = c("0180", "1480"),
+  cache = TRUE, cache_location = handle
+)
+
+# table_enrich with per-table caching + async support
+enriched <- table_enrich(tables, cache = TRUE,
+                         cache_location = handle)
+
+nxt_close(handle)
+```
+
+Features include cell-level deduplication across overlapping queries,
+per-table incremental enrichment with resume-on-crash, async background
+fetching via `mirai`, and FTS5-powered typeahead search via
+`nxt_search()`. See the
+[nordstatExtras README](https://github.com/LoveHansson/nordstatExtras)
+for details.
+
 ## Contributing
 
 You are welcome to contribute to the further development of the pixieweb package in any of the following ways:

@@ -43,15 +43,39 @@ get_tables <- function(api,
                        verbose = FALSE) {
   check_px_api(api)
 
-  ch <- cache_handler("tables", cache, cache_location, key_params = list(
+  key <- list(
     alias = api$alias %||% "default",
     lang = api$lang %||% "default",
     query = query %||% "",
     id = paste(sort(id %||% ""), collapse = ","),
     max_results = as.character(max_results %||% ""),
     updated_since = as.character(updated_since %||% "")
-  ))
-  if (ch("discover")) return(ch("load"))
+  )
+
+  # SQLite-backed metadata cache via nordstatExtras. Opt-in when
+  # cache_location is a sqlite target; otherwise the legacy .rds path
+  # is used unchanged.
+  #
+  # NOTE: `updated_since` is a time-relative filter — a cache entry keyed
+  # on updated_since=30 becomes semantically stale as the 30-day window
+  # slides. Callers using updated_since should either use a short ttl_days
+  # or skip the SQLite backend for that specific call.
+  nxt_ch <- NULL
+  ch <- NULL
+  if (isTRUE(cache) && !is.null(cache_location) &&
+      requireNamespace("nordstatExtras", quietly = TRUE) &&
+      nordstatExtras::nxt_is_backend(cache_location)) {
+    nxt_ch <- nordstatExtras::nxt_cache_handler(
+      source = "pixieweb", entity = "tables", cache = TRUE,
+      cache_location = cache_location,
+      kind = "metadata",
+      key_params = key
+    )
+    if (nxt_ch("discover")) return(nxt_ch("load"))
+  } else {
+    ch <- cache_handler("tables", cache, cache_location, key_params = key)
+    if (ch("discover")) return(ch("load"))
+  }
 
   if (api$version == "v2") {
     result <- get_tables_v2(api, query, id, updated_since, max_results, verbose)
@@ -65,6 +89,10 @@ get_tables <- function(api,
   # Attach the API object so downstream functions (table_enrich etc.) can use it
   attr(result, "px_api") <- api
 
+  if (!is.null(nxt_ch)) {
+    nxt_ch("store", result)
+    return(result)
+  }
   ch("store", result)
 }
 
@@ -571,13 +599,31 @@ table_describe <- function(table_df, max_n = 5, format = "inline",
 #' an extra API call per table, so it's separated from [get_tables()] to
 #' give users control over when the cost is incurred.
 #'
+#' When `cache_location` points at a SQLite file (or `nxt_handle` from the
+#' nordstatExtras package) the cache is **per table** rather than per
+#' enrich call. That gives three properties you don't get from the legacy
+#' `.rds` path: (1) enrichment results are reused across any
+#' `table_enrich()` call that touches the same `table_id`; (2) a long
+#' enrich run can be interrupted and resumes from where it left off; and
+#' (3) with `async = TRUE`, the call returns immediately with whatever is
+#' already cached and keeps fetching in the background.
+#'
 #' @param table_df A tibble returned by [get_tables()].
 #' @param api A `<px_api>` object. Optional — if omitted, the API connection
 #'   stored by [get_tables()] is used automatically.
 #' @param cache Logical. If `TRUE`, stores the enriched result locally and
-#'   loads it on subsequent calls instead of re-fetching metadata. Useful
-#'   for building local databases or working offline.
-#' @param cache_location Directory for cache files. Defaults to [pixieweb_cache_dir()].
+#'   loads it on subsequent calls instead of re-fetching metadata.
+#' @param cache_location Either a directory path (legacy `.rds` cache), a
+#'   path to a `.sqlite` file, or an `nxt_handle` from
+#'   `nordstatExtras::nxt_open()`. Defaults to [pixieweb_cache_dir()].
+#' @param async Logical. When `TRUE` (and `cache_location` is a SQLite
+#'   backend), missing rows are fetched in a background `mirai` task;
+#'   `table_enrich()` returns immediately with the currently-cached subset
+#'   plus NA placeholders for pending rows. The return value carries
+#'   `attr(x, "nxt_pending_ids")` (IDs still fetching) and
+#'   `attr(x, "nxt_promise")` (a `mirai` task the caller can await or
+#'   bridge to `promises::then()`). Ignored when the backend is not
+#'   SQLite or when `cache = FALSE`.
 #' @param verbose Print request details.
 #' @return The input tibble with additional columns: `notes`, `contents`,
 #'   `subject_area`, `official_statistics`, `contact`.
@@ -592,12 +638,19 @@ table_describe <- function(table_df, max_n = 5, format = "inline",
 #'     table_enrich() |>
 #'     table_describe()
 #'
-#'   # Cache enriched results for offline use
+#'   # Cache enriched results for offline use (legacy .rds path)
 #'   get_tables(scb, query = "population", cache = TRUE) |>
 #'     table_enrich(cache = TRUE)
+#'
+#'   # Per-table cache in a shared SQLite file
+#'   handle <- nordstatExtras::nxt_open("cache.sqlite")
+#'   get_tables(scb, query = "population", cache = TRUE,
+#'              cache_location = handle) |>
+#'     table_enrich(cache = TRUE, cache_location = handle)
 #' }}
 table_enrich <- function(table_df, api = NULL, cache = FALSE,
-                         cache_location = pixieweb_cache_dir, verbose = FALSE) {
+                         cache_location = pixieweb_cache_dir,
+                         async = FALSE, verbose = FALSE) {
   if (is.null(api)) {
     api <- attr(table_df, "px_api")
   }
@@ -612,7 +665,245 @@ table_enrich <- function(table_df, api = NULL, cache = FALSE,
     return(table_df)
   }
 
-  # Cache: key is based on sorted table IDs for reproducibility
+  backend_is_sqlite <- isTRUE(cache) && !is.null(cache_location) &&
+    requireNamespace("nordstatExtras", quietly = TRUE) &&
+    nordstatExtras::nxt_is_backend(cache_location)
+
+  if (!backend_is_sqlite) {
+    # Legacy .rds whole-tibble path — unchanged behavior.
+    return(table_enrich_legacy(table_df, api, cache, cache_location, verbose))
+  }
+
+  # v1 metadata is empty — just stamp the empty columns and return. The
+  # per-table cache path isn't useful when there's nothing to fetch.
+  if (api$version != "v2") {
+    return(enrich_v1_empty(table_df, api))
+  }
+
+  n <- nrow(table_df)
+  ids <- table_df$id
+  alias <- api$alias %||% "default"
+  lang <- api$lang %||% "default"
+
+  make_ch <- function(tid) {
+    nordstatExtras::nxt_cache_handler(
+      source = "pixieweb", entity = "enriched_row",
+      cache = TRUE, cache_location = cache_location,
+      kind = "metadata",
+      key_params = list(alias = alias, lang = lang, table_id = tid)
+    )
+  }
+
+  # Classify rows into cached / missing
+  cached_rows <- vector("list", n)
+  missing_ids <- character(0)
+  for (i in seq_len(n)) {
+    ch <- make_ch(ids[i])
+    if (ch("discover")) {
+      cached_rows[[i]] <- ch("load")
+    } else {
+      missing_ids <- c(missing_ids, ids[i])
+    }
+  }
+
+  if (length(missing_ids) == 0) {
+    return(assemble_enriched(table_df, cached_rows, api))
+  }
+
+  if (isTRUE(async)) {
+    # Resolve to an explicit path so the background worker can re-open
+    # the cache with its own connection.
+    path <- if (inherits(cache_location, "nxt_handle")) {
+      cache_location$path
+    } else if (is.function(cache_location)) {
+      cache_location()
+    } else {
+      cache_location
+    }
+
+    task <- launch_background_enrich(api, missing_ids, path)
+    partial <- assemble_enriched(table_df, cached_rows, api,
+                                 pending_ids = missing_ids)
+    attr(partial, "nxt_pending_ids") <- missing_ids
+    attr(partial, "nxt_promise") <- task
+    return(partial)
+  }
+
+  # Sync path — fetch missing inline, cache per table as we go
+  max_calls <- api$config$max_calls %||% 30
+  time_window <- api$config$time_window %||% 10
+  delay <- time_window / max_calls
+
+  if (length(missing_ids) > 1) {
+    cli::cli_alert_info("Enriching {length(missing_ids)} table(s) with metadata.")
+    cli::cli_progress_bar("Fetching metadata",
+                          total = length(missing_ids),
+                          .envir = environment())
+  }
+
+  for (i in seq_along(missing_ids)) {
+    tid <- missing_ids[i]
+    row <- fetch_single_enriched(api, tid, verbose)
+    ch <- make_ch(tid)
+    ch("store", row)
+    cached_rows[[match(tid, ids)]] <- row
+
+    if (length(missing_ids) > 1) {
+      cli::cli_progress_update(.envir = environment())
+      if (i < length(missing_ids)) Sys.sleep(delay)
+    }
+  }
+  if (length(missing_ids) > 1) cli::cli_progress_done(.envir = environment())
+
+  assemble_enriched(table_df, cached_rows, api)
+}
+
+#' Fetch a single enriched-row tibble for one table_id.
+#'
+#' Extracted from the original `table_enrich()` loop body so both the sync
+#' path and the mirai background path can call it. Returns a one-row tibble
+#' with the enrichment columns (notes, contents, subject_area,
+#' official_statistics, contact). On API failure returns a row of NA
+#' placeholders rather than aborting — the caller can decide what to do
+#' with a partial enrich run.
+#'
+#' @keywords internal
+#' @export
+fetch_single_enriched <- function(api, tid, verbose = FALSE) {
+  raw <- fetch_table_metadata(api, tid, verbose)
+
+  if (is.null(raw)) {
+    return(tibble::tibble(
+      notes = list(character()),
+      contents = NA_character_,
+      subject_area = NA_character_,
+      official_statistics = NA,
+      contact = NA_character_
+    ))
+  }
+
+  px <- raw$extension$px %||% list()
+  contacts <- raw$extension$contact %||% list()
+  contact_str <- if (length(contacts) > 0) {
+    paste0(
+      contacts[[1]]$name %||% "",
+      if (!is.null(contacts[[1]]$organization)) {
+        paste0(", ", contacts[[1]]$organization)
+      } else {
+        ""
+      }
+    )
+  } else {
+    NA_character_
+  }
+
+  tibble::tibble(
+    notes = list(raw$note %||% character()),
+    contents = px$contents %||% NA_character_,
+    subject_area = px$`subject-area` %||% NA_character_,
+    official_statistics = px$`official-statistics` %||% NA,
+    contact = contact_str
+  )
+}
+
+# Bind per-row enrichment results onto the input table_df and re-attach the
+# px_api attribute. If `pending_ids` is non-empty, missing rows get NA
+# placeholders in the enrichment columns.
+assemble_enriched <- function(table_df, cached_rows, api,
+                              pending_ids = character(0)) {
+  n <- nrow(table_df)
+  notes_col <- vector("list", n)
+  contents_col <- character(n)
+  subject_area_col <- character(n)
+  official_col <- logical(n)
+  contact_col <- character(n)
+
+  for (i in seq_len(n)) {
+    row <- cached_rows[[i]]
+    if (is.null(row)) {
+      notes_col[[i]] <- character()
+      contents_col[i] <- NA_character_
+      subject_area_col[i] <- NA_character_
+      official_col[i] <- NA
+      contact_col[i] <- NA_character_
+    } else {
+      notes_col[[i]] <- row$notes[[1]]
+      contents_col[i] <- row$contents
+      subject_area_col[i] <- row$subject_area
+      official_col[i] <- row$official_statistics
+      contact_col[i] <- row$contact
+    }
+  }
+
+  table_df$notes <- notes_col
+  table_df$contents <- contents_col
+  table_df$subject_area <- subject_area_col
+  table_df$official_statistics <- official_col
+  table_df$contact <- contact_col
+  attr(table_df, "px_api") <- api
+  table_df
+}
+
+# Fire off a mirai background task that loops over `tids`, fetching each
+# table's enriched row and writing to the shared SQLite file. Rate limit is
+# respected inside the worker via Sys.sleep. Returns the mirai task object
+# so the caller can attach as `attr(x, "nxt_promise")` and the app can
+# bridge to promises::then() or call mirai::call_mirai() to block.
+launch_background_enrich <- function(api, tids, path) {
+  if (!requireNamespace("mirai", quietly = TRUE)) {
+    abort(c(
+      "table_enrich(async = TRUE) requires the mirai package.",
+      i = "Install it with install.packages('mirai')."
+    ))
+  }
+
+  max_calls <- api$config$max_calls %||% 30
+  time_window <- api$config$time_window %||% 10
+  delay <- time_window / max_calls
+  alias <- api$alias %||% "default"
+  lang <- api$lang %||% "default"
+
+  mirai::mirai(
+    enrich_worker(api, tids, path, alias, lang, delay),
+    enrich_worker = enrich_worker,
+    api = api, tids = tids, path = path,
+    alias = alias, lang = lang, delay = delay
+  )
+}
+
+# Worker function for the mirai background enrich. Written as a standalone
+# function so mirai can serialize it cleanly (no package-scope closure
+# captures). Inside the worker it loads the two package namespaces and
+# looks up the actual fetch function via getFromNamespace().
+enrich_worker <- function(api, tids, path, alias, lang, delay) {
+  loadNamespace("pixieweb")
+  loadNamespace("nordstatExtras")
+
+  fetch <- utils::getFromNamespace("fetch_single_enriched", "pixieweb")
+
+  h <- nordstatExtras::nxt_open(path)
+  on.exit(nordstatExtras::nxt_close(h), add = TRUE)
+
+  for (i in seq_along(tids)) {
+    tid <- tids[i]
+    row <- fetch(api, tid, FALSE)
+    ch <- nordstatExtras::nxt_cache_handler(
+      source = "pixieweb", entity = "enriched_row",
+      cache = TRUE, cache_location = h,
+      kind = "metadata",
+      key_params = list(alias = alias, lang = lang, table_id = tid)
+    )
+    ch("store", row)
+    if (i < length(tids)) Sys.sleep(delay)
+  }
+  length(tids)
+}
+
+# The original .rds-backed whole-tibble enrich path. Kept verbatim from
+# before the SQLite integration so users who pass a directory path instead
+# of a sqlite file still get the exact behavior they had.
+table_enrich_legacy <- function(table_df, api, cache, cache_location,
+                                verbose = FALSE) {
   ch <- cache_handler("enriched", cache, cache_location, key_params = list(
     alias = api$alias %||% "default",
     lang = api$lang %||% "default",
@@ -620,31 +911,9 @@ table_enrich <- function(table_df, api = NULL, cache = FALSE,
   ))
   if (ch("discover")) return(ch("load"))
 
-  # v1 metadata only provides {title, variables} — no notes, contents,
-  # contact info, or other enrichment fields. Still add the columns
-  # (for consistency and bind_rows with v2 data) but warn the user.
   if (api$version != "v2") {
-    hints <- "Columns are added for compatibility but will be empty."
-    if (v1_api_has_v2(api)) {
-      hints <- c(hints, paste0(
-        "For richer metadata, use the v2 API: ",
-        "`px_api(\"", api$alias, "\", version = \"v2\")`"
-      ))
-    }
-    warn(c(
-      "PX-Web v1 metadata does not include enrichment fields (notes, contents, contact, etc.).",
-      stats::setNames(hints, rep("i", length(hints)))
-    ))
-    # Add empty columns without making API calls
-    n <- nrow(table_df)
-    table_df$notes <- vector("list", n)
-    for (i in seq_len(n)) table_df$notes[[i]] <- character()
-    table_df$contents <- NA_character_
-    table_df$subject_area <- NA_character_
-    table_df$official_statistics <- NA
-    table_df$contact <- NA_character_
-    attr(table_df, "px_api") <- api
-    return(ch("store", table_df))
+    result <- enrich_v1_empty(table_df, api)
+    return(ch("store", result))
   }
 
   n <- nrow(table_df)
@@ -654,7 +923,8 @@ table_enrich <- function(table_df, api = NULL, cache = FALSE,
 
   if (n > 1) {
     cli::cli_alert_info("Enriching {n} table(s) with metadata.")
-    cli::cli_progress_bar("Fetching metadata", total = n, .envir = environment())
+    cli::cli_progress_bar("Fetching metadata", total = n,
+                          .envir = environment())
   }
 
   notes_col <- vector("list", n)
@@ -665,39 +935,18 @@ table_enrich <- function(table_df, api = NULL, cache = FALSE,
 
   for (i in seq_len(n)) {
     tid <- table_df$id[i]
-    raw <- fetch_table_metadata(api, tid, verbose)
-
-    if (!is.null(raw)) {
-      notes_col[[i]] <- raw$note %||% character()
-
-      px <- raw$extension$px %||% list()
-      contents_col[i] <- px$contents %||% NA_character_
-      subject_area_col[i] <- px$`subject-area` %||% NA_character_
-      official_col[i] <- px$`official-statistics` %||% NA
-
-      contacts <- raw$extension$contact %||% list()
-      if (length(contacts) > 0) {
-        contact_col[i] <- paste0(
-          contacts[[1]]$name %||% "",
-          if (!is.null(contacts[[1]]$organization)) paste0(", ", contacts[[1]]$organization) else ""
-        )
-      } else {
-        contact_col[i] <- NA_character_
-      }
-    } else {
-      notes_col[[i]] <- character()
-      contents_col[i] <- NA_character_
-      subject_area_col[i] <- NA_character_
-      official_col[i] <- NA
-      contact_col[i] <- NA_character_
-    }
+    row <- fetch_single_enriched(api, tid, verbose)
+    notes_col[[i]] <- row$notes[[1]]
+    contents_col[i] <- row$contents
+    subject_area_col[i] <- row$subject_area
+    official_col[i] <- row$official_statistics
+    contact_col[i] <- row$contact
 
     if (n > 1) {
       cli::cli_progress_update(.envir = environment())
       if (i < n) Sys.sleep(delay)
     }
   }
-
   if (n > 1) cli::cli_progress_done(.envir = environment())
 
   table_df$notes <- notes_col
@@ -705,11 +954,35 @@ table_enrich <- function(table_df, api = NULL, cache = FALSE,
   table_df$subject_area <- subject_area_col
   table_df$official_statistics <- official_col
   table_df$contact <- contact_col
-
-  # Preserve the API attribute
   attr(table_df, "px_api") <- api
 
   ch("store", table_df)
+}
+
+# Produce an enriched tibble with empty columns for v1 APIs (which don't
+# expose enrichment metadata at all). Centralized so both the SQLite and
+# .rds paths warn + populate the same way.
+enrich_v1_empty <- function(table_df, api) {
+  hints <- "Columns are added for compatibility but will be empty."
+  if (v1_api_has_v2(api)) {
+    hints <- c(hints, paste0(
+      "For richer metadata, use the v2 API: ",
+      "`px_api(\"", api$alias, "\", version = \"v2\")`"
+    ))
+  }
+  warn(c(
+    "PX-Web v1 metadata does not include enrichment fields (notes, contents, contact, etc.).",
+    stats::setNames(hints, rep("i", length(hints)))
+  ))
+  n <- nrow(table_df)
+  table_df$notes <- vector("list", n)
+  for (i in seq_len(n)) table_df$notes[[i]] <- character()
+  table_df$contents <- NA_character_
+  table_df$subject_area <- NA_character_
+  table_df$official_statistics <- NA
+  table_df$contact <- NA_character_
+  attr(table_df, "px_api") <- api
+  table_df
 }
 
 #' Create a short stable hash from a vector of table IDs (for cache keys)

@@ -25,6 +25,7 @@ Suggests:
     ggplot2,
     httptest2,
     knitr,
+    nordstatExtras,
     pxweb,
     rmarkdown,
     testthat (>= 3.0.0),

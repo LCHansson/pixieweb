@@ -30,6 +30,12 @@
 #' @param max_results Override the API's cell limit. When set, this value is
 #'   used instead of the limit reported by the API's config endpoint. Useful
 #'   for keeping result size manageable or for testing chunking behavior.
+#' @param cache Logical. If `TRUE` and `cache_location` points at a SQLite
+#'   file (or an `nxt_handle` from nordstatExtras), the data is cached at
+#'   cell granularity in that database. Supports concurrent multi-process
+#'   read/write and cross-query cell reuse. Requires `nordstatExtras`.
+#' @param cache_location Either a path to a `.sqlite` file or an `nxt_handle`
+#'   from `nordstatExtras::nxt_open()`. Ignored unless `cache = TRUE`.
 #' @param verbose Print request details.
 #' @return A tibble of data. See Details for column structure.
 #'
@@ -74,6 +80,8 @@ get_data <- function(api,
                      simplify = TRUE,
                      auto_chunk = TRUE,
                      max_results = NULL,
+                     cache = FALSE,
+                     cache_location = NULL,
                      verbose = FALSE) {
   check_px_api(api)
   stopifnot(.output %in% c("long", "wide"))
@@ -119,6 +127,30 @@ get_data <- function(api,
 
     stopifnot(is.character(table_id), length(table_id) == 1)
     selections <- list(...)
+  }
+
+  # SQLite-backed cell cache via nordstatExtras. Key is the full selection
+  # dict + output/simplify options + api alias.
+  nxt_ch <- NULL
+  if (isTRUE(cache) && !is.null(cache_location) &&
+      requireNamespace("nordstatExtras", quietly = TRUE) &&
+      nordstatExtras::nxt_is_backend(cache_location)) {
+    alias <- api$alias %||% "default"
+    nxt_ch <- nordstatExtras::nxt_cache_handler(
+      source         = "pixieweb",
+      entity         = "data",
+      cache          = TRUE,
+      cache_location = cache_location,
+      key_params     = c(
+        list(alias = alias, table_id = table_id,
+             .output = .output, simplify = simplify,
+             .codelist_keys = paste(names(.codelist), collapse = ","),
+             .codelist_vals = paste(unlist(.codelist), collapse = ",")),
+        selections
+      ),
+      normalize_extra = list(alias = alias)
+    )
+    if (nxt_ch("discover")) return(nxt_ch("load"))
   }
 
   # Check if chunking is needed
@@ -177,6 +209,10 @@ get_data <- function(api,
     table_id = table_id,
     fetched = Sys.time()
   )
+
+  if (!is.null(nxt_ch) && !is.null(result) && nrow(result) > 0) {
+    nxt_ch("store", result)
+  }
 
   result
 }
