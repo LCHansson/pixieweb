@@ -13,7 +13,7 @@
 - `data_legend()` gains `lang`, `omit_varname`, `omit_desc` arguments
   and an optional `var_df` parameter.
 - Optional SQLite-backed caching via nordstatExtras (in Suggests, available
-  on GitHub at https://github.com/LoveHansson/nordstatExtras). `get_data()`,
+  on GitHub at https://github.com/LCHansson/nordstatExtras). `get_data()`,
   `get_tables()`, and `table_enrich()` support a shared SQLite cache with
   cell-level deduplication and async enrichment. All integration points
   use `requireNamespace()` with graceful fallback to standard `.rds` file

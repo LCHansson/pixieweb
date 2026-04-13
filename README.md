@@ -70,14 +70,14 @@ data <- get_data(scb, tables$id[1])
 
 For multi-user web applications or workflows that benefit from a shared,
 persistent cache, pixieweb integrates with the
-[nordstatExtras](https://github.com/LoveHansson/nordstatExtras) package.
+[nordstatExtras](https://github.com/LCHansson/nordstatExtras) package.
 When installed, `get_data()`, `get_tables()`, `table_enrich()`, and
 other functions can write to a shared SQLite file instead of per-session
 `.rds` files:
 
 ```r
 # install.packages("devtools")
-devtools::install_github("LoveHansson/nordstatExtras")
+devtools::install_github("LCHansson/nordstatExtras")
 
 library(nordstatExtras)
 handle <- nxt_open("cache.sqlite")
@@ -102,7 +102,7 @@ Features include cell-level deduplication across overlapping queries,
 per-table incremental enrichment with resume-on-crash, async background
 fetching via `mirai`, and FTS5-powered typeahead search via
 `nxt_search()`. See the
-[nordstatExtras README](https://github.com/LoveHansson/nordstatExtras)
+[nordstatExtras README](https://github.com/LCHansson/nordstatExtras)
 for details.
 
 ## Contributing

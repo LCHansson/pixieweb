@@ -14,7 +14,7 @@
 - **Optional SQLite-backed caching via nordstatExtras.** `get_data()`,
   `get_tables()`, and `table_enrich()` now accept `cache = TRUE` with a
   `.sqlite` `cache_location` for shared, multi-process cache backed by
-  the [nordstatExtras](https://github.com/LoveHansson/nordstatExtras)
+  the [nordstatExtras](https://github.com/LCHansson/nordstatExtras)
   package. Cell-level deduplication for data; per-table incremental
   enrichment with resume-on-crash and `async = TRUE` support for
   `table_enrich()`. Falls back to the existing `.rds` cache when
