@@ -25,9 +25,11 @@ Suggests:
     ggplot2,
     httptest2,
     knitr,
+    mirai,
     nordstatExtras,
     pxweb,
     rmarkdown,
+    scales,
     testthat (>= 3.0.0),
     withr
 VignetteBuilder: knitr

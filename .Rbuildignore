@@ -12,3 +12,5 @@
 ^CRAN-SUBMISSION$
 ^CLAUDE\.md$
 ^README\.Rmd$
+^data-raw$
+^tmp$
