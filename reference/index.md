@@ -87,7 +87,7 @@ Post-processing helpers for downloaded data.
 - [`data_minimize()`](https://lchansson.github.io/pixieweb/reference/data_minimize.md)
   : Remove monotonous columns from a data tibble
 - [`data_legend()`](https://lchansson.github.io/pixieweb/reference/data_legend.md)
-  : Generate a plot legend from variable metadata
+  : Generate a source caption for plots
 - [`data_comments()`](https://lchansson.github.io/pixieweb/reference/data_comments.md)
   : Extract comments from data
 - [`px_cite()`](https://lchansson.github.io/pixieweb/reference/px_cite.md)

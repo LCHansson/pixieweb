@@ -1,7 +1,6 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://lchansson.github.io/pixieweb/404.html</loc></url>
 <url><loc>https://lchansson.github.io/pixieweb/CODE_OF_CONDUCT.html</loc></url>
-<url><loc>https://lchansson.github.io/pixieweb/LICENSE-text.html</loc></url>
 <url><loc>https://lchansson.github.io/pixieweb/LICENSE.html</loc></url>
 <url><loc>https://lchansson.github.io/pixieweb/articles/a-quickstart.html</loc></url>
 <url><loc>https://lchansson.github.io/pixieweb/articles/index.html</loc></url>
@@ -19,6 +18,7 @@
 <url><loc>https://lchansson.github.io/pixieweb/reference/data_legend.html</loc></url>
 <url><loc>https://lchansson.github.io/pixieweb/reference/data_minimize.html</loc></url>
 <url><loc>https://lchansson.github.io/pixieweb/reference/execute_query.html</loc></url>
+<url><loc>https://lchansson.github.io/pixieweb/reference/fetch_single_enriched.html</loc></url>
 <url><loc>https://lchansson.github.io/pixieweb/reference/get_codelists.html</loc></url>
 <url><loc>https://lchansson.github.io/pixieweb/reference/get_data.html</loc></url>
 <url><loc>https://lchansson.github.io/pixieweb/reference/get_saved_query.html</loc></url>

@@ -13,7 +13,7 @@ give users control over when the cost is incurred."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">pixieweb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,6 +59,7 @@ give users control over when the cost is incurred.</p>
 <span>  api <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  cache <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  cache_location <span class="op">=</span> <span class="va">pixieweb_cache_dir</span>,</span>
+<span>  async <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -78,12 +79,24 @@ stored by <code><a href="get_tables.html">get_tables()</a></code> is used automa
 
 <dt id="arg-cache">cache<a class="anchor" aria-label="anchor" href="#arg-cache"></a></dt>
 <dd><p>Logical. If <code>TRUE</code>, stores the enriched result locally and
-loads it on subsequent calls instead of re-fetching metadata. Useful
-for building local databases or working offline.</p></dd>
+loads it on subsequent calls instead of re-fetching metadata.</p></dd>
 
 
 <dt id="arg-cache-location">cache_location<a class="anchor" aria-label="anchor" href="#arg-cache-location"></a></dt>
-<dd><p>Directory for cache files. Defaults to <code><a href="pixieweb_cache_dir.html">pixieweb_cache_dir()</a></code>.</p></dd>
+<dd><p>Either a directory path (legacy <code>.rds</code> cache), a
+path to a <code>.sqlite</code> file, or an <code>nxt_handle</code> from
+<code><a href="https://rdrr.io/pkg/nordstatExtras/man/nxt_open.html" class="external-link">nordstatExtras::nxt_open()</a></code>. Defaults to <code><a href="pixieweb_cache_dir.html">pixieweb_cache_dir()</a></code>.</p></dd>
+
+
+<dt id="arg-async">async<a class="anchor" aria-label="anchor" href="#arg-async"></a></dt>
+<dd><p>Logical. When <code>TRUE</code> (and <code>cache_location</code> is a SQLite
+backend), missing rows are fetched in a background <code>mirai</code> task;
+<code>table_enrich()</code> returns immediately with the currently-cached subset
+plus NA placeholders for pending rows. The return value carries
+<code>attr(x, "nxt_pending_ids")</code> (IDs still fetching) and
+<code>attr(x, "nxt_promise")</code> (a <code>mirai</code> task the caller can await or
+bridge to <code>promises::then()</code>). Ignored when the backend is not
+SQLite or when <code>cache = FALSE</code>.</p></dd>
 
 
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
@@ -94,6 +107,17 @@ for building local databases or working offline.</p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>The input tibble with additional columns: <code>notes</code>, <code>contents</code>,
 <code>subject_area</code>, <code>official_statistics</code>, <code>contact</code>.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>When <code>cache_location</code> points at a SQLite file (or <code>nxt_handle</code> from the
+nordstatExtras package) the cache is <strong>per table</strong> rather than per
+enrich call. That gives three properties you don't get from the legacy
+<code>.rds</code> path: (1) enrichment results are reused across any
+<code>table_enrich()</code> call that touches the same <code>table_id</code>; (2) a long
+enrich run can be interrupted and resumes from where it left off; and
+(3) with <code>async = TRUE</code>, the call returns immediately with whatever is
+already cached and keeps fetching in the background.</p>
     </div>
 
     <div class="section level2">
@@ -107,11 +131,19 @@ for building local databases or working offline.</p></dd>
 <span class="r-in"><span>    <span class="fu">table_enrich</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>    <span class="fu"><a href="table_describe.html">table_describe</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span>  <span class="co"># Cache enriched results for offline use</span></span></span>
+<span class="r-in"><span>  <span class="co"># Cache enriched results for offline use (legacy .rds path)</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="get_tables.html">get_tables</a></span><span class="op">(</span><span class="va">scb</span>, query <span class="op">=</span> <span class="st">"population"</span>, cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>    <span class="fu">table_enrich</span><span class="op">(</span>cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="co"># Per-table cache in a shared SQLite file</span></span></span>
+<span class="r-in"><span>  <span class="va">handle</span> <span class="op">&lt;-</span> <span class="fu">nordstatExtras</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/nordstatExtras/man/nxt_open.html" class="external-link">nxt_open</a></span><span class="op">(</span><span class="st">"cache.sqlite"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="get_tables.html">get_tables</a></span><span class="op">(</span><span class="va">scb</span>, query <span class="op">=</span> <span class="st">"population"</span>, cache <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>             cache_location <span class="op">=</span> <span class="va">handle</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>    <span class="fu">table_enrich</span><span class="op">(</span>cache <span class="op">=</span> <span class="cn">TRUE</span>, cache_location <span class="op">=</span> <span class="va">handle</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span><span class="co"># }</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Enriching 5 table(s) with metadata.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■       </span>  80% | ETA:  1s</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ </span> 100% | ETA:  0s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ── TAB1743: Income standard (median) for families with children aged 0-17 living at home, by population groups. Year 1995-2013  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Contents: Income standard (median) for families with children living at home aged 0-17</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Subject: Living conditions</span>
@@ -120,7 +152,7 @@ for building local databases or working offline.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Category: public</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Variables: population group, observations, year</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Source: Statistics Sweden</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Contact: Johan Lindberg, Statistics Sweden</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Contact: Nikolaus Koutakis, Statistics Sweden</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Official statistics: Yes </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ── TAB934: Family´s disposable income per consumption unit in SEK thousands. Children in families living at home aged 0-17, by population groups. Year 1995-2013  </span>
@@ -131,7 +163,7 @@ for building local databases or working offline.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Category: public</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Variables: population group, observations, year</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Source: Statistics Sweden</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Contact: Johan Lindberg, Statistics Sweden</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Contact: Nikolaus Koutakis, Statistics Sweden</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Official statistics: Yes </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ── TAB4552: Population connected to public network. Year 1960-2023 ────────────── </span>
@@ -162,11 +194,11 @@ for building local databases or working offline.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     -Population by region and source of water.  -Population by region and</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     type of wastewater disposal methods. </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ── TAB6473: Population statistics by region and sex.  Month 2025M01-2026M01 ───── </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ── TAB6473: Population statistics by region and sex.  Month 2025M01-2026M02 ───── </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Contents: Population</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Subject: Population</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Period: 2025M01 – 2026M01 (Monthly)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Updated: 2026-03-10T07:00:00Z</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Period: 2025M01 – 2026M02 (Monthly)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Updated: 2026-04-10T06:00:00Z</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Category: public</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Variables: region, population changes, sex, observations, month</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Source: Statistics Sweden</span>
@@ -246,22 +278,347 @@ for building local databases or working offline.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     statistics by region and sex. Year 2025--&lt;/a&gt; </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Enriching 100 table(s) with metadata.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■                              </span>   3% | ETA: 35s</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■                            </span>   9% | ETA: 40s</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■                           </span>  15% | ETA: 39s</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■                         </span>  21% | ETA: 36s</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■                       </span>  28% | ETA: 33s</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■■                     </span>  34% | ETA: 31s</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■■■■                   </span>  40% | ETA: 28s</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■■■■■■                 </span>  47% | ETA: 25s</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■               </span>  53% | ETA: 22s</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■             </span>  59% | ETA: 19s</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■           </span>  66% | ETA: 16s</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■         </span>  72% | ETA: 13s</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■        </span>  78% | ETA: 10s</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■      </span>  84% | ETA:  8s</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■    </span>  90% | ETA:  5s</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■   </span>  94% | ETA:  3s</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■                              </span>   3% | ETA: 36s</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■                             </span>   7% | ETA: 45s</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■                            </span>  11% | ETA:  1m</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■                          </span>  16% | ETA:  1m</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■                         </span>  19% | ETA:  1m</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■                        </span>  23% | ETA:  1m</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■                      </span>  29% | ETA: 46s</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■■                     </span>  34% | ETA: 42s</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■■■■                   </span>  39% | ETA: 38s</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■■■■■                  </span>  43% | ETA: 36s</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■■■■■■                 </span>  47% | ETA: 34s</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■               </span>  52% | ETA: 31s</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■              </span>  56% | ETA: 29s</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■             </span>  60% | ETA: 26s</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■            </span>  64% | ETA: 24s</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■           </span>  68% | ETA: 21s</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■         </span>  72% | ETA: 19s</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■        </span>  77% | ETA: 15s</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■      </span>  82% | ETA: 12s</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■     </span>  86% | ETA:  9s</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■    </span>  90% | ETA:  7s</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■   </span>  93% | ETA:  5s</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  </span>  98% | ETA:  1s</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ </span> 100% | ETA:  0s</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Enriching 100 table(s) with metadata.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■                              </span>   3% | ETA: 37s</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■                            </span>   9% | ETA: 41s</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■                           </span>  15% | ETA: 40s</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■                        </span>  22% | ETA: 37s</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■                       </span>  28% | ETA: 34s</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■■                     </span>  34% | ETA: 32s</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■■■■                   </span>  40% | ETA: 29s</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■■■■■■                 </span>  46% | ETA: 26s</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■               </span>  52% | ETA: 23s</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■             </span>  59% | ETA: 20s</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■           </span>  65% | ETA: 17s</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■          </span>  71% | ETA: 14s</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■        </span>  77% | ETA: 11s</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■      </span>  83% | ETA:  8s</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■    </span>  89% | ETA:  5s</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■   </span>  95% | ETA:  2s</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `description`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `id`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `title`.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Fetching metadata <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ </span> 100% | ETA:  0s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 100 × 18</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    id      title description category updated first_period last_period time_unit</span>
@@ -269,7 +626,7 @@ for building local databases or working offline.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> TAB1743 Inco… <span style="color: #949494;">""</span>          public   2015-1… 1995         2013        Annual   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> TAB934  Fami… <span style="color: #949494;">""</span>          public   2015-1… 1995         2013        Annual   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> TAB4552 Popu… <span style="color: #949494;">""</span>          public   2025-0… 1960         2023        Annual   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> TAB6473 Popu… <span style="color: #949494;">""</span>          public   2026-0… 2025M01      2026M01     Monthly  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> TAB6473 Popu… <span style="color: #949494;">""</span>          public   2026-0… 2025M01      2026M02     Monthly  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> TAB1625 Popu… <span style="color: #949494;">""</span>          public   2025-0… 2000M01      2024M12     Monthly  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> TAB6481 Popu… <span style="color: #949494;">""</span>          public   2026-0… 2025         2025        Annual   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> TAB5169 Popu… <span style="color: #949494;">""</span>          public   2025-0… 2000         2024        Annual   </span>

@@ -1,6 +1,60 @@
 # Changelog
 
+## pixieweb 0.1.1
+
+### New features
+
+- **[`data_legend()`](https://lchansson.github.io/pixieweb/reference/data_legend.md)
+  gains `lang`, `omit_varname` and `omit_desc` arguments**, mirroring
+  the same API in the sibling package `rTrafa`. `lang` (default `"EN"`,
+  settable via `getOption("pixieweb.lang", "EN")`) toggles the source
+  prefix between `"Source: …, table X"` and `"Källa: …, tabell X"`.
+  `omit_varname` drops the raw variable codes from the variable list;
+  `omit_desc` shows only the codes.
+- **[`data_legend()`](https://lchansson.github.io/pixieweb/reference/data_legend.md)’s
+  `var_df` argument is now optional.** When omitted, the caption
+  contains only the source line derived from the `px_source` attribute
+  attached by
+  [`get_data()`](https://lchansson.github.io/pixieweb/reference/get_data.md).
+- **Optional SQLite-backed caching via nordstatExtras.**
+  [`get_data()`](https://lchansson.github.io/pixieweb/reference/get_data.md),
+  [`get_tables()`](https://lchansson.github.io/pixieweb/reference/get_tables.md),
+  and
+  [`table_enrich()`](https://lchansson.github.io/pixieweb/reference/table_enrich.md)
+  now accept `cache = TRUE` with a `.sqlite` `cache_location` for
+  shared, multi-process cache backed by the
+  [nordstatExtras](https://github.com/LCHansson/nordstatExtras) package.
+  Cell-level deduplication for data; per-table incremental enrichment
+  with resume-on-crash and `async = TRUE` support for
+  [`table_enrich()`](https://lchansson.github.io/pixieweb/reference/table_enrich.md).
+  Falls back to the existing `.rds` cache when nordstatExtras is not
+  installed.
+
+### Documentation
+
+- **Vignette data is now pre-cached on disk** via
+  `data-raw/vignette-data.R` and `R/sysdata.rda`, mirroring the approach
+  used in `rKolada` and `rTrafa`. Vignettes render offline and show real
+  API output for tables, variables, prepared queries, codelists and
+  plots.
+- **Introduction vignette rewritten**: the `Kolada`-comparison table in
+  the “data model” section is replaced with a dedicated, pedagogical
+  explanation of the PX-Web data cube (API → table → variables → content
+  codes → codelists → data), following the same structure as the
+  `rKolada` and `rTrafa` introduction vignettes.
+- Vignette plots now convert `Tid` to `Date` before plotting and use
+  `scale_x_date(date_breaks = "1 year", date_labels = "%Y")`, so axis
+  breaks land on whole years rather than on decimal years like
+  `2020, 2022.5, 2025`. This pattern is explained inline and is
+  consistent with the sibling packages `rKolada` and `rTrafa`.
+- README and all vignettes now cross-link to the sibling packages
+  `rKolada` and `rTrafa`, and list `install.packages("pixieweb")` as the
+  primary install path.
+- README now includes a section on enhanced caching with nordstatExtras.
+
 ## pixieweb 0.1.0
+
+CRAN release: 2026-03-26
 
 Initial CRAN release.
 

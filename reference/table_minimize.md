@@ -37,7 +37,7 @@ if (px_available(scb)) {
 #>  1 TAB1… Inco… 2015-1… 1995         2013        Annual    <list>    LE          
 #>  2 TAB9… Fami… 2015-1… 1995         2013        Annual    <list>    LE          
 #>  3 TAB4… Popu… 2025-0… 1960         2023        Annual    <list>    MI          
-#>  4 TAB6… Popu… 2026-0… 2025M01      2026M01     Monthly   <list>    BE          
+#>  4 TAB6… Popu… 2026-0… 2025M01      2026M02     Monthly   <list>    BE          
 #>  5 TAB1… Popu… 2025-0… 2000M01      2024M12     Monthly   <list>    BE          
 #>  6 TAB6… Popu… 2026-0… 2025         2025        Annual    <list>    BE          
 #>  7 TAB5… Popu… 2025-0… 2000         2024        Annual    <list>    BE          

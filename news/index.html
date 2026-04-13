@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">pixieweb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,7 +39,29 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.1.0" id="pixieweb-010">pixieweb 0.1.0<a class="anchor" aria-label="anchor" href="#pixieweb-010"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.1.1" id="pixieweb-011">pixieweb 0.1.1<a class="anchor" aria-label="anchor" href="#pixieweb-011"></a></h2>
+<div class="section level3">
+<h3 id="new-features-0-1-1">New features<a class="anchor" aria-label="anchor" href="#new-features-0-1-1"></a></h3>
+<ul><li>
+<strong><code><a href="../reference/data_legend.html">data_legend()</a></code> gains <code>lang</code>, <code>omit_varname</code> and <code>omit_desc</code> arguments</strong>, mirroring the same API in the sibling package <code>rTrafa</code>. <code>lang</code> (default <code>"EN"</code>, settable via <code>getOption("pixieweb.lang",   "EN")</code>) toggles the source prefix between <code>"Source: …, table X"</code> and <code>"Källa: …, tabell X"</code>. <code>omit_varname</code> drops the raw variable codes from the variable list; <code>omit_desc</code> shows only the codes.</li>
+<li>
+<strong><code><a href="../reference/data_legend.html">data_legend()</a></code>’s <code>var_df</code> argument is now optional.</strong> When omitted, the caption contains only the source line derived from the <code>px_source</code> attribute attached by <code><a href="../reference/get_data.html">get_data()</a></code>.</li>
+<li>
+<strong>Optional SQLite-backed caching via nordstatExtras.</strong> <code><a href="../reference/get_data.html">get_data()</a></code>, <code><a href="../reference/get_tables.html">get_tables()</a></code>, and <code><a href="../reference/table_enrich.html">table_enrich()</a></code> now accept <code>cache = TRUE</code> with a <code>.sqlite</code> <code>cache_location</code> for shared, multi-process cache backed by the <a href="https://github.com/LCHansson/nordstatExtras" class="external-link">nordstatExtras</a> package. Cell-level deduplication for data; per-table incremental enrichment with resume-on-crash and <code>async = TRUE</code> support for <code><a href="../reference/table_enrich.html">table_enrich()</a></code>. Falls back to the existing <code>.rds</code> cache when nordstatExtras is not installed.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="documentation-0-1-1">Documentation<a class="anchor" aria-label="anchor" href="#documentation-0-1-1"></a></h3>
+<ul><li>
+<strong>Vignette data is now pre-cached on disk</strong> via <code>data-raw/vignette-data.R</code> and <code>R/sysdata.rda</code>, mirroring the approach used in <code>rKolada</code> and <code>rTrafa</code>. Vignettes render offline and show real API output for tables, variables, prepared queries, codelists and plots.</li>
+<li>
+<strong>Introduction vignette rewritten</strong>: the <code>Kolada</code>-comparison table in the “data model” section is replaced with a dedicated, pedagogical explanation of the PX-Web data cube (API → table → variables → content codes → codelists → data), following the same structure as the <code>rKolada</code> and <code>rTrafa</code> introduction vignettes.</li>
+<li>Vignette plots now convert <code>Tid</code> to <code>Date</code> before plotting and use <code>scale_x_date(date_breaks = "1 year", date_labels = "%Y")</code>, so axis breaks land on whole years rather than on decimal years like <code>2020,   2022.5, 2025</code>. This pattern is explained inline and is consistent with the sibling packages <code>rKolada</code> and <code>rTrafa</code>.</li>
+<li>README and all vignettes now cross-link to the sibling packages <code>rKolada</code> and <code>rTrafa</code>, and list <code>install.packages("pixieweb")</code> as the primary install path.</li>
+<li>README now includes a section on enhanced caching with nordstatExtras.</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.0" id="pixieweb-010">pixieweb 0.1.0<a class="anchor" aria-label="anchor" href="#pixieweb-010"></a></h2><p class="text-muted">CRAN release: 2026-03-26</p>
 <p>Initial CRAN release.</p>
 <div class="section level3">
 <h3 id="documentation-0-1-0">Documentation<a class="anchor" aria-label="anchor" href="#documentation-0-1-0"></a></h3>

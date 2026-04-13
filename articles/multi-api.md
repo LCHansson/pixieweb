@@ -18,10 +18,29 @@ results.
 ## Available APIs
 
 ``` r
-library(pixieweb)
+library("pixieweb")
+```
 
+``` r
 px_api_catalogue()
 ```
+
+    #> # A tibble: 13 × 7
+    #>    alias    description                 url   url_v1 versions langs default_lang
+    #>    <chr>    <chr>                       <chr> <chr>  <list>   <lis> <chr>       
+    #>  1 scb      Statistics Sweden (SCB)     http… https… <chr>    <chr> sv          
+    #>  2 ssb      Statistics Norway (SSB)     http… https… <chr>    <chr> no          
+    #>  3 statfi   Statistics Finland          http… https… <chr>    <chr> fi          
+    #>  4 statis   Statistics Iceland          http… https… <chr>    <chr> en          
+    #>  5 hagstova Statistics Faroe Islands    http… https… <chr>    <chr> fo          
+    #>  6 statgl   Statistics Greenland        http… https… <chr>    <chr> da          
+    #>  7 asub     Statistics Åland (ÅSUB)     http… https… <chr>    <chr> sv          
+    #>  8 sjv      Swedish Board of Agricultu… http… https… <chr>    <chr> sv          
+    #>  9 energi   Swedish Energy Agency (Ene… http… https… <chr>    <chr> sv          
+    #> 10 fohm     Public Health Agency of Sw… http… https… <chr>    <chr> sv          
+    #> 11 konj     National Institute of Econ… http… https… <chr>    <chr> sv          
+    #> 12 msb      Swedish Civil Contingencie… http… https… <chr>    <chr> sv          
+    #> 13 slu      Swedish University of Agri… http… https… <chr>    <chr> sv
 
 pixieweb ships with a catalogue of known PX-Web instances. You can also
 connect to any PX-Web API by providing a full URL.
@@ -39,7 +58,8 @@ configuration (cell limits, rate limits):
 
 ``` r
 scb
-ssb
+#> PX-Web API: Statistics Sweden (SCB) (v2, en)
+#>   Max cells: 150000 | Rate limit: 30/10s
 ```
 
 ## API version differences
@@ -67,8 +87,7 @@ The table IDs and variable codes will differ, but the workflow is
 identical:
 
 ``` r
-library(dplyr)
-library(purrr)
+library("dplyr")
 
 # Find population tables in each country
 scb_tables <- get_tables(scb, query = "population")
@@ -102,8 +121,8 @@ ssb_vars |> variable_describe()
 
 Since
 [`get_data()`](https://lchansson.github.io/pixieweb/reference/get_data.md)
-returns standard tibbles with a `table_id` column, you can bind results
-from different APIs:
+returns standard tibbles with a `table_id` attribute, you can bind
+results from different APIs:
 
 ``` r
 results <- list(
@@ -116,7 +135,7 @@ results <- list(
 
 # .id = "country" adds a column tracking which list element each row
 # came from — essential for traceability after binding
-bind_rows(results, .id = "country")
+dplyr::bind_rows(results, .id = "country")
 # NOTE: column names may differ between countries. If so, you may need
 # to rename() before bind_rows() to align them.
 ```
@@ -148,3 +167,14 @@ bind_rows(results, .id = "country")
 - **Quick refresher** —
   [`vignette("a-quickstart")`](https://lchansson.github.io/pixieweb/articles/a-quickstart.md)
   for the single-API basics.
+
+## Related packages
+
+`pixieweb` is part of a family of R packages for Swedish and Nordic open
+statistics that share the same design philosophy:
+
+- [rKolada](https://lchansson.github.io/rKolada/) — R client for the
+  [Kolada](https://kolada.se/) database of Swedish municipal and
+  regional Key Performance Indicators
+- [rTrafa](https://lchansson.github.io/rTrafa/) — R client for the
+  [Trafa](https://api.trafa.se/) API of Swedish transport statistics

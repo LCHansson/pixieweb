@@ -9,7 +9,7 @@ a consistent tibble-based interface.
 
 Useful links:
 
-- <https://lchansson.github.io/pixieweb>
+- <https://lchansson.github.io/pixieweb/>
 
 - <https://github.com/lchansson/pixieweb>
 

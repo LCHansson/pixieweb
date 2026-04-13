@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">pixieweb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,23 +59,38 @@
 </h1></div>
 <!-- badges: start -->
 
-<p>pixieweb is an R client for <a href="https://www.scb.se/px-web" class="external-link">PX-Web</a> statistical APIs. It provides a pipe-friendly, tibble-based interface for discovering and downloading data from national statistics agencies — including SCB (Sweden), SSB (Norway), Statistics Finland, and more.</p>
+<p><a href="https://lchansson.github.io/pixieweb/index.html"><code>pixieweb</code></a> is an R client for <a href="https://www.scb.se/px-web" class="external-link">PX-Web</a> statistical APIs. It provides a pipe-friendly, tibble-based interface for <em>discovering</em>, <em>inspecting</em> and <em>downloading</em> data from national statistics agencies — including SCB (Sweden), SSB (Norway), Statistics Finland, and more.</p>
+<p>To learn more about using <code>pixieweb</code>, it is recommended you use the following resources in order:</p>
+<div class="section level2">
+<h2 id="getting-started-with-pixieweb">Getting started with pixieweb<a class="anchor" aria-label="anchor" href="#getting-started-with-pixieweb"></a>
+</h2>
+<ol style="list-style-type: decimal">
+<li>To get up and running quickly with pixieweb, please see the vignette <a href="https://lchansson.github.io/pixieweb/articles/a-quickstart.html">A quick start guide to pixieweb</a>.</li>
+<li>For an introduction to pixieweb and the design principles of functions included, please see <a href="https://lchansson.github.io/pixieweb/articles/introduction-to-pixieweb.html">Introduction to pixieweb</a>.</li>
+<li>For cross-country comparisons and multi-API workflows, see <a href="https://lchansson.github.io/pixieweb/articles/multi-api.html">Working with multiple APIs</a>.</li>
+<li>See the <a href="https://lchansson.github.io/pixieweb/reference/index.html">Reference section of the package homepage</a> to learn about the full set of functionality included with the package.</li>
+</ol>
+<p><code>pixieweb</code> is open source licensed under the Affero Gnu Public License version 3. This means you are free to download the source, modify and redistribute it as you please, but any copies or modifications must retain the original license. Please see the file LICENSE.md for further information.</p>
 <blockquote>
 <p><strong>Note on pxweb:</strong> The excellent <a href="https://cran.r-project.org/package=pxweb" class="external-link">pxweb</a> package by rOpenGov already provides comprehensive R access to PX-Web APIs. pixieweb is not a replacement — it offers an <em>alternative paradigm</em> built around search-then-fetch discovery and progressive disclosure. If you already use pxweb and it works for you, there is no need to switch. Choose the workflow that fits your needs.</p>
 </blockquote>
+</div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>Install the development version from GitHub:</p>
+<p>pixieweb is on CRAN. To install it, run the following code in R:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
-<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"lchansson/pixieweb"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"pixieweb"</span><span class="op">)</span></span></code></pre></div>
+<p>To install the latest development version from GitHub, use the <code>remotes</code> package:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://remotes.r-lib.org" class="external-link">"remotes"</a></span><span class="op">)</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"LCHansson/pixieweb"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="quick-start">Quick start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
 </h2>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lchansson.github.io/pixieweb">pixieweb</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lchansson.github.io/pixieweb/">pixieweb</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Connect to Statistics Sweden</span></span>
 <span><span class="va">scb</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/px_api.html">px_api</a></span><span class="op">(</span><span class="st">"scb"</span>, lang <span class="op">=</span> <span class="st">"en"</span><span class="op">)</span></span>
@@ -109,14 +124,59 @@
 </ul>
 </div>
 <div class="section level2">
+<h2 id="enhanced-caching-with-nordstatextras">Enhanced caching with nordstatExtras<a class="anchor" aria-label="anchor" href="#enhanced-caching-with-nordstatextras"></a>
+</h2>
+<p>For multi-user web applications or workflows that benefit from a shared, persistent cache, pixieweb integrates with the <a href="https://github.com/LCHansson/nordstatExtras" class="external-link">nordstatExtras</a> package. When installed, <code><a href="reference/get_data.html">get_data()</a></code>, <code><a href="reference/get_tables.html">get_tables()</a></code>, <code><a href="reference/table_enrich.html">table_enrich()</a></code>, and other functions can write to a shared SQLite file instead of per-session <code>.rds</code> files:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"LCHansson/nordstatExtras"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/LCHansson/nordstatExtras" class="external-link">nordstatExtras</a></span><span class="op">)</span></span>
+<span><span class="va">handle</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nordstatExtras/man/nxt_open.html" class="external-link">nxt_open</a></span><span class="op">(</span><span class="st">"cache.sqlite"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">scb</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/px_api.html">px_api</a></span><span class="op">(</span><span class="st">"scb"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Metadata and data cached in the same SQLite file</span></span>
+<span><span class="va">tables</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_tables.html">get_tables</a></span><span class="op">(</span><span class="va">scb</span>, cache <span class="op">=</span> <span class="cn">TRUE</span>, cache_location <span class="op">=</span> <span class="va">handle</span><span class="op">)</span></span>
+<span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_data.html">get_data</a></span><span class="op">(</span><span class="va">scb</span>, <span class="st">"TAB638"</span>,</span>
+<span>  Region <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"0180"</span>, <span class="st">"1480"</span><span class="op">)</span>,</span>
+<span>  cache <span class="op">=</span> <span class="cn">TRUE</span>, cache_location <span class="op">=</span> <span class="va">handle</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># table_enrich with per-table caching + async support</span></span>
+<span><span class="va">enriched</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/table_enrich.html">table_enrich</a></span><span class="op">(</span><span class="va">tables</span>, cache <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                         cache_location <span class="op">=</span> <span class="va">handle</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/nordstatExtras/man/nxt_close.html" class="external-link">nxt_close</a></span><span class="op">(</span><span class="va">handle</span><span class="op">)</span></span></code></pre></div>
+<p>Features include cell-level deduplication across overlapping queries, per-table incremental enrichment with resume-on-crash, async background fetching via <code>mirai</code>, and FTS5-powered typeahead search via <code><a href="https://rdrr.io/pkg/nordstatExtras/man/nxt_search.html" class="external-link">nxt_search()</a></code>. See the <a href="https://github.com/LCHansson/nordstatExtras" class="external-link">nordstatExtras README</a> for details.</p>
+</div>
+<div class="section level2">
+<h2 id="contributing">Contributing<a class="anchor" aria-label="anchor" href="#contributing"></a>
+</h2>
+<p>You are welcome to contribute to the further development of the pixieweb package in any of the following ways:</p>
+<ul>
+<li>Open an <a href="https://github.com/LCHansson/pixieweb/issues" class="external-link">issue</a>
+</li>
+<li>Clone this repo, make modifications and create a pull request</li>
+<li>Spread the word!</li>
+</ul>
+</div>
+<div class="section level2">
 <h2 id="related-packages">Related packages<a class="anchor" aria-label="anchor" href="#related-packages"></a>
 </h2>
+<p><code>pixieweb</code> is part of a family of R packages for Swedish and Nordic open statistics that share the same design philosophy — tibble-based, pipe-friendly, and offline-safe:</p>
 <ul>
 <li>
-<a href="https://lchansson.github.io/rKolada/" class="external-link">rKolada</a> — R client for the Kolada API (Swedish municipality statistics). Sibling package with the same design principles.</li>
+<a href="https://lchansson.github.io/rKolada/" class="external-link">rKolada</a> — R client for the <a href="https://kolada.se/" class="external-link">Kolada</a> database of Swedish municipal and regional Key Performance Indicators</li>
 <li>
-<a href="https://cran.r-project.org/package=pxweb" class="external-link">pxweb</a> — the original and established PX-Web client for R, by rOpenGov</li>
+<a href="https://lchansson.github.io/rTrafa/" class="external-link">rTrafa</a> — R client for the <a href="https://api.trafa.se/" class="external-link">Trafa</a> API of Swedish transport statistics</li>
 </ul>
+<p>See also <a href="https://cran.r-project.org/package=pxweb" class="external-link">pxweb</a> — the original and established PX-Web client for R, by rOpenGov.</p>
+<div class="section level3">
+<h3 id="code-of-conduct">Code of Conduct<a class="anchor" aria-label="anchor" href="#code-of-conduct"></a>
+</h3>
+<p>Please note that the pixieweb project is released with a <a href="https://contributor-covenant.org/version/2/0/CODE_OF_CONDUCT.html" class="external-link">Contributor Code of Conduct</a>. By contributing to this project, you agree to abide by its terms.</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="license">License<a class="anchor" aria-label="anchor" href="#license"></a>
@@ -127,6 +187,7 @@
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
+<li><a href="https://cloud.r-project.org/package=pixieweb" class="external-link">View on CRAN</a></li>
 <li><a href="https://github.com/lchansson/pixieweb/" class="external-link">Browse source code</a></li>
 <li><a href="https://github.com/lchansson/pixieweb/issues" class="external-link">Report a bug</a></li>
 </ul>
@@ -136,7 +197,7 @@
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>
-<li><small>AGPL (&gt;= 3) + file <a href="LICENSE-text.html">LICENSE</a></small></li>
+<li><small>AGPL (&gt;= 3)</small></li>
 </ul>
 </div>
 

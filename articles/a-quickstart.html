@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">pixieweb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -67,130 +67,209 @@
 
     
     
-<p>pixieweb makes it easy to download open statistical data from PX-Web
-APIs — the platform used by Statistics Sweden (SCB), Statistics Norway
-(SSB), Statistics Finland, and many others. This vignette walks you from
-zero to a tidy tibble in five steps.</p>
-<div class="section level2">
-<h2 id="step-1-connect-to-an-api">Step 1: Connect to an API<a class="anchor" aria-label="anchor" href="#step-1-connect-to-an-api"></a>
-</h2>
+<p>This vignette provides a quick start guide to get up and running with
+<code>pixieweb</code> as fast as possible. For a more comprehensive
+introduction to the <code>pixieweb</code> package, see <a href="introduction-to-pixieweb.html">Introduction to pixieweb</a>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lchansson.github.io/pixieweb">pixieweb</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">scb</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/px_api.html">px_api</a></span><span class="op">(</span><span class="st">"scb"</span>, lang <span class="op">=</span> <span class="st">"en"</span><span class="op">)</span></span>
-<span><span class="va">scb</span></span></code></pre></div>
-<p><code><a href="../reference/px_api.html">px_api()</a></code> accepts a short alias (<code>"scb"</code>,
-<code>"ssb"</code>, <code>"statfi"</code>) or a full URL. Use
-<code><a href="../reference/px_api_catalogue.html">px_api_catalogue()</a></code> to list known instances.</p>
-</div>
-<div class="section level2">
-<h2 id="step-2-find-a-table">Step 2: Find a table<a class="anchor" aria-label="anchor" href="#step-2-find-a-table"></a>
-</h2>
-<p>PX-Web organises data into <strong>tables</strong>. Each table holds
-a data cube with one or more dimensions (called
-<strong>variables</strong>). Use <code><a href="../reference/get_tables.html">get_tables()</a></code> to
-search:</p>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://lchansson.github.io/pixieweb/">"pixieweb"</a></span><span class="op">)</span></span></code></pre></div>
+<p>In this guide we walk you through five steps to connect to a PX-Web
+API, find a table, inspect its variables, download data and plot it.
+We’ll use Statistics Sweden (SCB) as our example throughout.</p>
+<p>PX-Web tables are <em>multi-dimensional data cubes</em>. Each table
+has one or more <strong>variables</strong> (dimensions) — for example,
+region, sex and year — and one or more <strong>content codes</strong>
+(what is being measured). To download data you specify which values you
+want along each variable. See
+<code><a href="../articles/introduction-to-pixieweb.html">vignette("introduction-to-pixieweb")</a></code> for a deeper
+explanation of the data model.</p>
+<div class="section level3">
+<h3 id="connect-to-an-api">1. Connect to an API<a class="anchor" aria-label="anchor" href="#connect-to-an-api"></a>
+</h3>
+<p><code>pixieweb</code> ships with a catalogue of known PX-Web
+instances. <code><a href="../reference/px_api.html">px_api()</a></code> accepts either a known alias (such as
+<code>"scb"</code>, <code>"ssb"</code>, <code>"statfi"</code>) or a full
+base URL.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">scb</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/px_api.html">px_api</a></span><span class="op">(</span><span class="st">"scb"</span>, lang <span class="op">=</span> <span class="st">"en"</span><span class="op">)</span></span>
+<span><span class="va">scb</span></span></code></pre></div>
+<pre><code><span><span class="co">#&gt; PX-Web API: Statistics Sweden (SCB) (v2, en)</span></span>
+<span><span class="co">#&gt;   Max cells: 150000 | Rate limit: 30/10s</span></span></code></pre>
+<p>To see all known APIs, run <code><a href="../reference/px_api_catalogue.html">px_api_catalogue()</a></code>.</p>
+</div>
+<div class="section level3">
+<h3 id="find-a-table">2. Find a table<a class="anchor" aria-label="anchor" href="#find-a-table"></a>
+</h3>
+<p>PX-Web organises data into <strong>tables</strong>. Use
+<code><a href="../reference/get_tables.html">get_tables()</a></code> to search the catalogue (server-side on v2
+APIs, folder walk on v1):</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tables</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_tables.html">get_tables</a></span><span class="op">(</span><span class="va">scb</span>, query <span class="op">=</span> <span class="st">"population"</span><span class="op">)</span></span>
-<span><span class="va">tables</span></span></code></pre></div>
+<span></span>
+<span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">tables</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">#&gt; Rows: 26</span></span>
+<span><span class="co">#&gt; Columns: 13</span></span>
+<span><span class="co">#&gt; $ id           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "TAB638"<span style="color: #949494;">, </span>"TAB1743"<span style="color: #949494;">, </span>"TAB934"<span style="color: #949494;">, </span>"TAB4552"<span style="color: #949494;">, </span>"TAB6473"<span style="color: #949494;">, </span>"TAB…</span></span>
+<span><span class="co">#&gt; $ title        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Population by region, marital status, age and sex.  Year…</span></span>
+<span><span class="co">#&gt; $ description  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> ""<span style="color: #949494;">, </span>""<span style="color: #949494;">, </span>""<span style="color: #949494;">, </span>""<span style="color: #949494;">, </span>""<span style="color: #949494;">, </span>""<span style="color: #949494;">, </span>""<span style="color: #949494;">, </span>""<span style="color: #949494;">, </span>""<span style="color: #949494;">, </span>""<span style="color: #949494;">, </span>""<span style="color: #949494;">, </span>""<span style="color: #949494;">, </span>""<span style="color: #949494;">, </span>""<span style="color: #949494;">, </span>"…</span></span>
+<span><span class="co">#&gt; $ category     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "public"<span style="color: #949494;">, </span>"public"<span style="color: #949494;">, </span>"public"<span style="color: #949494;">, </span>"public"<span style="color: #949494;">, </span>"public"<span style="color: #949494;">, </span>"public…</span></span>
+<span><span class="co">#&gt; $ updated      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "2025-02-21T07:00:00Z"<span style="color: #949494;">, </span>"2015-10-01T07:30:00Z"<span style="color: #949494;">, </span>"2015-10-…</span></span>
+<span><span class="co">#&gt; $ first_period <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "1968"<span style="color: #949494;">, </span>"1995"<span style="color: #949494;">, </span>"1995"<span style="color: #949494;">, </span>"1960"<span style="color: #949494;">, </span>"2025M01"<span style="color: #949494;">, </span>"2000M01"<span style="color: #949494;">, </span>"20…</span></span>
+<span><span class="co">#&gt; $ last_period  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "2024"<span style="color: #949494;">, </span>"2013"<span style="color: #949494;">, </span>"2013"<span style="color: #949494;">, </span>"2023"<span style="color: #949494;">, </span>"2026M01"<span style="color: #949494;">, </span>"2024M12"<span style="color: #949494;">, </span>"20…</span></span>
+<span><span class="co">#&gt; $ time_unit    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Annual"<span style="color: #949494;">, </span>"Annual"<span style="color: #949494;">, </span>"Annual"<span style="color: #949494;">, </span>"Annual"<span style="color: #949494;">, </span>"Monthly"<span style="color: #949494;">, </span>"Month…</span></span>
+<span><span class="co">#&gt; $ variables    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> ["region", "marital status", "age", "sex", "observations…</span></span>
+<span><span class="co">#&gt; $ subject_code <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "BE"<span style="color: #949494;">, </span>"LE"<span style="color: #949494;">, </span>"LE"<span style="color: #949494;">, </span>"MI"<span style="color: #949494;">, </span>"BE"<span style="color: #949494;">, </span>"BE"<span style="color: #949494;">, </span>"BE"<span style="color: #949494;">, </span>"BE"<span style="color: #949494;">, </span>"MI"<span style="color: #949494;">, </span>"LE…</span></span>
+<span><span class="co">#&gt; $ subject_path <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Population &gt; Population statistics &gt; Number of inhabitan…</span></span>
+<span><span class="co">#&gt; $ source       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Statistics Sweden"<span style="color: #949494;">, </span>"Statistics Sweden"<span style="color: #949494;">, </span>"Statistics Swe…</span></span>
+<span><span class="co">#&gt; $ discontinued <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> FALSE<span style="color: #949494;">, </span>FALSE<span style="color: #949494;">, </span>FALSE<span style="color: #949494;">, </span>FALSE<span style="color: #949494;">, </span>FALSE<span style="color: #949494;">, </span>FALSE<span style="color: #949494;">, </span>FALSE<span style="color: #949494;">, </span>FALSE<span style="color: #949494;">, </span>F…</span></span></code></pre>
 <p>The result is a tibble. You can narrow it further on the client side
-with <code><a href="../reference/table_search.html">table_search()</a></code>, and inspect tables with
+with <code><a href="../reference/table_search.html">table_search()</a></code>, and inspect candidate tables with
 <code><a href="../reference/table_describe.html">table_describe()</a></code>:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tables</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/table_search.html">table_search</a></span><span class="op">(</span><span class="st">"municipal"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/table_describe.html">table_describe</a></span><span class="op">(</span>max_n <span class="op">=</span> <span class="fl">3</span>, format <span class="op">=</span> <span class="st">"md"</span><span class="op">)</span></span></code></pre></div>
-<p><code><a href="../reference/table_describe.html">table_describe()</a></code> now shows the subject path, time period
+<span>  <span class="fu"><a href="../reference/table_describe.html">table_describe</a></span><span class="op">(</span>max_n <span class="op">=</span> <span class="fl">2</span>, format <span class="op">=</span> <span class="st">"md"</span>, heading_level <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: No tables to describe.</span></span></code></pre></div>
+<p><code><a href="../reference/table_describe.html">table_describe()</a></code> shows the subject path, time period
 range, and data source alongside the title — making it much easier to
 pick the right table.</p>
 </div>
-<div class="section level2">
-<h2 id="step-3-explore-variables">Step 3: Explore variables<a class="anchor" aria-label="anchor" href="#step-3-explore-variables"></a>
-</h2>
-<p>Once you have a table ID, inspect what variables (dimensions) it
-has:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">vars</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_variables.html">get_variables</a></span><span class="op">(</span><span class="va">scb</span>, <span class="st">"TAB683"</span><span class="op">)</span></span>
+<div class="section level3">
+<h3 id="explore-variables">3. Explore variables<a class="anchor" aria-label="anchor" href="#explore-variables"></a>
+</h3>
+<p>Once you have a table ID, inspect what variables (dimensions) it has.
+<code><a href="../reference/get_variables.html">get_variables()</a></code> returns a tibble with one row per
+variable:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">vars</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_variables.html">get_variables</a></span><span class="op">(</span><span class="va">scb</span>, <span class="st">"TAB638"</span><span class="op">)</span></span>
 <span><span class="va">vars</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/variable_describe.html">variable_describe</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>Each variable has a set of available <strong>values</strong> (codes).
-Look at a specific variable’s values:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<pre><code><span><span class="co">#&gt; ── Region (region) ────────────────────────────────────────────────────────────── </span></span>
+<span><span class="co">#&gt;   Values: 312, optional (elimination) </span></span>
+<span><span class="co">#&gt;   First values: 00 Sweden, 01 Stockholm county, 0114 Upplands Väsby, 0115 Vallentuna, 0117 Österåker ... and 307 more </span></span>
+<span><span class="co">#&gt;   Codelists: agg_RegionA-region_2 A-regions, agg_RegionLA1998 Local labour markets 1998, agg_RegionLA2003_1 Local labour markets 2003 ... and 15 more </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ── Civilstand (marital status) ────────────────────────────────────────────────── </span></span>
+<span><span class="co">#&gt;   Values: 4, optional (elimination) </span></span>
+<span><span class="co">#&gt;   First values: OG single, G married, ÄNKL widowers/widows, SK divorced </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ── Alder (age) ────────────────────────────────────────────────────────────────── </span></span>
+<span><span class="co">#&gt;   Values: 102, optional (elimination) </span></span>
+<span><span class="co">#&gt;   First values: 0 0 years, 1 1 year, 2 2 years, 3 3 years, 4 4 years ... and 97 more </span></span>
+<span><span class="co">#&gt;   Codelists: agg_Ålder10årJ ´10-year intervals, agg_Ålder5år 5-year intervals, vs_Ålder1årA Age, 1 year age classes ... and 1 more </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ── Kon (sex) ──────────────────────────────────────────────────────────────────── </span></span>
+<span><span class="co">#&gt;   Values: 2, optional (elimination) </span></span>
+<span><span class="co">#&gt;   First values: 1 men, 2 women </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ── ContentsCode (observations) ────────────────────────────────────────────────── </span></span>
+<span><span class="co">#&gt;   Values: 2, mandatory </span></span>
+<span><span class="co">#&gt;   First values: BE0101N1 Population, BE0101N2 Population growth </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ── Tid (year) ─────────────────────────────────────────────────────────────────── </span></span>
+<span><span class="co">#&gt;   Values: 57, mandatory </span></span>
+<span><span class="co">#&gt;   Time variable: Yes</span></span>
+<span><span class="co">#&gt;   First values: 1968 1968, 1969 1969, 1970 1970, 1971 1971, 1972 1972 ... and 52 more</span></span></code></pre>
+<p>You can inspect the available values for any single variable with
+<code><a href="../reference/variable_values.html">variable_values()</a></code>:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">vars</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/variable_values.html">variable_values</a></span><span class="op">(</span><span class="st">"Region"</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 312 × 2</span></span></span>
+<span><span class="co">#&gt;    code  text            </span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 00    Sweden          </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 01    Stockholm county</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 0114  Upplands Väsby  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 0115  Vallentuna      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 0117  Österåker       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 0120  Värmdö          </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 0123  Järfälla        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 0125  Ekerö           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 0126  Huddinge        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 0127  Botkyrka        </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 302 more rows</span></span></span></code></pre>
 </div>
-<div class="section level2">
-<h2 id="step-4-fetch-data">Step 4: Fetch data<a class="anchor" aria-label="anchor" href="#step-4-fetch-data"></a>
-</h2>
-<p>Now you know which variables the table has and what values are
+<div class="section level3">
+<h3 id="get-data">4. Get data<a class="anchor" aria-label="anchor" href="#get-data"></a>
+</h3>
+<p>Now we know which variables the table has and what values are
 available. Pass your selections to <code><a href="../reference/get_data.html">get_data()</a></code>:</p>
 <ul>
 <li>
-<strong>ContentsCode</strong> tells the API <em>what</em> to measure
-(population, deaths, etc.). <code>"*"</code> means “all measures in this
-table”.</li>
+<strong><code>ContentsCode</code></strong> tells the API
+<em>what</em> to measure (population, deaths, etc.). <code>"*"</code>
+means “all measures in this table”.</li>
 <li>Variables you <strong>omit</strong> are <em>eliminated</em> — the
-API returns a pre-computed aggregate (e.g., omitting <code>Kon</code>
-gives totals for both sexes). Not all variables allow this; see
-<code><a href="../articles/introduction-to-pixieweb.html">vignette("introduction-to-pixieweb")</a></code> for mandatory vs
-eliminable.</li>
+API returns a pre-computed aggregate (for example, omitting a
+<code>Sex</code> variable gives totals for both sexes). Not every
+variable is eliminable; see
+<code><a href="../articles/introduction-to-pixieweb.html">vignette("introduction-to-pixieweb")</a></code> for the distinction
+between mandatory and eliminable variables.</li>
+<li>Selection helpers like <code><a href="../reference/px_selections.html">px_top()</a></code>, <code><a href="../reference/px_selections.html">px_from()</a></code>
+and <code><a href="../reference/px_selections.html">px_range()</a></code> let you select values without knowing exact
+codes. Use them when you want “the latest N periods” or “everything from
+2020 onward”.</li>
 </ul>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pop</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_data.html">get_data</a></span><span class="op">(</span><span class="va">scb</span>, <span class="st">"TAB638"</span>,</span>
-<span>  Region <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"0180"</span>, <span class="st">"1480"</span><span class="op">)</span>,</span>
+<span>  Region <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"0180"</span>, <span class="st">"1480"</span>, <span class="st">"1280"</span><span class="op">)</span>,</span>
 <span>  ContentsCode <span class="op">=</span> <span class="st">"*"</span>,</span>
 <span>  Tid <span class="op">=</span> <span class="fu"><a href="../reference/px_selections.html">px_top</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="va">pop</span></span></code></pre></div>
-<p>Selection helpers like <code><a href="../reference/px_selections.html">px_top()</a></code>, <code><a href="../reference/px_selections.html">px_from()</a></code>,
-and <code><a href="../reference/px_selections.html">px_range()</a></code> let you select values without knowing exact
-codes. Use them when you want “the latest N periods” or “everything from
-2020 onward” rather than typing out specific year codes.</p>
-<div class="section level3">
-<h3 id="optional-shortcut-prepare_query">Optional shortcut: <code>prepare_query()</code><a class="anchor" aria-label="anchor" href="#optional-shortcut-prepare_query"></a>
-</h3>
-<p>You can skip this section if you prefer the direct approach above.
-<code><a href="../reference/prepare_query.html">prepare_query()</a></code> inspects the table and fills in sensible
-defaults — handy when you don’t want to specify every variable:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">q</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/prepare_query.html">prepare_query</a></span><span class="op">(</span><span class="va">scb</span>, <span class="st">"TAB638"</span>, Region <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"0180"</span>, <span class="st">"1480"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>It prints a summary of what was chosen and why. When you’re happy,
-pass the query to <code><a href="../reference/get_data.html">get_data()</a></code>:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pop</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_data.html">get_data</a></span><span class="op">(</span><span class="va">scb</span>, query <span class="op">=</span> <span class="va">q</span><span class="op">)</span></span></code></pre></div>
-<p>Set <code>maximize_selection = TRUE</code> to automatically include
-as many variables as the API’s cell limit allows:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">q</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/prepare_query.html">prepare_query</a></span><span class="op">(</span><span class="va">scb</span>, <span class="st">"TAB638"</span>,</span>
-<span>  Region <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"0180"</span><span class="op">)</span>,</span>
-<span>  maximize_selection <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-</div>
-</div>
-<div class="section level2">
-<h2 id="step-5-work-with-the-result">Step 5: Work with the result<a class="anchor" aria-label="anchor" href="#step-5-work-with-the-result"></a>
-</h2>
-<p>The result is a standard tibble. Use your favourite tidyverse
-tools:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">pop</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Tid</span>, y <span class="op">=</span> <span class="va">value</span>, colour <span class="op">=</span> <span class="va">Region_text</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="co"># One line per region</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>group <span class="op">=</span> <span class="va">Region_text</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="co"># Separate panel for each measure (Population, Deaths, etc.)</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span> <span class="va">ContentsCode_text</span>, scales <span class="op">=</span> <span class="st">"free_y"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="co"># Rotate x-axis labels to avoid overlap</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">45</span>, hjust <span class="op">=</span> <span class="fl">1</span>, vjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
-<span>    title <span class="op">=</span> <span class="st">"Population over time"</span>,</span>
-<span>    caption <span class="op">=</span> <span class="fu"><a href="../reference/px_cite.html">px_cite</a></span><span class="op">(</span><span class="va">pop</span><span class="op">)</span>  <span class="co"># Auto-generated data citation</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
+<span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">pop</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">#&gt; Rows: 30</span></span>
+<span><span class="co">#&gt; Columns: 8</span></span>
+<span><span class="co">#&gt; $ table_id          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "TAB638"<span style="color: #949494;">, </span>"TAB638"<span style="color: #949494;">, </span>"TAB638"<span style="color: #949494;">, </span>"TAB638"<span style="color: #949494;">, </span>"TAB638"<span style="color: #949494;">, </span>"T…</span></span>
+<span><span class="co">#&gt; $ Region            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "0180"<span style="color: #949494;">, </span>"0180"<span style="color: #949494;">, </span>"0180"<span style="color: #949494;">, </span>"0180"<span style="color: #949494;">, </span>"0180"<span style="color: #949494;">, </span>"0180"<span style="color: #949494;">, </span>"018…</span></span>
+<span><span class="co">#&gt; $ Region_text       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Stockholm"<span style="color: #949494;">, </span>"Stockholm"<span style="color: #949494;">, </span>"Stockholm"<span style="color: #949494;">, </span>"Stockholm"<span style="color: #949494;">, </span>…</span></span>
+<span><span class="co">#&gt; $ ContentsCode      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "BE0101N1"<span style="color: #949494;">, </span>"BE0101N1"<span style="color: #949494;">, </span>"BE0101N1"<span style="color: #949494;">, </span>"BE0101N1"<span style="color: #949494;">, </span>"BE0…</span></span>
+<span><span class="co">#&gt; $ ContentsCode_text <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Population"<span style="color: #949494;">, </span>"Population"<span style="color: #949494;">, </span>"Population"<span style="color: #949494;">, </span>"Populatio…</span></span>
+<span><span class="co">#&gt; $ Tid               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "2020"<span style="color: #949494;">, </span>"2021"<span style="color: #949494;">, </span>"2022"<span style="color: #949494;">, </span>"2023"<span style="color: #949494;">, </span>"2024"<span style="color: #949494;">, </span>"2020"<span style="color: #949494;">, </span>"202…</span></span>
+<span><span class="co">#&gt; $ Tid_text          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "2020"<span style="color: #949494;">, </span>"2021"<span style="color: #949494;">, </span>"2022"<span style="color: #949494;">, </span>"2023"<span style="color: #949494;">, </span>"2024"<span style="color: #949494;">, </span>"2020"<span style="color: #949494;">, </span>"202…</span></span>
+<span><span class="co">#&gt; $ value             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 975551<span style="color: #949494;">, </span>978770<span style="color: #949494;">, </span>984748<span style="color: #949494;">, </span>988943<span style="color: #949494;">, </span>995574<span style="color: #949494;">, </span>1477<span style="color: #949494;">, </span>3219<span style="color: #949494;">, </span>…</span></span></code></pre>
 <p>Notice the <code>_text</code> suffix: <code><a href="../reference/get_data.html">get_data()</a></code> returns
 both raw code columns (<code>Region = "0180"</code>) and human-readable
 label columns (<code>Region_text = "Stockholm"</code>). Use
 <code>_text</code> columns for display and plotting; use the raw codes
 for filtering and joining.</p>
-<p>Other useful helpers:</p>
+</div>
+<div class="section level3">
+<h3 id="inspect-and-visualise-results">5. Inspect and visualise results<a class="anchor" aria-label="anchor" href="#inspect-and-visualise-results"></a>
+</h3>
+<p>Finally, time to plot our data:</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://ggplot2.tidyverse.org" class="external-link">"ggplot2"</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">pop_plot</span> <span class="op">&lt;-</span> <span class="va">pop</span> <span class="op">|&gt;</span></span>
+<span>  <span class="co"># Keep only the Population content code (the table also has</span></span>
+<span>  <span class="co"># "Population growth"); convert year to Date for nice axis breaks</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">ContentsCode</span> <span class="op">==</span> <span class="st">"BE0101N1"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">Tid</span>, <span class="st">"-01-01"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">pop_plot</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">year</span>, <span class="va">value</span>, colour <span class="op">=</span> <span class="va">Region_text</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="co"># One line per region</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>linewidth <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="co"># Years as dates — ensures whole-year breaks, not decimals</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_date.html" class="external-link">scale_x_date</a></span><span class="op">(</span>date_breaks <span class="op">=</span> <span class="st">"1 year"</span>, date_labels <span class="op">=</span> <span class="st">"%Y"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="va"><a href="https://scales.r-lib.org/reference/comma.html" class="external-link">comma</a></span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="st">"Population, Sweden's three most populous municipalities"</span>,</span>
+<span>    x <span class="op">=</span> <span class="st">"Year"</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">"Population"</span>,</span>
+<span>    colour <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>    caption <span class="op">=</span> <span class="fu"><a href="../reference/px_cite.html">px_cite</a></span><span class="op">(</span><span class="va">pop</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"top"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="a-quickstart_files/figure-html/plot-1.png" class="r-plt" alt="" width="672"></p>
+<p>Note the use of <code><a href="../reference/px_cite.html">px_cite()</a></code> to produce a citation for the
+downloaded data, and the conversion of <code>Tid</code> to
+<code>Date</code> before plotting: years as <code>Date</code> keep
+<code><a href="https://ggplot2.tidyverse.org/reference/scale_date.html" class="external-link">scale_x_date()</a></code> on whole years (e.g. 2020, 2021, 2022)
+rather than producing decimal breaks like 2020, 2022.5, 2025. This is a
+pattern you will want to reuse for any time-series analysis across
+<code>pixieweb</code>, <code>rKolada</code> and <code>rTrafa</code>.</p>
+<p>Other useful helpers you may want to explore next:</p>
 <ul>
 <li>
 <code><a href="../reference/data_minimize.html">data_minimize()</a></code> — remove columns where all values are
@@ -199,8 +278,8 @@ identical</li>
 <code><a href="../reference/data_legend.html">data_legend()</a></code> — generate a caption string from variable
 metadata</li>
 <li>
-<code><a href="../reference/px_cite.html">px_cite()</a></code> — create a citation for the downloaded
-data</li>
+<code><a href="../reference/prepare_query.html">prepare_query()</a></code> — build queries with sensible defaults
+for tables with many variables</li>
 </ul>
 </div>
 <div class="section level2">
@@ -208,16 +287,34 @@ data</li>
 </h2>
 <ul>
 <li>
-<strong>Concepts &amp; advanced features</strong> —
-<code><a href="../articles/introduction-to-pixieweb.html">vignette("introduction-to-pixieweb")</a></code> covers the data model,
-codelists, saved queries, and query composition.</li>
+<strong>Deeper walkthrough</strong> —
+<code><a href="../articles/introduction-to-pixieweb.html">vignette("introduction-to-pixieweb")</a></code> covers the full data
+model, codelists, wide output, saved queries and advanced query
+composition.</li>
 <li>
 <strong>Multiple countries</strong> —
 <code><a href="../articles/multi-api.html">vignette("multi-api")</a></code> shows how to compare data across
-national statistics agencies.</li>
+national statistics agencies (SCB, SSB, Statistics Finland and
+more).</li>
 <li>
 <strong>ggplot2 reference</strong> — <a href="https://ggplot2-book.org/" class="external-link uri">https://ggplot2-book.org/</a> for more on
 visualisation.</li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="related-packages">Related packages<a class="anchor" aria-label="anchor" href="#related-packages"></a>
+</h2>
+<p><code>pixieweb</code> is part of a family of R packages for Swedish
+and Nordic open statistics that share the same design philosophy:</p>
+<ul>
+<li>
+<a href="https://lchansson.github.io/rKolada/" class="external-link">rKolada</a> — R
+client for the <a href="https://kolada.se/" class="external-link">Kolada</a> database of
+Swedish municipal and regional Key Performance Indicators</li>
+<li>
+<a href="https://lchansson.github.io/rTrafa/" class="external-link">rTrafa</a> — R client
+for the <a href="https://api.trafa.se/" class="external-link">Trafa</a> API of Swedish
+transport statistics</li>
 </ul>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

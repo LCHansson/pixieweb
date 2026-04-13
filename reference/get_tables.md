@@ -85,16 +85,16 @@ if (px_available(scb)) {
 #> # A tibble: 100 × 13
 #>    id      title description category updated first_period last_period time_unit
 #>    <chr>   <chr> <chr>       <chr>    <chr>   <chr>        <chr>       <chr>    
-#>  1 TAB1391 Corp… ""          public   2026-0… 1998K2       2025K4      Quarterly
-#>  2 TAB6726 Ente… ""          public   2026-0… 2025         2025        Annual   
-#>  3 TAB1872 Indu… ""          public   2026-0… 2000M01      2026M01     Monthly  
-#>  4 TAB1411 Corp… ""          public   2026-0… 1997K1       2025K4      Quarterly
-#>  5 TAB1710 Orde… ""          public   2026-0… 2000M01      2026M01     Monthly  
-#>  6 TAB1693 Turn… ""          public   2026-0… 2000M01      2026M01     Monthly  
-#>  7 TAB4894 Prod… ""          public   2026-0… 2010M01      2026M01     Monthly  
-#>  8 TAB4810 Prod… ""          public   2026-0… 2010K1       2025K4      Quarterly
-#>  9 TAB6343 Priv… ""          public   2026-0… 2022K1       2025K4      Quarterly
-#> 10 TAB6587 Priv… ""          public   2026-0… 2022K1       2025K4      Quarterly
+#>  1 TAB1872 Indu… ""          public   2026-0… 2000M01      2026M02     Monthly  
+#>  2 TAB4370 Pres… ""          public   2026-0… 2013         2023        Annual   
+#>  3 TAB1710 Orde… ""          public   2026-0… 2000M01      2026M02     Monthly  
+#>  4 TAB1693 Turn… ""          public   2026-0… 2000M01      2026M02     Monthly  
+#>  5 TAB4894 Prod… ""          public   2026-0… 2010M01      2026M02     Monthly  
+#>  6 TAB4810 Prod… ""          public   2026-0… 2010K1       2025K4      Quarterly
+#>  7 TAB4248 Part… ""          public   2026-0… 2017         2025        Annual   
+#>  8 TAB2612 Part… ""          public   2026-0… 2017         2025        Annual   
+#>  9 TAB3789 Part… ""          public   2026-0… 2017         2025        Annual   
+#> 10 TAB4203 Part… ""          public   2026-0… 2017         2025        Annual   
 #> # ℹ 90 more rows
 #> # ℹ 5 more variables: variables <list>, subject_code <chr>, subject_path <chr>,
 #> #   source <chr>, discontinued <lgl>

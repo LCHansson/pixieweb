@@ -19,6 +19,8 @@ get_data(
   simplify = TRUE,
   auto_chunk = TRUE,
   max_results = NULL,
+  cache = FALSE,
+  cache_location = NULL,
   verbose = FALSE
 )
 ```
@@ -94,6 +96,19 @@ get_data(
   Override the API's cell limit. When set, this value is used instead of
   the limit reported by the API's config endpoint. Useful for keeping
   result size manageable or for testing chunking behavior.
+
+- cache:
+
+  Logical. If `TRUE` and `cache_location` points at a SQLite file (or an
+  `nxt_handle` from nordstatExtras), the data is cached at cell
+  granularity in that database. Supports concurrent multi-process
+  read/write and cross-query cell reuse. Requires `nordstatExtras`.
+
+- cache_location:
+
+  Either a path to a `.sqlite` file or an `nxt_handle` from
+  [`nordstatExtras::nxt_open()`](https://rdrr.io/pkg/nordstatExtras/man/nxt_open.html).
+  Ignored unless `cache = TRUE`.
 
 - verbose:
 
