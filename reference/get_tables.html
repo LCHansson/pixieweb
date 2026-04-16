@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">pixieweb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9002</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -67,7 +67,14 @@
 
 
 <dt id="arg-query">query<a class="anchor" aria-label="anchor" href="#arg-query"></a></dt>
-<dd><p>Free-text search string (sent to API as server-side search).</p></dd>
+<dd><p>Free-text search string (sent to API as server-side search).
+On v2 APIs (e.g. SCB) the server-side search is an <strong>exact token match</strong>
+by default — <code>query = "befolk"</code> will not find tables with "befolkning"
+in the title. Use explicit wildcards (<code>query = "befolk*"</code>) for prefix
+matching. Wildcards can also appear mid-term (e.g. <code>*arbets*</code>). This is
+a property of the PX-Web server, not pixieweb; behaviour may vary by
+agency. Case-insensitive. Non-ASCII characters (å/ä/ö etc.) are
+URL-encoded automatically.</p></dd>
 
 
 <dt id="arg-id">id<a class="anchor" aria-label="anchor" href="#arg-id"></a></dt>
@@ -123,7 +130,7 @@ large APIs. Has no effect on v2 APIs (which have native search).</p></dd>
 <span class="r-in"><span>  <span class="co"># Tables updated in the last 30 days</span></span></span>
 <span class="r-in"><span>  <span class="fu">get_tables</span><span class="op">(</span><span class="va">scb</span>, updated_since <span class="op">=</span> <span class="fl">30</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span><span class="co"># }</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 100 × 13</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 322 × 13</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    id      title description category updated first_period last_period time_unit</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> TAB1872 Indu… <span style="color: #949494;">""</span>          public   2026-0… 2000M01      2026M02     Monthly  </span>
@@ -136,7 +143,7 @@ large APIs. Has no effect on v2 APIs (which have native search).</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> TAB2612 Part… <span style="color: #949494;">""</span>          public   2026-0… 2017         2025        Annual   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> TAB3789 Part… <span style="color: #949494;">""</span>          public   2026-0… 2017         2025        Annual   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> TAB4203 Part… <span style="color: #949494;">""</span>          public   2026-0… 2017         2025        Annual   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 90 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 312 more rows</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 5 more variables: variables &lt;list&gt;, subject_code &lt;chr&gt;, subject_path &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   source &lt;chr&gt;, discontinued &lt;lgl&gt;</span></span>
 </code></pre></div>

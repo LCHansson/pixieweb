@@ -9,7 +9,7 @@ values and codelists. This is the key discovery step before fetching data."></he
 
     <a class="navbar-brand me-2" href="../index.html">pixieweb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9002</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,7 +48,13 @@ values and codelists. This is the key discovery step before fetching data.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_variables</span><span class="op">(</span><span class="va">api</span>, <span class="va">table_id</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_variables</span><span class="op">(</span></span>
+<span>  <span class="va">api</span>,</span>
+<span>  <span class="va">table_id</span>,</span>
+<span>  cache <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  cache_location <span class="op">=</span> <span class="va">pixieweb_cache_dir</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -61,6 +67,19 @@ values and codelists. This is the key discovery step before fetching data.</p>
 
 <dt id="arg-table-id">table_id<a class="anchor" aria-label="anchor" href="#arg-table-id"></a></dt>
 <dd><p>A single table ID (character).</p></dd>
+
+
+<dt id="arg-cache">cache<a class="anchor" aria-label="anchor" href="#arg-cache"></a></dt>
+<dd><p>Logical, cache results locally. When combined with a sqlite
+<code>cache_location</code> (an <code>nxt_handle</code> from nordstatExtras), the response
+is stored in the shared multi-process cache; otherwise a legacy <code>.rds</code>
+file is written under <code><a href="pixieweb_cache_dir.html">pixieweb_cache_dir()</a></code>.</p></dd>
+
+
+<dt id="arg-cache-location">cache_location<a class="anchor" aria-label="anchor" href="#arg-cache-location"></a></dt>
+<dd><p>Either a path to a <code>.sqlite</code> file / <code>nxt_handle</code>,
+or a directory for legacy <code>.rds</code> caching. Defaults to
+<code><a href="pixieweb_cache_dir.html">pixieweb_cache_dir()</a></code>.</p></dd>
 
 
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>

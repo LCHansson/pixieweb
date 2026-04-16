@@ -63,5 +63,5 @@ if (px_available(scb)) {
 #>   Variables: type of network, observations, year
 #>   Source: Statistics Sweden 
 #> 
-#> ... and 97 more table(s).
+#> ... and 347 more table(s).
 ```

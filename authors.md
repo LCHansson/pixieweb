@@ -10,12 +10,12 @@ Source:
 [`DESCRIPTION`](https://github.com/lchansson/pixieweb/blob/master/DESCRIPTION)
 
 Hansson L (2026). *pixieweb: Access PX-Web Statistical Data from R*. R
-package version 0.1.1, <https://lchansson.github.io/pixieweb/>.
+package version 0.1.1.9002, <https://lchansson.github.io/pixieweb/>.
 
     @Manual{,
       title = {pixieweb: Access PX-Web Statistical Data from R},
       author = {Love Hansson},
       year = {2026},
-      note = {R package version 0.1.1},
+      note = {R package version 0.1.1.9002},
       url = {https://lchansson.github.io/pixieweb/},
     }

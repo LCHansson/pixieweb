@@ -26,7 +26,14 @@ get_tables(
 
 - query:
 
-  Free-text search string (sent to API as server-side search).
+  Free-text search string (sent to API as server-side search). On v2
+  APIs (e.g. SCB) the server-side search is an **exact token match** by
+  default — `query = "befolk"` will not find tables with "befolkning" in
+  the title. Use explicit wildcards (`query = "befolk*"`) for prefix
+  matching. Wildcards can also appear mid-term (e.g. `*arbets*`). This
+  is a property of the PX-Web server, not pixieweb; behaviour may vary
+  by agency. Case-insensitive. Non-ASCII characters (å/ä/ö etc.) are
+  URL-encoded automatically.
 
 - id:
 
@@ -82,7 +89,7 @@ if (px_available(scb)) {
   # Tables updated in the last 30 days
   get_tables(scb, updated_since = 30)
 }# }
-#> # A tibble: 100 × 13
+#> # A tibble: 322 × 13
 #>    id      title description category updated first_period last_period time_unit
 #>    <chr>   <chr> <chr>       <chr>    <chr>   <chr>        <chr>       <chr>    
 #>  1 TAB1872 Indu… ""          public   2026-0… 2000M01      2026M02     Monthly  
@@ -95,7 +102,7 @@ if (px_available(scb)) {
 #>  8 TAB2612 Part… ""          public   2026-0… 2017         2025        Annual   
 #>  9 TAB3789 Part… ""          public   2026-0… 2017         2025        Annual   
 #> 10 TAB4203 Part… ""          public   2026-0… 2017         2025        Annual   
-#> # ℹ 90 more rows
+#> # ℹ 312 more rows
 #> # ℹ 5 more variables: variables <list>, subject_code <chr>, subject_path <chr>,
 #> #   source <chr>, discontinued <lgl>
 ```

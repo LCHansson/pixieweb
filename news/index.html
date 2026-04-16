@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">pixieweb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9002</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,6 +38,27 @@
       <small>Source: <a href="https://github.com/lchansson/pixieweb/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.1.9002" id="pixieweb-0119002">pixieweb 0.1.1.9002<a class="anchor" aria-label="anchor" href="#pixieweb-0119002"></a></h2>
+<div class="section level3">
+<h3 id="new-features-0-1-1-9002">New features<a class="anchor" aria-label="anchor" href="#new-features-0-1-1-9002"></a></h3>
+<ul><li>
+<strong><code><a href="../reference/get_variables.html">get_variables()</a></code> gains <code>cache</code> and <code>cache_location</code> arguments</strong>, matching the interface of <code><a href="../reference/get_tables.html">get_tables()</a></code> and <code><a href="../reference/get_data.html">get_data()</a></code>. Variable metadata can now be cached to the shared SQLite backend via an <code>nxt_handle</code> from nordstatExtras, or to the legacy <code>.rds</code> directory. Previously, callers that passed these arguments (reasonably assuming parity with the other <code>get_*</code> functions) received a silent error via consumer-side <code>tryCatch</code> wrapping.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="documentation-0-1-1-9002">Documentation<a class="anchor" aria-label="anchor" href="#documentation-0-1-1-9002"></a></h3>
+<ul><li>
+<strong><code>get_tables(query = ...)</code> documentation now covers wildcard behaviour.</strong> On v2 APIs the server-side search is an exact token match by default; <code>"befolk"</code> will not find <code>"befolkning"</code>. Use explicit wildcards (<code>"befolk*"</code>, <code>"*arbets*"</code>) for prefix or substring matching.</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.1.9001" id="pixieweb-0119001">pixieweb 0.1.1.9001<a class="anchor" aria-label="anchor" href="#pixieweb-0119001"></a></h2>
+<div class="section level3">
+<h3 id="bug-fixes-0-1-1-9001">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-1-9001"></a></h3>
+<ul><li><p><strong><code><a href="../reference/get_tables.html">get_tables()</a></code> now paginates transparently on v2 APIs.</strong> Previously, the v2 code path sent a single request with <code>pageSize = max_results</code> (default 100). For SCB, which holds tens of thousands of tables, users had to discover the undocumented workaround of setting <code>max_results = 100000L</code> to avoid silently capped results. The new implementation loops over <code>pageNumber</code> in 1000-row chunks, stopping when the API reports <code>totalPages</code> reached, when <code>max_results</code> is satisfied, when a short page is returned, or at a 50000-row safety cap for the rare “no filter, no <code>max_results</code>” full-listing case. <code>max_results = NULL</code> (the default) now means “all matching tables”, consistent with <code>rKolada::get_kpi()</code> and <code>rTrafa::get_products()</code>. A user query for “befolkning” on SCB that previously returned 100 tables now returns all 205 in roughly 1 second.</p></li>
+<li><p><strong><code>get_tables(query = ...)</code> now URL-encodes the query parameter.</strong> Previously, <code>get_tables_v2</code> built the request URL with a plain <code><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste()</a></code> call, unlike the v1 code path which correctly used <code><a href="https://rdrr.io/r/utils/URLencode.html" class="external-link">utils::URLencode()</a></code>. As a result, any search term containing non-ASCII characters (å/ä/ö, accented letters, spaces, punctuation) silently returned zero tables even when matching tables existed. For SCB searches this meant almost all Swedish queries failed. Verified against the SCB API: <code>query = "arbetslöshet"</code> now correctly returns tables such as TAB203 <em>Arbetslösa 16-64 år (AKU)</em>.</p></li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.1" id="pixieweb-011">pixieweb 0.1.1<a class="anchor" aria-label="anchor" href="#pixieweb-011"></a></h2>
 <div class="section level3">

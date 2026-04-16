@@ -1,5 +1,60 @@
 # Changelog
 
+## pixieweb 0.1.1.9002
+
+### New features
+
+- **[`get_variables()`](https://lchansson.github.io/pixieweb/reference/get_variables.md)
+  gains `cache` and `cache_location` arguments**, matching the interface
+  of
+  [`get_tables()`](https://lchansson.github.io/pixieweb/reference/get_tables.md)
+  and
+  [`get_data()`](https://lchansson.github.io/pixieweb/reference/get_data.md).
+  Variable metadata can now be cached to the shared SQLite backend via
+  an `nxt_handle` from nordstatExtras, or to the legacy `.rds`
+  directory. Previously, callers that passed these arguments (reasonably
+  assuming parity with the other `get_*` functions) received a silent
+  error via consumer-side `tryCatch` wrapping.
+
+### Documentation
+
+- **`get_tables(query = ...)` documentation now covers wildcard
+  behaviour.** On v2 APIs the server-side search is an exact token match
+  by default; `"befolk"` will not find `"befolkning"`. Use explicit
+  wildcards (`"befolk*"`, `"*arbets*"`) for prefix or substring
+  matching.
+
+## pixieweb 0.1.1.9001
+
+### Bug fixes
+
+- **[`get_tables()`](https://lchansson.github.io/pixieweb/reference/get_tables.md)
+  now paginates transparently on v2 APIs.** Previously, the v2 code path
+  sent a single request with `pageSize = max_results` (default 100). For
+  SCB, which holds tens of thousands of tables, users had to discover
+  the undocumented workaround of setting `max_results = 100000L` to
+  avoid silently capped results. The new implementation loops over
+  `pageNumber` in 1000-row chunks, stopping when the API reports
+  `totalPages` reached, when `max_results` is satisfied, when a short
+  page is returned, or at a 50000-row safety cap for the rare “no
+  filter, no `max_results`” full-listing case. `max_results = NULL` (the
+  default) now means “all matching tables”, consistent with
+  `rKolada::get_kpi()` and `rTrafa::get_products()`. A user query for
+  “befolkning” on SCB that previously returned 100 tables now returns
+  all 205 in roughly 1 second.
+
+- **`get_tables(query = ...)` now URL-encodes the query parameter.**
+  Previously, `get_tables_v2` built the request URL with a plain
+  [`paste()`](https://rdrr.io/r/base/paste.html) call, unlike the v1
+  code path which correctly used
+  [`utils::URLencode()`](https://rdrr.io/r/utils/URLencode.html). As a
+  result, any search term containing non-ASCII characters (å/ä/ö,
+  accented letters, spaces, punctuation) silently returned zero tables
+  even when matching tables existed. For SCB searches this meant almost
+  all Swedish queries failed. Verified against the SCB API:
+  `query = "arbetslöshet"` now correctly returns tables such as TAB203
+  *Arbetslösa 16-64 år (AKU)*.
+
 ## pixieweb 0.1.1
 
 ### New features

@@ -7,7 +7,13 @@ data.
 ## Usage
 
 ``` r
-get_variables(api, table_id, verbose = FALSE)
+get_variables(
+  api,
+  table_id,
+  cache = FALSE,
+  cache_location = pixieweb_cache_dir,
+  verbose = FALSE
+)
 ```
 
 ## Arguments
@@ -19,6 +25,20 @@ get_variables(api, table_id, verbose = FALSE)
 - table_id:
 
   A single table ID (character).
+
+- cache:
+
+  Logical, cache results locally. When combined with a sqlite
+  `cache_location` (an `nxt_handle` from nordstatExtras), the response
+  is stored in the shared multi-process cache; otherwise a legacy `.rds`
+  file is written under
+  [`pixieweb_cache_dir()`](https://lchansson.github.io/pixieweb/reference/pixieweb_cache_dir.md).
+
+- cache_location:
+
+  Either a path to a `.sqlite` file / `nxt_handle`, or a directory for
+  legacy `.rds` caching. Defaults to
+  [`pixieweb_cache_dir()`](https://lchansson.github.io/pixieweb/reference/pixieweb_cache_dir.md).
 
 - verbose:
 
