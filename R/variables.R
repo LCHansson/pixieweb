@@ -5,6 +5,13 @@
 #'
 #' @param api A `<px_api>` object.
 #' @param table_id A single table ID (character).
+#' @param cache Logical, cache results locally. When combined with a sqlite
+#'   `cache_location` (an `nxt_handle` from nordstatExtras), the response
+#'   is stored in the shared multi-process cache; otherwise a legacy `.rds`
+#'   file is written under [pixieweb_cache_dir()].
+#' @param cache_location Either a path to a `.sqlite` file / `nxt_handle`,
+#'   or a directory for legacy `.rds` caching. Defaults to
+#'   [pixieweb_cache_dir()].
 #' @param verbose Print request details.
 #' @return A tibble with columns: `code`, `text`, `n_values`, `elimination`,
 #'   `time`, `values`, `codelists`, `table_id`.
@@ -15,15 +22,51 @@
 #' if (px_available(scb)) {
 #'   get_variables(scb, "TAB638")
 #' }}
-get_variables <- function(api, table_id, verbose = FALSE) {
+get_variables <- function(api, table_id,
+                          cache = FALSE,
+                          cache_location = pixieweb_cache_dir,
+                          verbose = FALSE) {
   check_px_api(api)
   stopifnot(is.character(table_id), length(table_id) == 1)
 
-  if (api$version == "v2") {
+  key <- list(
+    alias = api$alias %||% "default",
+    lang = api$lang %||% "default",
+    table_id = table_id
+  )
+
+  # SQLite-backed cache via nordstatExtras, when available. Falls back to
+  # the legacy .rds cache_handler otherwise.
+  nxt_ch <- NULL
+  ch <- NULL
+  if (isTRUE(cache) && !is.null(cache_location) &&
+      requireNamespace("nordstatExtras", quietly = TRUE) &&
+      nordstatExtras::nxt_is_backend(cache_location)) {
+    nxt_ch <- nordstatExtras::nxt_cache_handler(
+      source = "pixieweb", entity = "variables", cache = TRUE,
+      cache_location = cache_location,
+      kind = "metadata",
+      key_params = key
+    )
+    if (nxt_ch("discover")) return(nxt_ch("load"))
+  } else {
+    ch <- cache_handler("variables", cache, cache_location, key_params = key)
+    if (ch("discover")) return(ch("load"))
+  }
+
+  result <- if (api$version == "v2") {
     get_variables_v2(api, table_id, verbose)
   } else {
     get_variables_v1(api, table_id, verbose)
   }
+
+  if (is.null(result)) return(NULL)
+
+  if (!is.null(nxt_ch)) {
+    nxt_ch("store", result)
+    return(result)
+  }
+  ch("store", result)
 }
 
 #' @noRd

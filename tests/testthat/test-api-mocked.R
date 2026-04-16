@@ -47,6 +47,37 @@ test_that("get_tables_v2 parses mocked response correctly", {
   expect_equal(result$source, "TestSource")
 })
 
+test_that("get_tables_v2 URL-encodes query parameter", {
+  api <- structure(
+    list(base_url = "https://example.com/api/v2",
+         alias = "test", lang = "en", version = "v2",
+         config = list(max_cells = 100000)),
+    class = "px_api"
+  )
+
+  captured_urls <- character()
+  local_mocked_bindings(
+    px_get = function(url, verbose = FALSE) {
+      captured_urls <<- c(captured_urls, url)
+      list(tables = list(), page = list(pageNumber = 1, pageSize = 100,
+                                        totalElements = 0, totalPages = 0))
+    }
+  )
+
+  # Swedish search term with non-ASCII characters must be percent-encoded
+  pixieweb:::get_tables_v2(api, query = "arbetslöshet", id = NULL,
+                           updated_since = NULL, max_results = 5,
+                           verbose = FALSE)
+  expect_match(captured_urls[1], "query=arbetsl%C3%B6shet", fixed = TRUE)
+
+  # Terms with spaces must be encoded too
+  captured_urls <- character()
+  pixieweb:::get_tables_v2(api, query = "word with spaces", id = NULL,
+                           updated_since = NULL, max_results = 5,
+                           verbose = FALSE)
+  expect_match(captured_urls[1], "query=word%20with%20spaces", fixed = TRUE)
+})
+
 test_that("get_tables returns NULL on API failure", {
   api <- structure(
     list(base_url = "https://example.com/api/v2",

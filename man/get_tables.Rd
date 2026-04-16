@@ -19,7 +19,14 @@ get_tables(
 \arguments{
 \item{api}{A \verb{<px_api>} object.}
 
-\item{query}{Free-text search string (sent to API as server-side search).}
+\item{query}{Free-text search string (sent to API as server-side search).
+On v2 APIs (e.g. SCB) the server-side search is an \strong{exact token match}
+by default — \code{query = "befolk"} will not find tables with "befolkning"
+in the title. Use explicit wildcards (\code{query = "befolk*"}) for prefix
+matching. Wildcards can also appear mid-term (e.g. \verb{*arbets*}). This is
+a property of the PX-Web server, not pixieweb; behaviour may vary by
+agency. Case-insensitive. Non-ASCII characters (å/ä/ö etc.) are
+URL-encoded automatically.}
 
 \item{id}{Character vector of specific table IDs to retrieve.}
 

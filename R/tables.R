@@ -4,6 +4,13 @@
 #'
 #' @param api A `<px_api>` object.
 #' @param query Free-text search string (sent to API as server-side search).
+#'   On v2 APIs (e.g. SCB) the server-side search is an **exact token match**
+#'   by default — `query = "befolk"` will not find tables with "befolkning"
+#'   in the title. Use explicit wildcards (`query = "befolk*"`) for prefix
+#'   matching. Wildcards can also appear mid-term (e.g. `*arbets*`). This is
+#'   a property of the PX-Web server, not pixieweb; behaviour may vary by
+#'   agency. Case-insensitive. Non-ASCII characters (å/ä/ö etc.) are
+#'   URL-encoded automatically.
 #' @param id Character vector of specific table IDs to retrieve.
 #' @param updated_since Only return tables updated in the last N days (integer).
 #' @param max_results Maximum number of tables to return.
@@ -111,34 +118,84 @@ get_tables_v2 <- function(api, query, id, updated_since, max_results, verbose) {
     return(dplyr::bind_rows(rows))
   }
 
-  # Search / list — build URL with lang + additional params
+  # Search / list — paginate transparently.
+  # PX-Web v2 caps pageSize server-side (SCB allows up to 10000; we use 1000
+  # per page as a safe default). Loop over pageNumber until we've exhausted
+  # totalPages, or until max_results has been reached.
   base <- api_url(api, "tables")
-  # Append extra query params (lang already present from api_url)
-  extra_params <- list(
-    query = query,
-    pastDays = updated_since,
-    pageSize = max_results %||% 100
-  )
-  extra_params <- extra_params[!vapply(extra_params, is.null, logical(1))]
-  if (length(extra_params) > 0) {
+
+  # Target number of rows — NULL means "all". Safety: when the caller doesn't
+  # set max_results and doesn't supply any filter (neither query nor
+  # updated_since), cap the full-listing walk to avoid accidentally pulling
+  # every table on the server.
+  unbounded_full_listing <- is.null(max_results) &&
+                            is.null(query) &&
+                            is.null(updated_since)
+  target <- max_results
+  page_size <- if (!is.null(target) && is.finite(target)) {
+    as.integer(min(1000L, max(1L, target)))
+  } else {
+    1000L
+  }
+
+  all_rows <- list()
+  page_number <- 1L
+  total_pages <- NA_integer_
+
+  repeat {
+    extra_params <- list(
+      query = query,
+      pastDays = updated_since,
+      pageSize = page_size,
+      pageNumber = page_number
+    )
+    extra_params <- extra_params[!vapply(extra_params, is.null, logical(1))]
     extra_str <- paste(
       names(extra_params),
-      vapply(extra_params, as.character, character(1)),
+      vapply(extra_params, function(x) {
+        utils::URLencode(as.character(x), reserved = TRUE)
+      }, character(1)),
       sep = "="
     )
-    base <- paste0(base, "&", paste(extra_str, collapse = "&"))
+    url <- paste0(base, "&", paste(extra_str, collapse = "&"))
+
+    raw <- px_get(url, verbose = verbose)
+    if (is.null(raw)) {
+      if (page_number == 1L) return(NULL)
+      break
+    }
+
+    tables <- raw$tables %||% raw
+    if (length(tables) == 0) break
+
+    all_rows <- c(all_rows, lapply(tables, function(t) parse_table_v2(t, api)))
+
+    # Determine stop conditions
+    total_pages <- raw$page$totalPages %||% total_pages
+    got_rows <- length(all_rows)
+    if (!is.null(target) && got_rows >= target) break
+    if (!is.na(total_pages) && page_number >= total_pages) break
+    # If we received fewer than page_size rows, there can be no further page
+    if (length(tables) < page_size) break
+    # Safety cap for truly unbounded full listings
+    if (unbounded_full_listing && got_rows >= 50000L) {
+      cli::cli_warn(c(
+        "Stopped fetching tables at 50000 rows as a safety cap.",
+        i = "Pass {.code max_results = Inf} explicitly to override, or add a {.arg query} filter."
+      ))
+      break
+    }
+
+    page_number <- page_number + 1L
   }
 
-  raw <- px_get(base, verbose = verbose)
-  if (is.null(raw)) return(NULL)
+  if (length(all_rows) == 0) return(empty_tables_tibble())
 
-  tables <- raw$tables %||% raw
-  if (length(tables) == 0) {
-    return(empty_tables_tibble())
+  result <- dplyr::bind_rows(all_rows)
+  if (!is.null(target) && nrow(result) > target) {
+    result <- utils::head(result, target)
   }
-
-  rows <- lapply(tables, function(t) parse_table_v2(t, api))
-  dplyr::bind_rows(rows)
+  result
 }
 
 #' @noRd

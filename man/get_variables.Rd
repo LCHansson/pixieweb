@@ -4,12 +4,27 @@
 \alias{get_variables}
 \title{Get variables (dimensions) for a table}
 \usage{
-get_variables(api, table_id, verbose = FALSE)
+get_variables(
+  api,
+  table_id,
+  cache = FALSE,
+  cache_location = pixieweb_cache_dir,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{api}{A \verb{<px_api>} object.}
 
 \item{table_id}{A single table ID (character).}
+
+\item{cache}{Logical, cache results locally. When combined with a sqlite
+\code{cache_location} (an \code{nxt_handle} from nordstatExtras), the response
+is stored in the shared multi-process cache; otherwise a legacy \code{.rds}
+file is written under \code{\link[=pixieweb_cache_dir]{pixieweb_cache_dir()}}.}
+
+\item{cache_location}{Either a path to a \code{.sqlite} file / \code{nxt_handle},
+or a directory for legacy \code{.rds} caching. Defaults to
+\code{\link[=pixieweb_cache_dir]{pixieweb_cache_dir()}}.}
 
 \item{verbose}{Print request details.}
 }
