@@ -123,6 +123,24 @@ px_url <- function(...) {
   paste(parts, collapse = "/")
 }
 
+#' Percent-encode a table/folder path for use in a URL
+#'
+#' v1 database and folder ids may contain spaces and other reserved
+#' characters (e.g. sjv's "Jordbruksverkets statistikdatabas"). Each
+#' path segment is encoded individually; the `/` separators are kept.
+#' Already-encoded input is left untouched (no double encoding).
+#' @param path Character path, possibly with `/` separators.
+#' @return Encoded path.
+#' @noRd
+px_encode_path <- function(path) {
+  if (is.null(path) || !nzchar(path)) return(path)
+  segments <- strsplit(path, "/", fixed = TRUE)[[1]]
+  encoded <- vapply(segments, function(s) {
+    if (grepl("%[0-9A-Fa-f]{2}", s)) s else utils::URLencode(s, reserved = TRUE)
+  }, character(1), USE.NAMES = FALSE)
+  paste(encoded, collapse = "/")
+}
+
 #' Add query parameters to a URL
 #' @param url Base URL.
 #' @param ... Named parameters. NULL values are dropped.

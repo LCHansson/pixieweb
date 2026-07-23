@@ -51,8 +51,13 @@ px_to <- function(value) {
 
 #' @rdname px_selections
 #' @export
-px_range <- function(from, to) {
+px_range <- function(from, to = NULL) {
   stopifnot(is.character(from), length(from) == 1)
+  if (is.null(to)) {
+    # Open-ended range: "from X onwards" — same as px_from(). Lets stored,
+    # deterministic query specs avoid hard-coding an end period.
+    return(new_px_selection("from", values = from))
+  }
   stopifnot(is.character(to), length(to) == 1)
   new_px_selection("range", values = c(from, to))
 }

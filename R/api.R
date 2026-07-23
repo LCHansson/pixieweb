@@ -17,6 +17,7 @@
 #'   custom <- px_api("https://my.statbank.example/api/v2/", lang = "en")
 #' }}
 px_api <- function(x, lang = NULL, version = "v2", verbose = FALSE) {
+  # Input validation
   stopifnot(is.character(x), length(x) == 1)
   stopifnot(version %in% c("v1", "v2"))
 
@@ -75,12 +76,29 @@ px_api <- function(x, lang = NULL, version = "v2", verbose = FALSE) {
   api
 }
 
-#' Fetch API configuration
+# Package-private config cache: one /config round-trip per base_url per
+# session-day instead of per px_api() call (~80–100 ms saved per call;
+# config is static in practice: max_cells, rate limits).
+.px_config_cache <- new.env(parent = emptyenv())
+
+#' Fetch API configuration (memoized per base_url, TTL 24 h)
 #' @param api A `<px_api>` object.
 #' @param verbose Print details.
 #' @return A list with config values, or a default list on failure.
 #' @noRd
 fetch_api_config <- function(api, verbose = FALSE) {
+  cache_key <- api$base_url
+  hit <- .px_config_cache[[cache_key]]
+  if (!is.null(hit) && difftime(Sys.time(), hit$at, units = "hours") < 24) {
+    return(hit$config)
+  }
+  config <- fetch_api_config_live(api, verbose = verbose)
+  assign(cache_key, list(config = config, at = Sys.time()), envir = .px_config_cache)
+  config
+}
+
+#' @noRd
+fetch_api_config_live <- function(api, verbose = FALSE) {
   config_url <- px_url(api$base_url, "config")
   raw <- px_get(config_url, verbose = verbose)
 

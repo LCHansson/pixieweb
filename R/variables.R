@@ -128,7 +128,7 @@ get_variables_v2 <- function(api, table_id, verbose) {
 
 #' @noRd
 get_variables_v1 <- function(api, table_id, verbose) {
-  url <- px_url(api_base_url(api), table_id)
+  url <- px_url(api_base_url(api), px_encode_path(table_id))
   raw <- px_get(url, verbose = verbose)
   if (is.null(raw)) return(NULL)
 

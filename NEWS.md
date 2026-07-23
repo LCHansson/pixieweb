@@ -1,3 +1,25 @@
+# pixieweb 0.1.1.9003
+
+## Bug fixes
+
+- **v1 catalog walks now reach databases with spaces in their ids** (e.g.
+  sjv's "Jordbruksverkets statistikdatabas"): all v1 URL path segments are
+  percent-encoded via the new internal `px_encode_path()`. Previously
+  `get_tables()` silently returned zero tables for such APIs.
+- **msb catalogue entry updated**: MSB's statistics moved to MCF —
+  `https://statistik.mcf.se/PXWeb/api/v1`.
+
+## New features
+
+- **Clear-text `subject_path` for v1 tree walks**: the walk now accumulates
+  each folder's text label, so v1 tables get a readable subject path
+  ("Folkhälsodata/ANDTS/…") instead of `NA`.
+- **`px_range(from)` without `to`** is now an open-ended range (equivalent
+  to `px_from(from)`), so stored query specs can express "from year X
+  onwards" without hard-coding an end period.
+- **`px_api()` config fetches are memoized** per base_url (24 h TTL) —
+  saves an ~80–100 ms round-trip on every repeated `px_api()` call.
+
 # pixieweb 0.1.1.9002
 
 ## New features

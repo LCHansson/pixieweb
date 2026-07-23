@@ -72,7 +72,7 @@ compose_data_query <- function(api, table_id, ..., .codelist = NULL) {
     url <- paste0(api_url(api, "tables", table_id, "data"), "&outputFormat=json-stat2")
     body <- build_query_body_v2(selections, .codelist, api)
   } else {
-    url <- px_url(api_base_url(api), table_id)
+    url <- px_url(api_base_url(api), px_encode_path(table_id))
     body <- build_query_body_v1(selections, .codelist)
   }
 

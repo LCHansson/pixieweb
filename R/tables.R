@@ -249,7 +249,7 @@ get_tables_v1 <- function(api, query, id, updated_since, max_results, verbose,
   # If specific IDs requested, fetch metadata directly
   if (!is.null(id)) {
     rows <- lapply(id, function(tid) {
-      url <- px_url(api_base_url(api), tid)
+      url <- px_url(api_base_url(api), px_encode_path(tid))
       raw <- px_get(url, verbose = verbose)
       if (is.null(raw)) return(NULL)
       parse_table_v1(raw, tid, api)
@@ -304,6 +304,7 @@ v1_tree_walk_with_timeout <- function(raw, base, query, verbose, max_results,
 
   tables <- collect_tables_v1(raw, base, query, verbose,
                                depth = 0, max_depth = 5, path_prefix = "",
+                               text_prefix = "",
                                max_results = max_results %||% Inf,
                                deadline = deadline)
 
@@ -368,7 +369,7 @@ search_tables_v1 <- function(api, base, query, max_results, verbose) {
 
   for (db in db_paths) {
     search_url <- paste0(
-      px_url(base, db),
+      px_url(base, px_encode_path(db)),
       "?query=", utils::URLencode(query, reserved = TRUE)
     )
     raw <- suppressWarnings(px_get(search_url, verbose = verbose))
@@ -420,9 +421,14 @@ search_tables_v1 <- function(api, base, query, max_results, verbose) {
 }
 
 #' Recursively collect tables from v1 level hierarchy
+#'
+#' `text_prefix` accumulates the folder TEXT labels along the walk, giving
+#' tree-walked tables a clear-text `subject_path` ("Folkhälsodata/ANDTS/…")
+#' — previously NA for v1 (the API only exposes labels during navigation).
 #' @noRd
 collect_tables_v1 <- function(items, base_url, query, verbose,
                                depth = 0, max_depth = 5, path_prefix = "",
+                               text_prefix = "",
                                max_results = Inf, deadline = NULL) {
   if (depth > max_depth) return(list())
 
@@ -435,10 +441,12 @@ collect_tables_v1 <- function(items, base_url, query, verbose,
 
     item_type <- item$type %||% NA_character_
 
-    # Detect non-standard root items: dbid entries or items with only text
-    # (no type field). These are folder-like — recurse into them.
+    # Detect non-standard root items: dbid entries or untyped items with a
+    # text label. Some instances (sjv, mcf) list databases with BOTH id and
+    # text but no type — those are folders too, so the presence of an id
+    # must not disqualify them. Real tables always carry type "t".
     is_dbid <- !is.null(item$dbid) && is.na(item_type)
-    is_untyped_folder <- is.na(item_type) && !is_dbid && !is.null(item$text) && is.null(item$id)
+    is_untyped_folder <- is.na(item_type) && !is_dbid && !is.null(item$text)
 
     if (identical(item_type, "t")) {
       # It's a table — build full path ID
@@ -459,7 +467,7 @@ collect_tables_v1 <- function(items, base_url, query, verbose,
         time_unit = NA_character_,
         variables = list(character()),
         subject_code = NA_character_,
-        subject_path = NA_character_,
+        subject_path = if (nzchar(text_prefix)) text_prefix else NA_character_,
         source = NA_character_,
         discontinued = FALSE
       )
@@ -475,13 +483,21 @@ collect_tables_v1 <- function(items, base_url, query, verbose,
     } else if (identical(item_type, "l") || is_dbid || is_untyped_folder) {
       # It's a folder (level, dbid entry, or untyped root item) — recurse
       folder_id <- item$dbid %||% item$id %||% ""
-      child_url <- px_url(base_url, folder_id)
+      folder_text <- item$text %||% folder_id
+      child_url <- px_url(base_url, px_encode_path(folder_id))
       child_path <- if (nzchar(path_prefix) && nzchar(folder_id)) {
         paste0(path_prefix, "/", folder_id)
       } else if (nzchar(folder_id)) {
         folder_id
       } else {
         path_prefix
+      }
+      child_text <- if (nzchar(text_prefix) && nzchar(folder_text)) {
+        paste0(text_prefix, "/", folder_text)
+      } else if (nzchar(folder_text)) {
+        folder_text
+      } else {
+        text_prefix
       }
 
       children <- px_get(child_url, verbose = verbose)
@@ -490,6 +506,7 @@ collect_tables_v1 <- function(items, base_url, query, verbose,
         sub_tables <- collect_tables_v1(
           children, child_url, query, verbose,
           depth + 1, max_depth, path_prefix = child_path,
+          text_prefix = child_text,
           max_results = remaining, deadline = deadline
         )
         tables <- c(tables, sub_tables)
@@ -1061,7 +1078,7 @@ fetch_table_metadata <- function(api, table_id, verbose = FALSE) {
     url <- api_url(api, "tables", table_id, "metadata")
     px_get(url, verbose = verbose)
   } else {
-    url <- px_url(api_base_url(api), table_id)
+    url <- px_url(api_base_url(api), px_encode_path(table_id))
     px_get(url, verbose = verbose)
   }
 }
