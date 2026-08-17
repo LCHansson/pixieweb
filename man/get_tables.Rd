@@ -23,10 +23,15 @@ get_tables(
 On v2 APIs (e.g. SCB) the server-side search is an \strong{exact token match}
 by default — \code{query = "befolk"} will not find tables with "befolkning"
 in the title. Use explicit wildcards (\code{query = "befolk*"}) for prefix
-matching. Wildcards can also appear mid-term (e.g. \verb{*arbets*}). This is
-a property of the PX-Web server, not pixieweb; behaviour may vary by
-agency. Case-insensitive. Non-ASCII characters (å/ä/ö etc.) are
-URL-encoded automatically.}
+matching. Only \emph{trailing} wildcards are reliably supported: SCB's v2
+search rejects a wildcard at the start of a term (\verb{*arbets*}) with an
+HTTP 500, and pixieweb raises an informative error when that happens.
+For contains-style matching, fetch a broader set and filter client-side
+with \code{\link[=table_search]{table_search()}}. This is a property of the PX-Web server, not
+pixieweb; behaviour may vary by agency. Case-insensitive. Non-ASCII
+characters (å/ä/ö etc.) are URL-encoded automatically. Note also that
+v2 search does not index legacy subject-area codes ("MI0107"): search
+in clear text and filter on the \code{subject_code} column instead.}
 
 \item{id}{Character vector of specific table IDs to retrieve.}
 

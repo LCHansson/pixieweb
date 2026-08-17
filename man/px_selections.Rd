@@ -21,7 +21,7 @@ px_from(value)
 
 px_to(value)
 
-px_range(from, to)
+px_range(from, to = NULL)
 
 \method{print}{px_selection}(x, ...)
 }

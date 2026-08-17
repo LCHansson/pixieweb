@@ -7,10 +7,15 @@
 #'   On v2 APIs (e.g. SCB) the server-side search is an **exact token match**
 #'   by default — `query = "befolk"` will not find tables with "befolkning"
 #'   in the title. Use explicit wildcards (`query = "befolk*"`) for prefix
-#'   matching. Wildcards can also appear mid-term (e.g. `*arbets*`). This is
-#'   a property of the PX-Web server, not pixieweb; behaviour may vary by
-#'   agency. Case-insensitive. Non-ASCII characters (å/ä/ö etc.) are
-#'   URL-encoded automatically.
+#'   matching. Only *trailing* wildcards are reliably supported: SCB's v2
+#'   search rejects a wildcard at the start of a term (`*arbets*`) with an
+#'   HTTP 500, and pixieweb raises an informative error when that happens.
+#'   For contains-style matching, fetch a broader set and filter client-side
+#'   with [table_search()]. This is a property of the PX-Web server, not
+#'   pixieweb; behaviour may vary by agency. Case-insensitive. Non-ASCII
+#'   characters (å/ä/ö etc.) are URL-encoded automatically. Note also that
+#'   v2 search does not index legacy subject-area codes ("MI0107"): search
+#'   in clear text and filter on the `subject_code` column instead.
 #' @param id Character vector of specific table IDs to retrieve.
 #' @param updated_since Only return tables updated in the last N days (integer).
 #' @param max_results Maximum number of tables to return.
@@ -161,7 +166,23 @@ get_tables_v2 <- function(api, query, id, updated_since, max_results, verbose) {
 
     raw <- px_get(url, verbose = verbose)
     if (is.null(raw)) {
-      if (page_number == 1L) return(NULL)
+      if (page_number == 1L) {
+        # SCB's v2 search endpoint rejects a wildcard at the start of a
+        # term with HTTP 500; surface that as an actionable error instead
+        # of a silent zero-hit result.
+        if (!is.null(query) && grepl("(^|\\s)\\*", query)) {
+          abort(c(
+            "The table search was rejected by the API.",
+            x = paste0("`query = \"", query,
+                       "\"` has a wildcard at the start of a term, which ",
+                       "SCB's PX-Web v2 search does not support (HTTP 500)."),
+            i = "Use a trailing wildcard instead, e.g. \"arbets*\".",
+            i = paste0("For contains-style matching, fetch a broader set ",
+                       "and filter client-side with table_search().")
+          ))
+        }
+        return(NULL)
+      }
       break
     }
 

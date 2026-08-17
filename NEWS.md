@@ -1,3 +1,24 @@
+# pixieweb 0.1.1.9004
+
+## Bug fixes
+
+- **v1 auto-chunking no longer crashes** (`"Variable selection must be a
+  character vector or a px_*() helper"`): v1 variable metadata stores value
+  codes as list-columns, and the chunk splitter passed those lists straight
+  into the per-chunk selections. Codes are now normalized to character in
+  `check_query_size()`, and chunked v1 fetches verified byte-identical to
+  unchunked ones (konj Indikatorm.px, 30 828 cells / 3 chunks).
+- **Split-variable choice ignores eliminated variables correctly**: the
+  splittable set was subset with a logical index of the wrong length when a
+  variable was eliminated (assigning `NULL` into a list removes the element);
+  now indexed by name.
+- **Leading wildcards fail loudly**: SCB's v2 search rejects a wildcard at
+  the start of a term with HTTP 500, which surfaced as a silent zero-hit
+  warning. `get_tables()` now raises an informative error suggesting a
+  trailing wildcard or client-side `table_search()`. Documentation no longer
+  claims mid-term wildcards work, and notes that legacy subject-area codes
+  ("MI0107") are not indexed by the v2 search.
+
 # pixieweb 0.1.1.9003
 
 ## Bug fixes

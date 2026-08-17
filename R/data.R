@@ -234,18 +234,24 @@ check_query_size <- function(selections, api, table_id, max_cells, verbose,
   var_sizes <- list()
   var_values <- list()
 
+  # v1 metadata stores the per-variable value tibble with list-columns
+  # (each code is a length-1 list element); v2 stores plain character
+  # vectors. Normalize to character so chunk batches are always valid
+  # selections downstream (resolve_selection_*() rejects bare lists).
+  codes_of <- function(v) as.character(unlist(v$values[[1]]$code))
+
   for (i in seq_len(nrow(vars))) {
     v <- vars[i, ]
     code <- v$code
     sel <- selections[[code]]
 
     if (is.null(sel)) {
-      # Eliminated
+      # Eliminated. Note: assigning NULL into var_values would *remove*
+      # the element, so only var_sizes gets an entry here.
       var_sizes[[code]] <- 1
-      var_values[[code]] <- NULL
     } else if (is.character(sel) && length(sel) == 1 && sel == "*") {
       var_sizes[[code]] <- v$n_values
-      var_values[[code]] <- v$values[[1]]$code
+      var_values[[code]] <- codes_of(v)
     } else if (is.character(sel)) {
       var_sizes[[code]] <- length(sel)
       var_values[[code]] <- sel
@@ -258,7 +264,7 @@ check_query_size <- function(selections, api, table_id, max_cells, verbose,
       )
       var_sizes[[code]] <- n
       # For top/bottom, get the actual value codes
-      all_codes <- v$values[[1]]$code
+      all_codes <- codes_of(v)
       var_values[[code]] <- switch(sel$type,
         top = utils::head(all_codes, n),
         bottom = utils::tail(all_codes, n),
@@ -266,7 +272,7 @@ check_query_size <- function(selections, api, table_id, max_cells, verbose,
       )
     } else {
       var_sizes[[code]] <- v$n_values
-      var_values[[code]] <- v$values[[1]]$code
+      var_values[[code]] <- codes_of(v)
     }
   }
 
@@ -277,8 +283,10 @@ check_query_size <- function(selections, api, table_id, max_cells, verbose,
   }
 
   # Find the variable to split on: the one with the most values
-  # (excluding eliminated variables)
-  splittable <- var_sizes[!vapply(var_values, is.null, logical(1))]
+  # (excluding eliminated variables, which have no var_values entry --
+  # indexing by name avoids the misaligned logical index that a
+  # NULL-removed element would cause)
+  splittable <- var_sizes[names(var_values)]
   split_var <- names(which.max(splittable))
   split_values <- var_values[[split_var]]
 
