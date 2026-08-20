@@ -1,3 +1,20 @@
+# pixieweb 0.1.1.9005
+
+## New features
+
+- **Tillväxtanalys added to the API catalogue** (alias `tva`), bringing the
+  catalogue to 14 sources. A PxWeb **v1** instance, Swedish only, at
+  `https://statistik.tillvaxtanalys.se/PxWeb/api/v1` — the statistics
+  authority for Swedish business demography: bankruptcies and composition
+  proceedings, new enterprises, foreign-owned firms, and groups with
+  subsidiaries abroad. Verified with `get_tables()` (14 bankruptcy tables
+  found) and `get_data()` (monthly bankruptcies by industry, 2009M01–,
+  1 688 observations over eight industries).
+  Its database id and every folder segment are clear-text strings with
+  spaces and åäö ("Konkurser och offentliga ackord"), the same shape as the
+  `sjv` entry — `px_encode_path()` (0.1.1.9003) already handles it, so no
+  code change was needed. Reported in `paket/DEV_BACKLOG.md` 2026-08-20.
+
 # pixieweb 0.1.1.9004
 
 ## Bug fixes

@@ -176,5 +176,18 @@
       "sv"
     ],
     "default_lang": "sv"
+  },
+  {
+    "alias": "tva",
+    "description": "Swedish Agency for Growth Policy Analysis (Tillvaxtanalys)",
+    "url": "https://statistik.tillvaxtanalys.se/PxWeb/api/v1",
+    "url_v1": "https://statistik.tillvaxtanalys.se/PxWeb/api/v1",
+    "versions": [
+      "v1"
+    ],
+    "langs": [
+      "sv"
+    ],
+    "default_lang": "sv"
   }
 ]
