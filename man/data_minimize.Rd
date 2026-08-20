@@ -21,7 +21,8 @@ Remove monotonous columns from a data tibble
 \donttest{
 scb <- px_api("scb", lang = "en")
 if (px_available(scb)) {
-  d <- get_data(scb, "TAB638", Region = "0180", Tid = px_top(3))
+  d <- get_data(scb, "TAB638", Region = "0180", ContentsCode = "*",
+                Tid = px_top(3))
   d |> data_minimize()
 }}
 }

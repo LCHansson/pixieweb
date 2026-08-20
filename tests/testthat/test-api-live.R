@@ -103,3 +103,45 @@ test_that("px_api_catalogue returns known APIs", {
   expect_true("scb" %in% cat$alias)
   expect_true("ssb" %in% cat$alias)
 })
+
+# --- Regressions fixed in 0.1.1.9006 --------------------------------------
+
+test_that("get_tables handles multi-word and non-ASCII queries (SCB v2)", {
+  scb <- px_api("scb", lang = "sv")
+  skip_if_not(px_available(scb), "SCB API not reachable")
+
+  tables <- get_tables(scb, query = "nyregistrerade personbilar")
+  expect_s3_class(tables, "tbl_df")
+  expect_true(nrow(tables) > 0)
+
+  swedish <- get_tables(scb, query = "arbetsl\u00f6shet", max_results = 5)
+  expect_true(nrow(swedish) > 0)
+})
+
+test_that("get_tables(max_results = Inf) does not send pageSize=Inf", {
+  scb <- px_api("scb", lang = "sv")
+  skip_if_not(px_available(scb), "SCB API not reachable")
+
+  unlimited <- get_tables(scb, query = "befolkning", max_results = Inf)
+  default <- get_tables(scb, query = "befolkning")
+  expect_true(nrow(unlimited) > 100)
+  expect_equal(nrow(unlimited), nrow(default))
+})
+
+test_that("get_data names the mandatory variables SCB v2 demands", {
+  scb <- px_api("scb", lang = "sv")
+  skip_if_not(px_available(scb), "SCB API not reachable")
+
+  # TAB5166: SNI2007/ContentsCode/Tid are mandatory, Storleksklass is not.
+  expect_error(
+    get_data(scb, "TAB5166", Tid = px_top(1)),
+    "Missing selection for mandatory variable"
+  )
+
+  ok <- get_data(scb, "TAB5166", Tid = px_top(1),
+                 SNI2007 = "01", ContentsCode = "*")
+  expect_s3_class(ok, "tbl_df")
+  expect_true(nrow(ok) > 0)
+  # Storleksklass was omitted and summed away by the server.
+  expect_false("Storleksklass" %in% names(ok))
+})

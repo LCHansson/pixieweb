@@ -22,12 +22,16 @@ compose_table_query(
 
 \item{updated_since}{Days since last update.}
 
-\item{page}{Page number.}
+\item{page}{Page number. A single positive whole number, or \code{NA} (default)
+to leave the parameter out.}
 
-\item{per_page}{Results per page.}
+\item{per_page}{Results per page. A single positive whole number, or \code{NA}
+(default) to leave the parameter out. \code{Inf} is not a legal page size —
+use \code{\link[=get_tables]{get_tables()}}, which paginates transparently.}
 }
 \value{
-A character URL string.
+A character URL string. All parameter values are percent-encoded,
+so multi-word and non-ASCII queries produce a valid URL.
 }
 \description{
 Build the URL for querying the tables endpoint (advanced use).

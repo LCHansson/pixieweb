@@ -19,7 +19,8 @@ Produces a citation string from metadata attached to data by \code{\link[=get_da
 \donttest{
 scb <- px_api("scb", lang = "en")
 if (px_available(scb)) {
-  d <- get_data(scb, "TAB638", Region = "0180", Tid = px_top(3))
+  d <- get_data(scb, "TAB638", Region = "0180", ContentsCode = "*",
+                Tid = px_top(3))
   px_cite(d)
 }}
 }

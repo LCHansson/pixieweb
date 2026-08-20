@@ -35,8 +35,15 @@ code, each value is one of:
 \item A \link{px_selections} helper: \code{px_all()}, \code{px_top()}, \code{px_bottom()},
 \code{px_from()}, \code{px_to()}, \code{px_range()}
 \item Omitted variables are eliminated if the API allows it
-Ignored when \code{query} is provided.
-}}
+}
+
+Only variables whose metadata reports \code{elimination = TRUE} may be
+omitted on a v2 API. Omitting a mandatory one (including \code{ContentsCode}
+and the time variable) is an error naming the variables to add — the
+server's own HTTP 400 does not say which variable is missing. Use
+\code{get_variables()} to see the flag, or let \code{\link[=prepare_query]{prepare_query()}} fill the
+mandatory variables for you.
+Ignored when \code{query} is provided.}
 
 \item{query}{A \verb{<px_query>} object from \code{\link[=prepare_query]{prepare_query()}}. When provided,
 \code{table_id}, \code{...}, and \code{.codelist} are taken from the query object.}
@@ -99,9 +106,11 @@ Requests are paced to respect the API's rate limit.
 scb <- px_api("scb", lang = "en")
 if (px_available(scb)) {
 
-  # Fetch with explicit selections
+  # Fetch with explicit selections. ContentsCode and Tid are mandatory
+  # in this table (elimination = FALSE); Region is not.
   get_data(scb, "TAB638",
     Region = c("0180", "1480"),
+    ContentsCode = "*",
     Tid = px_top(5)
   )
 

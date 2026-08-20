@@ -26,7 +26,8 @@ Handles rate limiting, retries, and error handling.
 \donttest{
 scb <- px_api("scb", lang = "en")
 if (px_available(scb)) {
-  q <- compose_data_query(scb, "TAB638", Region = "0180", Tid = px_top(3))
+  q <- compose_data_query(scb, "TAB638", Region = "0180",
+                          ContentsCode = "*", Tid = px_top(3))
   raw <- execute_query(scb, q$url, q$body)
 }}
 }

@@ -71,8 +71,10 @@ if (px_available(scb)) {
   get_tables(scb, query = "population", cache = TRUE) |>
     table_enrich(cache = TRUE)
 
-  # Per-table cache in a shared SQLite file
-  handle <- nordstatExtras::nxt_open("cache.sqlite")
+  # Per-table cache in a shared SQLite file. In real use, point this at a
+  # durable path; the example writes to a temporary file so that running it
+  # leaves nothing behind in the working directory.
+  handle <- nordstatExtras::nxt_open(tempfile(fileext = ".sqlite"))
   get_tables(scb, query = "population", cache = TRUE,
              cache_location = handle) |>
     table_enrich(cache = TRUE, cache_location = handle)

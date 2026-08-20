@@ -6,9 +6,13 @@
 #' @param query Free-text search string.
 #' @param id Table ID(s).
 #' @param updated_since Days since last update.
-#' @param page Page number.
-#' @param per_page Results per page.
-#' @return A character URL string.
+#' @param page Page number. A single positive whole number, or `NA` (default)
+#'   to leave the parameter out.
+#' @param per_page Results per page. A single positive whole number, or `NA`
+#'   (default) to leave the parameter out. `Inf` is not a legal page size —
+#'   use [get_tables()], which paginates transparently.
+#' @return A character URL string. All parameter values are percent-encoded,
+#'   so multi-word and non-ASCII queries produce a valid URL.
 #' @export
 #' @examples
 #' \donttest{
@@ -25,6 +29,16 @@ compose_table_query <- function(api, query = NULL, id = NULL,
     abort("compose_table_query() requires PX-Web API v2.")
   }
 
+  check_count_arg(page, "page", allow_na = TRUE)
+  check_count_arg(
+    per_page, "per_page", allow_na = TRUE,
+    extra_hint = paste0(
+      "compose_table_query() builds a single request URL, so there is no ",
+      "page size meaning \"all results\". Use ",
+      "`get_tables(api, ..., max_results = Inf)`, which paginates."
+    )
+  )
+
   if (!is.null(id) && length(id) == 1) {
     return(api_url(api, "tables", id))
   }
@@ -37,10 +51,7 @@ compose_table_query <- function(api, query = NULL, id = NULL,
   if (!is.na(page)) params$pageNumber <- page
   if (!is.na(per_page)) params$pageSize <- per_page
 
-  if (length(params) == 0) return(url)
-
-  query_str <- paste(names(params), params, sep = "=", collapse = "&")
-  paste0(url, "&", query_str)
+  px_url_append(url, params)
 }
 
 #' Compose a data query
@@ -58,7 +69,8 @@ compose_table_query <- function(api, query = NULL, id = NULL,
 #' \donttest{
 #' scb <- px_api("scb", lang = "en")
 #' if (px_available(scb)) {
-#'   q <- compose_data_query(scb, "TAB638", Region = c("0180"), Tid = px_top(5))
+#'   q <- compose_data_query(scb, "TAB638", Region = c("0180"),
+#'                           ContentsCode = "*", Tid = px_top(5))
 #'   str(q$url)
 #'   str(q$body)
 #' }}
@@ -141,7 +153,8 @@ build_query_body_v1 <- function(selections, codelist) {
 #' \donttest{
 #' scb <- px_api("scb", lang = "en")
 #' if (px_available(scb)) {
-#'   q <- compose_data_query(scb, "TAB638", Region = "0180", Tid = px_top(3))
+#'   q <- compose_data_query(scb, "TAB638", Region = "0180",
+#'                           ContentsCode = "*", Tid = px_top(3))
 #'   raw <- execute_query(scb, q$url, q$body)
 #' }}
 execute_query <- function(api, url, body = NULL, verbose = FALSE) {

@@ -1,3 +1,60 @@
+# pixieweb 0.1.1.9006
+
+## Bug fixes
+
+- **`compose_table_query()` now percent-encodes its parameters.** The
+  exported URL builder pasted `query=` in raw, so a multi-word search
+  (`"nyregistrerade personbilar"`) produced a URL with a literal space that
+  curl refuses outright ("Malformed input to a URL function"), and
+  non-ASCII terms produced a URL the server could not match. `get_tables()`
+  itself has encoded correctly since 0.1.1.9001; the low-level builder had
+  been left behind. Encoding now lives in one place — `px_query_string()` /
+  `px_url_append()` in `utils.R` — and both `compose_table_query()` and
+  `get_tables_v2()` go through it, so a call site cannot forget it again.
+  `px_url_query()` also picks `&` over `?` when the URL already carries a
+  query string.
+- **Impossible page sizes are rejected instead of being sent.**
+  `compose_table_query(per_page = Inf)` put `pageSize=Inf` in the URL and
+  SCB answered HTTP 400. `per_page`/`page` must now be a single positive
+  whole number, and the error for `Inf` names the remedy
+  (`get_tables(..., max_results = Inf)`, which paginates transparently).
+  `get_tables(max_results = ...)` gained the same guard: `Inf` and `NULL`
+  both mean "all matching tables", while `NA`, `0`, negatives, fractions
+  and non-numerics now fail with a clear message rather than an opaque
+  HTTP error or an internal `NA` comparison.
+- **`get_data()` names the mandatory variables a v2 API demands.** PX-Web
+  v2 rejects a data query that omits any variable whose metadata has
+  `elimination = FALSE` — including `ContentsCode` and the time variable —
+  and its HTTP 400 body (`"Missing selection for mandantory variable"`)
+  does not say which one. `get_data()` surfaced that as an unactionable
+  warning and returned `NULL`. It now checks client-side, where the
+  variable metadata is already in hand, and errors with the missing
+  variables, a copy-pasteable selection for each, and which variables may
+  legitimately be omitted. Verified against SCB `TAB5166`, where the
+  genuinely eliminable variable is `Storleksklass` and the missing ones
+  were `SNI2007` and `ContentsCode`. The check is v2-only: PX-Web v1
+  expands an omitted non-eliminable variable rather than rejecting the
+  request (verified against Konjunkturinstitutet's `Indikatorm.px`).
+  `prepare_query()` already filled the mandatory variables and is
+  unaffected. Variable metadata is now fetched once per `get_data()` call
+  and shared between this check and the chunk planner.
+  All three reported in `paket/DEV_BACKLOG.md` 2026-08-20.
+
+## Documentation
+
+- **Examples that omitted a mandatory variable are corrected.** The new
+  check turned up several `TAB638` examples in `get_data()`,
+  `data_legend()`, `data_minimize()`, `data_comments()`, `px_cite()`,
+  `compose_data_query()` and `execute_query()`, plus two README snippets,
+  that left out `ContentsCode`. They had been quietly returning `NULL`
+  against the live API; they now pass `ContentsCode = "*"`. The vignettes
+  were already correct.
+- **`table_enrich()`'s example no longer writes into the working
+  directory.** It opened a cache at the literal path `"cache.sqlite"`,
+  which `R CMD check` flags as a non-standard file in the check directory.
+  It now uses `tempfile()`. This had been masked: the example run used to
+  abort earlier, at one of the `TAB638` examples above, before reaching it.
+
 # pixieweb 0.1.1.9005
 
 ## New features

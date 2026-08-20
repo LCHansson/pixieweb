@@ -26,7 +26,8 @@ Useful for inspecting or modifying queries before sending them.
 \donttest{
 scb <- px_api("scb", lang = "en")
 if (px_available(scb)) {
-  q <- compose_data_query(scb, "TAB638", Region = c("0180"), Tid = px_top(5))
+  q <- compose_data_query(scb, "TAB638", Region = c("0180"),
+                          ContentsCode = "*", Tid = px_top(5))
   str(q$url)
   str(q$body)
 }}

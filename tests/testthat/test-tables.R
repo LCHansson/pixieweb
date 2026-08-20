@@ -110,3 +110,42 @@ test_that("table_extract_ids returns empty vector for empty input", {
   expect_equal(table_extract_ids(NULL), character())
   expect_equal(table_extract_ids(tibble::tibble(id = character())), character())
 })
+
+# --- max_results validation (0.1.1.9006) ----------------------------------
+# These never reach the network: the check runs before any request is built.
+
+test_that("get_tables rejects a max_results that cannot become a pageSize", {
+  api <- structure(
+    list(base_url = "https://api.scb.se/ov0104/v2beta/api/v2",
+         alias = "scb", lang = "sv", version = "v2", config = NULL),
+    class = "px_api"
+  )
+
+  expect_error(get_tables(api, query = "x", max_results = NA), "max_results")
+  expect_error(get_tables(api, query = "x", max_results = -3), "max_results")
+  expect_error(get_tables(api, query = "x", max_results = 0), "max_results")
+  expect_error(get_tables(api, query = "x", max_results = "10"), "max_results")
+  expect_error(get_tables(api, query = "x", max_results = c(1, 2)), "max_results")
+})
+
+test_that("get_tables_v2 builds an encoded, paginated URL", {
+  api <- structure(
+    list(base_url = "https://api.scb.se/ov0104/v2beta/api/v2",
+         alias = "scb", lang = "sv", version = "v2", config = NULL),
+    class = "px_api"
+  )
+
+  base <- pixieweb:::api_url(api, "tables")
+  url <- pixieweb:::px_url_append(
+    base,
+    list(query = "personbilar i trafik", pageSize = 1000L, pageNumber = 1L)
+  )
+
+  expect_equal(
+    url,
+    paste0("https://api.scb.se/ov0104/v2beta/api/v2/tables?lang=sv",
+           "&query=personbilar%20i%20trafik&pageSize=1000&pageNumber=1")
+  )
+  # pageSize must never be a non-finite number (HTTP 400 from SCB).
+  expect_no_match(url, "pageSize=Inf", fixed = TRUE)
+})

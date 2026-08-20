@@ -53,8 +53,12 @@ tables <- get_tables(scb, query = "population")
 # Inspect variables in a table
 vars <- get_variables(scb, tables$id[1])
 
-# Download data
-data <- get_data(scb, tables$id[1])
+# Download data. Every variable with `elimination = FALSE` in `vars` must be
+# given a selection; the rest are aggregated away by the API.
+data <- get_data(scb, tables$id[1],
+  ContentsCode = "*",
+  Tid = px_top(5)
+)
 ```
 
 ## Features
@@ -88,6 +92,8 @@ scb <- px_api("scb")
 tables <- get_tables(scb, cache = TRUE, cache_location = handle)
 data <- get_data(scb, "TAB638",
   Region = c("0180", "1480"),
+  ContentsCode = "*",
+  Tid = px_top(5),
   cache = TRUE, cache_location = handle
 )
 

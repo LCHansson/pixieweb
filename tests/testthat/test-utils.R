@@ -90,3 +90,80 @@ test_that("entity_search warns on empty input", {
   df <- tibble::tibble(id = character(), title = character())
   expect_warning(pixieweb:::entity_search(df, "test"), "empty")
 })
+
+# --- Query-string construction (0.1.1.9006) --------------------------------
+
+test_that("px_query_value percent-encodes spaces and non-ASCII", {
+  expect_equal(pixieweb:::px_query_value("two words"), "two%20words")
+  expect_equal(pixieweb:::px_query_value("arbetsl\u00f6shet"),
+               "arbetsl%C3%B6shet")
+  expect_equal(pixieweb:::px_query_value("a&b"), "a%26b")
+  expect_equal(pixieweb:::px_query_value(1000L), "1000")
+})
+
+test_that("px_query_string encodes every value and drops NULLs", {
+  qs <- pixieweb:::px_query_string(
+    list(query = "nyregistrerade personbilar", pageSize = 1000L, x = NULL)
+  )
+  expect_equal(qs, "query=nyregistrerade%20personbilar&pageSize=1000")
+})
+
+test_that("px_query_string returns empty string for nothing to add", {
+  expect_equal(pixieweb:::px_query_string(list()), "")
+  expect_equal(pixieweb:::px_query_string(list(a = NULL)), "")
+})
+
+test_that("px_url_query encodes values, unlike plain pasting", {
+  url <- pixieweb:::px_url_query("https://example.com/api",
+                                 query = "two words")
+  expect_equal(url, "https://example.com/api?query=two%20words")
+  expect_no_match(url, " ", fixed = TRUE)
+})
+
+test_that("px_url_query picks & when the URL already has a query string", {
+  url <- pixieweb:::px_url_query("https://example.com/api?lang=sv",
+                                 query = "befolkning")
+  expect_equal(url, "https://example.com/api?lang=sv&query=befolkning")
+})
+
+test_that("px_url_append takes a list and behaves like px_url_query", {
+  expect_equal(
+    pixieweb:::px_url_append("https://example.com?lang=sv",
+                             list(query = "a b", pageSize = 10L)),
+    "https://example.com?lang=sv&query=a%20b&pageSize=10"
+  )
+})
+
+# --- check_count_arg (0.1.1.9006) -----------------------------------------
+
+test_that("check_count_arg accepts positive whole numbers and NULL", {
+  expect_silent(pixieweb:::check_count_arg(1L, "n"))
+  expect_silent(pixieweb:::check_count_arg(1000, "n"))
+  expect_silent(pixieweb:::check_count_arg(NULL, "n"))
+})
+
+test_that("check_count_arg rejects Inf unless allow_inf", {
+  expect_error(pixieweb:::check_count_arg(Inf, "per_page"), "per_page")
+  expect_silent(pixieweb:::check_count_arg(Inf, "max_results", allow_inf = TRUE))
+})
+
+test_that("check_count_arg rejects NA, zero, negatives and non-numerics", {
+  expect_error(pixieweb:::check_count_arg(NA, "n", allow_inf = TRUE), "NA")
+  expect_error(pixieweb:::check_count_arg(0, "n"), "positive whole number")
+  expect_error(pixieweb:::check_count_arg(-3, "n"), "positive whole number")
+  expect_error(pixieweb:::check_count_arg(2.5, "n"), "positive whole number")
+  expect_error(pixieweb:::check_count_arg("10", "n"), "positive whole number")
+  expect_error(pixieweb:::check_count_arg(c(1, 2), "n"), "positive whole number")
+})
+
+test_that("check_count_arg accepts NA only when allow_na", {
+  expect_silent(pixieweb:::check_count_arg(NA, "page", allow_na = TRUE))
+  expect_error(pixieweb:::check_count_arg(NA, "page"), "page")
+})
+
+test_that("check_count_arg surfaces the extra hint", {
+  expect_error(
+    pixieweb:::check_count_arg(Inf, "per_page", extra_hint = "Use get_tables()."),
+    "get_tables"
+  )
+})

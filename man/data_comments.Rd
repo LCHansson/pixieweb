@@ -19,7 +19,8 @@ Extract comments from data
 \donttest{
 scb <- px_api("scb", lang = "en")
 if (px_available(scb)) {
-  d <- get_data(scb, "TAB638", Region = "0180", Tid = px_top(3), .comments = TRUE)
+  d <- get_data(scb, "TAB638", Region = "0180", ContentsCode = "*",
+                Tid = px_top(3), .comments = TRUE)
   data_comments(d)
 }}
 }

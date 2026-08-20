@@ -15,6 +15,13 @@
 #'   - A [px_selections] helper: `px_all()`, `px_top()`, `px_bottom()`,
 #'     `px_from()`, `px_to()`, `px_range()`
 #'   - Omitted variables are eliminated if the API allows it
+#'
+#'   Only variables whose metadata reports `elimination = TRUE` may be
+#'   omitted on a v2 API. Omitting a mandatory one (including `ContentsCode`
+#'   and the time variable) is an error naming the variables to add — the
+#'   server's own HTTP 400 does not say which variable is missing. Use
+#'   `get_variables()` to see the flag, or let [prepare_query()] fill the
+#'   mandatory variables for you.
 #'   Ignored when `query` is provided.
 #' @param query A `<px_query>` object from [prepare_query()]. When provided,
 #'   `table_id`, `...`, and `.codelist` are taken from the query object.
@@ -60,9 +67,11 @@
 #' scb <- px_api("scb", lang = "en")
 #' if (px_available(scb)) {
 #'
-#'   # Fetch with explicit selections
+#'   # Fetch with explicit selections. ContentsCode and Tid are mandatory
+#'   # in this table (elimination = FALSE); Region is not.
 #'   get_data(scb, "TAB638",
 #'     Region = c("0180", "1480"),
+#'     ContentsCode = "*",
 #'     Tid = px_top(5)
 #'   )
 #'
@@ -156,9 +165,20 @@ get_data <- function(api,
   # Check if chunking is needed
   max_cells <- max_results %||% api$config$max_cells %||% 100000
   # Use variable metadata from query object if available, otherwise fetch it
+  # once and reuse it for both the mandatory-variable check and the chunk plan.
   vars_meta <- if (inherits(query, "px_query")) query$variables else NULL
-  chunk_info <- check_query_size(selections, api, table_id, max_cells, verbose,
-                                  vars = vars_meta)
+  if (is.null(vars_meta)) {
+    vars_meta <- get_variables(api, table_id, verbose = verbose)
+  }
+
+  check_mandatory_selections(selections, vars_meta, table_id, api)
+
+  chunk_info <- if (is.null(vars_meta) || nrow(vars_meta) == 0) {
+    list(needs_chunking = FALSE)
+  } else {
+    check_query_size(selections, api, table_id, max_cells, verbose,
+                     vars = vars_meta)
+  }
 
   if (chunk_info$needs_chunking) {
     if (!auto_chunk) {
@@ -215,6 +235,87 @@ get_data <- function(api,
   }
 
   result
+}
+
+#' Fail early when a mandatory v2 variable has no selection
+#'
+#' PX-Web v2 (verified against SCB, 2026-08-20) requires an explicit
+#' selection for every variable whose metadata reports
+#' `extension.elimination = FALSE` — including `ContentsCode` and the time
+#' variable. Only variables with `elimination = TRUE` may be omitted; those
+#' the server sums away by itself.
+#'
+#' When a mandatory variable is missing, the server answers HTTP 400 with
+#' `{"title": "Missing selection for mandantory variable"}` and does **not**
+#' name the variable, so `get_data()` used to surface an unactionable warning
+#' and return `NULL`. Check client-side instead, where the metadata is
+#' already in hand, and name both the variables and the remedy.
+#'
+#' v1 APIs are deliberately excluded: PX-Web v1 expands omitted
+#' non-eliminable variables instead of rejecting the request (verified
+#' against Konjunkturinstitutet's `KonjBar/indikatorer/Indikatorm.px`,
+#' where selecting only the time variable returns all 84 indicators).
+#'
+#' @param selections Named list of user selections.
+#' @param vars Variable metadata tibble from `get_variables()`, or NULL.
+#' @param table_id Table id, used in the message.
+#' @param api A `<px_api>` object.
+#' @noRd
+check_mandatory_selections <- function(selections, vars, table_id, api) {
+  if (api$version != "v2") return(invisible(NULL))
+  if (is.null(vars) || nrow(vars) == 0) return(invisible(NULL))
+  if (!"elimination" %in% names(vars)) return(invisible(NULL))
+
+  mandatory <- vars$code[!vapply(vars$elimination, isTRUE, logical(1))]
+  selected <- names(selections)[
+    !vapply(selections, is.null, logical(1))
+  ]
+  missing_vars <- setdiff(mandatory, selected)
+
+  if (length(missing_vars) == 0) return(invisible(NULL))
+
+  examples <- vapply(missing_vars, function(code) {
+    row <- vars[vars$code == code, ][1, ]
+    if (isTRUE(row$time)) {
+      paste0(code, " = px_top(5)")
+    } else {
+      paste0(code, ' = "*"')
+    }
+  }, character(1))
+
+  eliminable <- vars$code[vapply(vars$elimination, isTRUE, logical(1))]
+
+  msg <- c(
+    paste0(
+      "Missing selection for mandatory variable",
+      if (length(missing_vars) > 1) "s" else "",
+      " in table '", table_id, "': ",
+      paste0("`", missing_vars, "`", collapse = ", "), "."
+    ),
+    x = paste0(
+      "PX-Web v2 rejects a data query that omits a variable whose metadata ",
+      "has `elimination = FALSE`, and its HTTP 400 does not say which one."
+    ),
+    i = paste0(
+      "Add a selection, e.g. `get_data(api, \"", table_id, "\", ",
+      paste(examples, collapse = ", "), ", ...)`."
+    )
+  )
+
+  if (length(eliminable) > 0) {
+    msg <- c(msg, i = paste0(
+      "Variable", if (length(eliminable) > 1) "s" else "", " ",
+      paste0("`", eliminable, "`", collapse = ", "),
+      " may be omitted (elimination = TRUE)."
+    ))
+  }
+
+  msg <- c(msg, i = paste0(
+    "`get_variables(api, \"", table_id, "\")` lists every variable and its ",
+    "`elimination` flag; `prepare_query()` fills the mandatory ones for you."
+  ))
+
+  abort(msg)
 }
 
 #' Check if a query needs chunking and compute the split plan
@@ -646,7 +747,8 @@ parse_comments <- function(comments) {
 #' \donttest{
 #' scb <- px_api("scb", lang = "en")
 #' if (px_available(scb)) {
-#'   d <- get_data(scb, "TAB638", Region = "0180", Tid = px_top(3))
+#'   d <- get_data(scb, "TAB638", Region = "0180", ContentsCode = "*",
+#'                 Tid = px_top(3))
 #'   d |> data_minimize()
 #' }}
 data_minimize <- function(data_df, remove_monotonous_data = TRUE) {
@@ -693,7 +795,8 @@ data_minimize <- function(data_df, remove_monotonous_data = TRUE) {
 #' scb <- px_api("scb", lang = "en")
 #' if (px_available(scb)) {
 #'   vars <- get_variables(scb, "TAB638")
-#'   d <- get_data(scb, "TAB638", Region = "0180", Tid = px_top(3))
+#'   d <- get_data(scb, "TAB638", Region = "0180", ContentsCode = "*",
+#'                 Tid = px_top(3))
 #'   data_legend(d, vars)
 #'   data_legend(d, vars, lang = "SV")
 #'   data_legend(d, vars, omit_varname = TRUE)
@@ -761,7 +864,8 @@ format_legend_field <- function(label, code, omit_varname, omit_desc) {
 #' \donttest{
 #' scb <- px_api("scb", lang = "en")
 #' if (px_available(scb)) {
-#'   d <- get_data(scb, "TAB638", Region = "0180", Tid = px_top(3), .comments = TRUE)
+#'   d <- get_data(scb, "TAB638", Region = "0180", ContentsCode = "*",
+#'                 Tid = px_top(3), .comments = TRUE)
 #'   data_comments(d)
 #' }}
 data_comments <- function(data_df) {

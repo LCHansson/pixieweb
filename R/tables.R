@@ -54,6 +54,10 @@ get_tables <- function(api,
                        cache_location = pixieweb_cache_dir,
                        verbose = FALSE) {
   check_px_api(api)
+  check_count_arg(
+    max_results, "max_results", allow_inf = TRUE,
+    extra_hint = "Use `NULL` (the default) or `Inf` for all matching tables."
+  )
 
   key <- list(
     alias = api$alias %||% "default",
@@ -154,15 +158,9 @@ get_tables_v2 <- function(api, query, id, updated_since, max_results, verbose) {
       pageSize = page_size,
       pageNumber = page_number
     )
-    extra_params <- extra_params[!vapply(extra_params, is.null, logical(1))]
-    extra_str <- paste(
-      names(extra_params),
-      vapply(extra_params, function(x) {
-        utils::URLencode(as.character(x), reserved = TRUE)
-      }, character(1)),
-      sep = "="
-    )
-    url <- paste0(base, "&", paste(extra_str, collapse = "&"))
+    # px_url_append() is the single place where parameters are encoded --
+    # see px_query_string() in utils.R.
+    url <- px_url_append(base, extra_params)
 
     raw <- px_get(url, verbose = verbose)
     if (is.null(raw)) {
@@ -389,9 +387,9 @@ search_tables_v1 <- function(api, base, query, max_results, verbose) {
   all_tables <- list()
 
   for (db in db_paths) {
-    search_url <- paste0(
+    search_url <- px_url_query(
       px_url(base, px_encode_path(db)),
-      "?query=", utils::URLencode(query, reserved = TRUE)
+      query = query
     )
     raw <- suppressWarnings(px_get(search_url, verbose = verbose))
 
@@ -737,8 +735,10 @@ table_describe <- function(table_df, max_n = 5, format = "inline",
 #'   get_tables(scb, query = "population", cache = TRUE) |>
 #'     table_enrich(cache = TRUE)
 #'
-#'   # Per-table cache in a shared SQLite file
-#'   handle <- nordstatExtras::nxt_open("cache.sqlite")
+#'   # Per-table cache in a shared SQLite file. In real use, point this at a
+#'   # durable path; the example writes to a temporary file so that running it
+#'   # leaves nothing behind in the working directory.
+#'   handle <- nordstatExtras::nxt_open(tempfile(fileext = ".sqlite"))
 #'   get_tables(scb, query = "population", cache = TRUE,
 #'              cache_location = handle) |>
 #'     table_enrich(cache = TRUE, cache_location = handle)
