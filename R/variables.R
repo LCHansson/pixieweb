@@ -136,8 +136,12 @@ get_variables_v1 <- function(api, table_id, verbose) {
   if (length(variables) == 0) return(empty_variables_tibble(table_id))
 
   rows <- lapply(variables, function(v) {
-    val_codes <- v$values %||% character()
-    val_texts <- v$valueTexts %||% val_codes
+    # The JSON arrays arrive as lists; flatten them to character so `values`
+    # has the same shape as for v2 (a list-column here made
+    # `setNames(vals$text, vals$code)` silently useless downstream).
+    val_codes <- px_chr(v$values)
+    val_texts <- px_chr(v$valueTexts)
+    if (length(val_texts) != length(val_codes)) val_texts <- val_codes
 
     vals <- tibble::tibble(
       code = val_codes,

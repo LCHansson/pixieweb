@@ -1,3 +1,23 @@
+# pixieweb 0.1.1.9010
+
+## Bug fixes
+
+- **v1 results carry labels in `<var>_text`.** A v1 data response holds
+  codes only, so the twin column repeated the code (`Bränsle_text` was
+  `"0"`, `"1"` in the tables of Energimyndigheten) while a pivoted contents
+  column did get a real label: the column existed but meant different
+  things per table. `get_data()` now fills it from the variable metadata
+  it has already fetched, wherever the twin still equals the code.
+- **`get_variables()` returns plain character `code`/`text` for v1.** The
+  nested `values` tibble held list-columns for v1 and character columns
+  for v2, so `setNames(vals$text, vals$code)` gave an unusable lookup
+  without an error. Both versions now give character columns.
+- **The contents variable a v1 response folds into `ContentsCode` is
+  named.** For `*_Cont.px` tables the variable is called `Mått` going in
+  and `ContentsCode` coming out. The column name is unchanged (stored
+  specs read it); the name the source uses is now in
+  `attr(x, "px_contents_variable")`.
+
 # pixieweb 0.1.1.9009
 
 ## Bug fixes

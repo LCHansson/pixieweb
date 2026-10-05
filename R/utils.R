@@ -338,3 +338,17 @@ resolve_lang <- function(lang = NULL) {
   }
   lang
 }
+
+#' Flatten a JSON array of scalars to a character vector
+#'
+#' One element per entry, `NA` for a null entry (which `unlist()` would
+#' drop, shifting everything after it).
+#' @param x A list or atomic vector, or NULL.
+#' @return A character vector of the same length.
+#' @noRd
+px_chr <- function(x) {
+  if (is.null(x)) return(character())
+  vapply(x, function(e) {
+    if (is.null(e) || length(e) == 0) NA_character_ else as.character(e)[1]
+  }, character(1), USE.NAMES = FALSE)
+}

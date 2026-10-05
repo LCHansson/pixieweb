@@ -107,6 +107,12 @@ When \code{simplify = FALSE}, only raw codes and \code{value} are returned.
 
 When \code{.output = "wide"}, content variables are pivoted into separate columns.
 
+A v1 API returns the values of a contents variable as separate content
+columns, and they are folded into a column named \code{ContentsCode} even when
+the table metadata calls the variable something else (as in the
+\verb{*_Cont.px} tables of Energimyndigheten). When that happens the result
+carries the name the source uses in \code{attr(x, "px_contents_variable")}.
+
 When \code{auto_chunk = TRUE} and the query would exceed the API's cell limit,
 \code{get_data()} automatically splits the request. It picks the variable with
 the most values and batches its values so each request fits under the limit.

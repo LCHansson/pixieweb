@@ -65,6 +65,12 @@
 #'
 #' When `.output = "wide"`, content variables are pivoted into separate columns.
 #'
+#' A v1 API returns the values of a contents variable as separate content
+#' columns, and they are folded into a column named `ContentsCode` even when
+#' the table metadata calls the variable something else (as in the
+#' `*_Cont.px` tables of Energimyndigheten). When that happens the result
+#' carries the name the source uses in `attr(x, "px_contents_variable")`.
+#'
 #' When `auto_chunk = TRUE` and the query would exceed the API's cell limit,
 #' `get_data()` automatically splits the request. It picks the variable with
 #' the most values and batches its values so each request fits under the limit.
@@ -234,6 +240,10 @@ get_data <- function(api,
   }
 
   if (is.null(result)) return(NULL)
+
+  if (api$version != "v2") {
+    result <- label_v1_result(result, vars_meta, names(selections), simplify)
+  }
 
   # Handle wide output
   if (.output == "wide") {
@@ -795,6 +805,55 @@ parse_data_v1 <- function(raw, table_id, simplify, status = FALSE) {
     # No content columns at all — unusual, but don't crash
     result$value <- NA_real_
     if (status) result$status <- NA_character_
+  }
+
+  result
+}
+
+#' Put the metadata labels on a v1 result
+#'
+#' A v1 (px-json) data response carries codes only, so the `<var>_text`
+#' twin column repeated the code. The variable metadata `get_data()` has
+#' already fetched knows the label of every code; use it wherever the twin
+#' still equals the code.
+#'
+#' The same response also re-shapes a contents variable: its values come
+#' back as separate content columns, which the parser folds into
+#' `ContentsCode` whatever the variable is called in the metadata (for
+#' example in the `*_Cont.px` tables of Energimyndigheten). The column name
+#' is kept, for the sake of stored specs that read it, and the name the
+#' source uses is put in the attribute `px_contents_variable` so the mapping
+#' can be read rather than discovered.
+#' @param result Parsed tibble.
+#' @param vars Variable metadata tibble, or NULL.
+#' @param selected Names of the variables the caller selected.
+#' @param simplify Whether `_text` columns were asked for.
+#' @noRd
+label_v1_result <- function(result, vars, selected = character(), simplify = TRUE) {
+  if (is.null(result) || is.null(vars) || nrow(vars) == 0) return(result)
+
+  if (simplify) {
+    for (i in seq_len(nrow(vars))) {
+      code <- vars$code[i]
+      text_col <- paste0(code, "_text")
+      if (is.na(code) || !all(c(code, text_col) %in% names(result))) next
+      vals <- vars$values[[i]]
+      if (!is.data.frame(vals) || nrow(vals) == 0) next
+      lookup <- stats::setNames(px_chr(vals$text), px_chr(vals$code))
+      codes <- as.character(result[[code]])
+      labels <- unname(lookup[codes])
+      current <- as.character(result[[text_col]])
+      fill <- !is.na(labels) & (is.na(current) | current == codes)
+      if (any(fill)) {
+        current[fill] <- labels[fill]
+        result[[text_col]] <- current
+      }
+    }
+  }
+
+  if ("ContentsCode" %in% names(result) && !"ContentsCode" %in% vars$code) {
+    folded <- setdiff(intersect(selected, vars$code), names(result))
+    if (length(folded) == 1) attr(result, "px_contents_variable") <- folded
   }
 
   result
