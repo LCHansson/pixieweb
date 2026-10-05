@@ -24,6 +24,7 @@ reference:
     desc: Examine dimensions and available values within a table.
     contents:
       - get_variables
+      - get_contents
       - variable_search
       - variable_describe
       - variable_minimize
@@ -44,6 +45,7 @@ reference:
     contents:
       - prepare_query
       - get_data
+      - px_get_data
       - starts_with("px_all")
       - px_top
       - px_bottom

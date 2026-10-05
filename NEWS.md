@@ -1,3 +1,15 @@
+# pixieweb 0.1.1.9013
+
+## New features
+
+- **`px_get_data()`: `get_data()` under a name that cannot be masked.**
+  rTrafa exports a `get_data()` too, so in a script that attaches both
+  packages the one attached last masks the other, and every call to the
+  masked one fails on the wrong argument check. `px_get_data()` forwards
+  to `get_data()` unchanged (rTrafa gains `trafa_get_data()`), and
+  attaching pixieweb while rTrafa is attached now prints a one-line note
+  naming the two safe calls. `get_data()` itself is unchanged.
+
 # pixieweb 0.1.1.9012
 
 ## New features
