@@ -1,3 +1,18 @@
+# pixieweb 0.1.1.9011
+
+## New features
+
+- **`get_contents()` returns the unit of every measure in a table.** The
+  unit (`tkr` or `mnkr`?) never reached the caller: `get_variables()` reads
+  the labels of the contents variable and drops the `unit` block beside
+  them, along with the measuring type (stock or flow), price type (current
+  or fixed), adjustment and reference period. `get_contents(api, table_id)`
+  returns one row per measure with those fields. For v2 it is one metadata
+  request. A v1 API states no unit in its metadata but does in a json-stat2
+  data response, so for v1 the function asks for a single cell in that
+  form, and once more for all values of the contents variable: at most two
+  small data requests. `get_variables()` is unchanged.
+
 # pixieweb 0.1.1.9010
 
 ## Bug fixes
