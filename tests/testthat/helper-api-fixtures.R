@@ -33,7 +33,7 @@ pixieweb_test_apis <- function() {
       alias    = "statfi",
       lang     = "en",
       versions = list(
-        v1 = list(table_id = "StatFin/matk/statfin_matk_pxt_117s.px", codelist_var = NULL)
+        v1 = list(table_id = "StatFin/matk/117s.px", codelist_var = NULL)
       )
     ),
     list(
