@@ -1,3 +1,18 @@
+# pixieweb 0.1.1.9007
+
+## New features
+
+- **`get_data(.status = TRUE)` keeps the source's status symbol.** PX-Web
+  marks a cell it withholds or cannot give with a symbol such as `".."`
+  (not available or suppressed) or `"."` (not applicable). Both arrived as
+  a plain `NA` in `value`, so a caller could not tell "the source withholds
+  this" from "no value". With `.status = TRUE` the result gains a character
+  column `status` after `value`: the symbol exactly as sent, `NA` where the
+  cell has a value. Works for v2 (json-stat2 `status`, in its object, array
+  and single-string forms) and v1 (the symbol is the cell's own string),
+  also across chunked fetches. Opt-in: the default result is unchanged.
+  Long output only; the SQLite cell cache is bypassed for such a call.
+
 # pixieweb 0.1.1.9006
 
 ## Bug fixes

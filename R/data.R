@@ -44,6 +44,15 @@
 #' @param cache_location Either a path to a `.sqlite` file or an `nxt_handle`
 #'   from `nordstatExtras::nxt_open()`. Ignored unless `cache = TRUE`.
 #' @param verbose Print request details.
+#' @param .status Keep the source's status symbol for cells without a value.
+#'   PX-Web marks a cell it withholds or cannot give with a symbol such as
+#'   `".."` (not available or suppressed) or `"."` (not applicable); by
+#'   default such a cell is simply `NA` in `value`, indistinguishable from a
+#'   cell the response does not carry. With `.status = TRUE` the result gains
+#'   a character column `status`, placed after `value`: the symbol exactly as
+#'   the source sent it, and `NA` where the cell has a value (or no symbol).
+#'   Default `FALSE` leaves the result unchanged. Only for `.output = "long"`;
+#'   the SQLite cell cache is bypassed, since it stores numeric cells only.
 #' @return A tibble of data. See Details for column structure.
 #'
 #' @details
@@ -91,9 +100,17 @@ get_data <- function(api,
                      max_results = NULL,
                      cache = FALSE,
                      cache_location = NULL,
-                     verbose = FALSE) {
+                     verbose = FALSE,
+                     .status = FALSE) {
   check_px_api(api)
   stopifnot(.output %in% c("long", "wide"))
+  stopifnot(is.logical(.status), length(.status) == 1, !is.na(.status))
+  if (.status && .output != "long") {
+    abort(c(
+      "`.status = TRUE` requires `.output = \"long\"`.",
+      i = "Pivot the long result yourself if you need status symbols in a wide table."
+    ))
+  }
 
   # Extract table_id, selections, and codelist from query or arguments
   if (inherits(query, "px_query")) {
@@ -141,7 +158,7 @@ get_data <- function(api,
   # SQLite-backed cell cache via nordstatExtras. Key is the full selection
   # dict + output/simplify options + api alias.
   nxt_ch <- NULL
-  if (isTRUE(cache) && !is.null(cache_location) &&
+  if (isTRUE(cache) && !.status && !is.null(cache_location) &&
       requireNamespace("nordstatExtras", quietly = TRUE) &&
       nordstatExtras::nxt_is_backend(cache_location)) {
     alias <- api$alias %||% "default"
@@ -197,7 +214,7 @@ get_data <- function(api,
 
     result <- execute_chunked(
       api, table_id, selections, .codelist,
-      chunk_info, simplify, verbose
+      chunk_info, simplify, verbose, status = .status
     )
   } else {
     # Single request
@@ -210,9 +227,9 @@ get_data <- function(api,
     if (is.null(raw)) return(NULL)
 
     if (api$version == "v2") {
-      result <- parse_data_v2(raw, table_id, simplify)
+      result <- parse_data_v2(raw, table_id, simplify, status = .status)
     } else {
-      result <- parse_data_v1(raw, table_id, simplify)
+      result <- parse_data_v1(raw, table_id, simplify, status = .status)
     }
   }
 
@@ -410,7 +427,7 @@ check_query_size <- function(selections, api, table_id, max_cells, verbose,
 #' Execute a query in chunks with progress bar
 #' @noRd
 execute_chunked <- function(api, table_id, selections, .codelist,
-                            chunk_info, simplify, verbose) {
+                            chunk_info, simplify, verbose, status = FALSE) {
   split_var <- chunk_info$split_var
   split_values <- chunk_info$split_values
   values_per_chunk <- chunk_info$values_per_chunk
@@ -452,9 +469,9 @@ execute_chunked <- function(api, table_id, selections, .codelist,
 
     if (!is.null(raw)) {
       parsed <- if (api$version == "v2") {
-        parse_data_v2(raw, table_id, simplify)
+        parse_data_v2(raw, table_id, simplify, status = status)
       } else {
-        parse_data_v1(raw, table_id, simplify)
+        parse_data_v1(raw, table_id, simplify, status = status)
       }
       if (!is.null(parsed)) {
         results <- c(results, list(parsed))
@@ -478,14 +495,16 @@ execute_chunked <- function(api, table_id, selections, .codelist,
 
 #' Parse v2 (json-stat2) data response
 #' @noRd
-parse_data_v2 <- function(raw, table_id, simplify) {
+parse_data_v2 <- function(raw, table_id, simplify, status = FALSE) {
   # json-stat2 format has dimensions and values
   dims <- raw$dimension %||% raw$dimensions
   values <- raw$value
 
   if (is.null(dims) || is.null(values)) {
     # Try alternative v2 response format with columns + data
-    return(parse_data_v2_tabular(raw, table_id, simplify))
+    out <- parse_data_v2_tabular(raw, table_id, simplify)
+    if (status && !is.null(out)) out$status <- NA_character_
+    return(out)
   }
 
   # Build dimension index
@@ -543,7 +562,35 @@ parse_data_v2 <- function(raw, table_id, simplify) {
     if (is.null(v)) NA_real_ else as.numeric(v)
   }, numeric(1)))
 
+  if (status) result$status <- status_symbols_v2(raw$status, n_rows)
+
   result
+}
+
+#' Status symbols of a json-stat2 response, one per cell
+#'
+#' json-stat2 carries the symbols apart from the values: `status` is an
+#' object keyed by the cell's zero-based position (PX-Web's form, sparse),
+#' an array with one entry per cell, or a single string for every cell.
+#' @param st `raw$status`, or NULL.
+#' @param n Number of cells.
+#' @return Character vector of length `n`, `NA` where no symbol is given.
+#' @noRd
+status_symbols_v2 <- function(st, n) {
+  out <- rep(NA_character_, n)
+  if (is.null(st) || length(st) == 0) return(out)
+  as_chr <- function(v) if (is.null(v) || length(v) == 0) NA_character_ else as.character(v)[1]
+  if (!is.null(names(st))) {
+    idx <- suppressWarnings(as.integer(names(st))) + 1L
+    ok <- !is.na(idx) & idx >= 1L & idx <= n
+    out[idx[ok]] <- vapply(st[ok], as_chr, character(1))
+  } else if (length(st) == n) {
+    out <- vapply(st, as_chr, character(1), USE.NAMES = FALSE)
+  } else if (length(st) == 1) {
+    out <- rep(as_chr(st[[1]]), n)
+  }
+  out[!is.na(out) & !nzchar(out)] <- NA_character_
+  out
 }
 
 #' Parse v2 tabular response format (columns + data)
@@ -594,7 +641,7 @@ parse_data_v2_tabular <- function(raw, table_id, simplify) {
 #' (type "c") are pivoted into `value` (and `ContentsCode` when there are
 #' multiple content variables).
 #' @noRd
-parse_data_v1 <- function(raw, table_id, simplify) {
+parse_data_v1 <- function(raw, table_id, simplify, status = FALSE) {
   columns <- raw$columns
   data_rows <- raw$data
 
@@ -639,6 +686,13 @@ parse_data_v1 <- function(raw, table_id, simplify) {
   dim_idx <- which(col_types %in% c("d", "t"))
   content_idx <- which(col_types == "c")
 
+  # The source's own symbol for a cell without a value ("..", ".") arrives
+  # as the cell's string; keep it aside before the numeric conversion.
+  raw_content <- df[content_idx]
+  symbol_of <- function(chr, num) {
+    ifelse(is.na(num) & !is.na(chr) & nzchar(chr) & chr != "NA", chr, NA_character_)
+  }
+
   # Convert content columns to numeric
   for (i in content_idx) {
     df[[i]] <- as.numeric(df[[i]])
@@ -665,6 +719,7 @@ parse_data_v1 <- function(raw, table_id, simplify) {
   if (length(content_idx) == 1) {
     # Single content variable — just rename to value
     result$value <- df[[col_codes[content_idx]]]
+    if (status) result$status <- symbol_of(raw_content[[1]], result$value)
   } else if (length(content_idx) > 1) {
     # Multiple content variables — pivot to long format
     content_codes <- col_codes[content_idx]
@@ -688,11 +743,19 @@ parse_data_v1 <- function(raw, table_id, simplify) {
       vals[seq(j, length(vals), by = n_content)] <- df[[content_codes[j]]]
     }
     expanded$value <- vals
+    if (status) {
+      syms <- character(n_rows * n_content)
+      for (j in seq_along(content_codes)) {
+        syms[seq(j, length(syms), by = n_content)] <- raw_content[[j]]
+      }
+      expanded$status <- symbol_of(syms, vals)
+    }
 
     result <- tibble::as_tibble(expanded)
   } else {
     # No content columns at all — unusual, but don't crash
     result$value <- NA_real_
+    if (status) result$status <- NA_character_
   }
 
   result

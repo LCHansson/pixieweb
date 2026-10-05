@@ -17,7 +17,8 @@ get_data(
   max_results = NULL,
   cache = FALSE,
   cache_location = NULL,
-  verbose = FALSE
+  verbose = FALSE,
+  .status = FALSE
 )
 }
 \arguments{
@@ -75,6 +76,16 @@ read/write and cross-query cell reuse. Requires \code{nordstatExtras}.}
 from \code{nordstatExtras::nxt_open()}. Ignored unless \code{cache = TRUE}.}
 
 \item{verbose}{Print request details.}
+
+\item{.status}{Keep the source's status symbol for cells without a value.
+PX-Web marks a cell it withholds or cannot give with a symbol such as
+\code{".."} (not available or suppressed) or \code{"."} (not applicable); by
+default such a cell is simply \code{NA} in \code{value}, indistinguishable from a
+cell the response does not carry. With \code{.status = TRUE} the result gains
+a character column \code{status}, placed after \code{value}: the symbol exactly as
+the source sent it, and \code{NA} where the cell has a value (or no symbol).
+Default \code{FALSE} leaves the result unchanged. Only for \code{.output = "long"};
+the SQLite cell cache is bypassed, since it stores numeric cells only.}
 }
 \value{
 A tibble of data. See Details for column structure.
