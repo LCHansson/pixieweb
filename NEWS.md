@@ -1,3 +1,14 @@
+# pixieweb 0.1.1.9008
+
+## Bug fixes
+
+- **`table_search()` says what is wrong when it is handed an api object.**
+  `table_search(px_api("scb"), "utsläpp")` died inside the shared search
+  helper with "missing value where TRUE/FALSE needed". It filters a tibble
+  from `get_tables()`; given a `<px_api>` (or anything else that is not a
+  data frame) it now errors with the two calls that do work:
+  `get_tables(api, query = ...)` and `get_tables(api) |> table_search(...)`.
+
 # pixieweb 0.1.1.9007
 
 ## New features

@@ -149,3 +149,19 @@ test_that("get_tables_v2 builds an encoded, paginated URL", {
   # pageSize must never be a non-finite number (HTTP 400 from SCB).
   expect_no_match(url, "pageSize=Inf", fixed = TRUE)
 })
+
+# dev-backlog 2026-08-21: table_search(api, "term") died with
+# "missing value where TRUE/FALSE needed" deep inside entity_search().
+test_that("table_search names the mistake when handed an api object", {
+  api <- structure(list(base_url = "https://x", version = "v2", lang = "en"),
+                   class = "px_api")
+  expect_error(table_search(api, "emissions"), "get_tables(api, query", fixed = TRUE)
+  expect_error(table_search(list(a = 1), "x"), "needs a tibble")
+})
+
+test_that("table_search still filters a tibble and tolerates NULL", {
+  df <- tibble::tibble(id = c("T1", "T2"), title = c("Population", "Emissions"))
+  expect_equal(table_search(df, "emis")$id, "T2")
+  expect_warning(res <- table_search(NULL, "x"), "empty object")
+  expect_null(res)
+})

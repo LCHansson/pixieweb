@@ -583,6 +583,19 @@ parse_table_v1 <- function(raw, table_id, api) {
 #'   tables |> table_search("municipality")
 #' }}
 table_search <- function(table_df, query, column = NULL) {
+  if (inherits(table_df, "px_api")) {
+    abort(c(
+      "table_search() filters a table tibble, but got a <px_api> object.",
+      i = "Search the server: `get_tables(api, query = \"...\")`.",
+      i = "Or filter what you fetched: `get_tables(api) |> table_search(\"...\")`."
+    ))
+  }
+  if (!is.null(table_df) && !is.data.frame(table_df)) {
+    abort(c(
+      "table_search() needs a tibble returned by get_tables().",
+      x = paste0("Got an object of class <", class(table_df)[1], ">.")
+    ))
+  }
   api <- attr(table_df, "px_api")
   result <- entity_search(table_df, query, column, caller = "table_search")
   attr(result, "px_api") <- api
