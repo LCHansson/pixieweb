@@ -66,9 +66,13 @@ px_api <- function(x, lang = NULL, version = "v2", verbose = FALSE) {
     class = "px_api"
   )
 
-  # Try to fetch config (v2 only)
+  # Fetch the instance's own limits. v2 has a /config endpoint; v1 answers
+  # `?config` on the language root. A v1 instance that does not answer
+  # leaves `config` NULL, and callers fall back to their defaults.
   if (version == "v2") {
     api$config <- fetch_api_config(api, verbose = verbose)
+  } else {
+    api$config <- fetch_api_config_v1(api, verbose = verbose)
   }
 
   if (verbose) inform(format(api))
@@ -120,6 +124,61 @@ fetch_api_config_live <- function(api, verbose = FALSE) {
     default_format = raw$defaultDataFormat %||% "json-stat2",
     cors = raw$CORS %||% FALSE,
     api_version = raw$apiVersion %||% NULL
+  )
+}
+
+#' Fetch a v1 instance's limits (memoized per base_url + language, TTL 24 h)
+#'
+#' PX-Web v1 reports `maxCells`, `maxCalls` and `timeWindow` on
+#' `<base>/<lang>/?config`. They differ between instances (Konjunkturinstitutet
+#' allows 10 calls per 10 s, a third of the package default), so chunked
+#' fetches must pace by the instance's own numbers. Quiet by design: an
+#' instance that does not answer gives NULL, never a warning, and is asked
+#' again on the next `px_api()` call.
+#' @param api A `<px_api>` object (v1).
+#' @param verbose Print details.
+#' @return A list with `max_cells`, `max_calls`, `time_window`, or NULL.
+#' @noRd
+fetch_api_config_v1 <- function(api, verbose = FALSE) {
+  cache_key <- paste0(api$base_url, "|v1|", api$lang)
+  hit <- .px_config_cache[[cache_key]]
+  if (!is.null(hit) && difftime(Sys.time(), hit$at, units = "hours") < 24) {
+    return(hit$config)
+  }
+  config <- parse_api_config_v1(fetch_api_config_v1_live(api, verbose = verbose))
+  if (!is.null(config)) {
+    assign(cache_key, list(config = config, at = Sys.time()), envir = .px_config_cache)
+  }
+  config
+}
+
+#' @noRd
+fetch_api_config_v1_live <- function(api, verbose = FALSE) {
+  url <- paste0(api_base_url(api), "/?config")
+  if (verbose) inform(paste("GET", url))
+  res <- tryCatch(
+    httr2::request(url) |>
+      httr2::req_error(is_error = function(resp) FALSE) |>
+      httr2::req_timeout(5) |>
+      httr2::req_perform(),
+    error = function(e) NULL
+  )
+  if (is.null(res) || httr2::resp_status(res) >= 400) return(NULL)
+  tryCatch(suppressWarnings(parse_json_response(res)), error = function(e) NULL)
+}
+
+#' @noRd
+parse_api_config_v1 <- function(raw) {
+  num <- function(x) if (is.numeric(x) && length(x) == 1 && !is.na(x) && x > 0) x else NULL
+  if (!is.list(raw)) return(NULL)
+  cells <- num(raw$maxCells)
+  calls <- num(raw$maxCalls)
+  window <- num(raw$timeWindow)
+  if (is.null(cells) && is.null(calls)) return(NULL)
+  list(
+    max_cells = cells %||% 100000,
+    max_calls = calls %||% 30,
+    time_window = window %||% 10
   )
 }
 

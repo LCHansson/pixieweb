@@ -1,3 +1,26 @@
+# pixieweb 0.1.1.9009
+
+## Bug fixes
+
+- **v1 fetches are paced by the instance's own limits.** `px_api()` read
+  the limits only for v2, so every v1 instance was paced by the package
+  default of 30 calls per 10 s. Konjunkturinstitutet allows 10 per 10 s:
+  a chunked fetch ran three times too tight and risked HTTP 429. `px_api()`
+  now also asks a v1 instance (`<base>/<lang>/?config`) and fills
+  `api$config` with `max_cells`, `max_calls` and `time_window`, memoized
+  for 24 h like the v2 config. An instance that does not answer leaves
+  `config` `NULL`, silently, and the defaults apply as before.
+- **The chunk planner counts a ranged selection by its own size.**
+  `px_from()`, `px_to()` and `px_range()` were estimated as *all* values of
+  the variable. A query with `Tid = px_range("2015")` was therefore split
+  more often than needed, and when the split ran along the time variable
+  the batches listed every period code, fetching periods outside the range.
+  The planner now resolves each helper to the codes it stands for.
+- **A split along a `px_top()`/`px_bottom()` time selection keeps the right
+  periods.** For the time variable the server counts from the latest
+  period (`px_top(3)` is the three latest), but the planner took the first
+  three codes, so a chunked fetch returned the earliest periods instead.
+
 # pixieweb 0.1.1.9008
 
 ## Bug fixes

@@ -374,20 +374,13 @@ check_query_size <- function(selections, api, table_id, max_cells, verbose,
       var_sizes[[code]] <- length(sel)
       var_values[[code]] <- sel
     } else if (inherits(sel, "px_selection")) {
-      n <- switch(sel$type,
-        top = min(as.integer(sel$values), v$n_values),
-        bottom = min(as.integer(sel$values), v$n_values),
-        all = v$n_values,
-        v$n_values  # from/to/range — estimate as all
-      )
-      var_sizes[[code]] <- n
-      # For top/bottom, get the actual value codes
-      all_codes <- codes_of(v)
-      var_values[[code]] <- switch(sel$type,
-        top = utils::head(all_codes, n),
-        bottom = utils::tail(all_codes, n),
-        all_codes
-      )
+      # Resolve the helper to the codes the server will actually return, so
+      # the cell estimate is not inflated (px_range("2015") is not "all
+      # periods") and a split along this variable never asks for values
+      # outside the selection.
+      picked <- selection_codes(sel, codes_of(v), isTRUE(v[["time"]]))
+      var_sizes[[code]] <- length(picked)
+      var_values[[code]] <- picked
     } else {
       var_sizes[[code]] <- v$n_values
       var_values[[code]] <- codes_of(v)
@@ -421,6 +414,52 @@ check_query_size <- function(selections, api, table_id, max_cells, verbose,
     values_per_chunk = values_per_chunk,
     n_chunks = n_chunks,
     max_cells = max_cells
+  )
+}
+
+#' The value codes a selection helper stands for
+#'
+#' `from`/`to`/`range` are positional in the variable's value list, bounds
+#' included. `top(n)` is the first n values and `bottom(n)` the last n,
+#' except for a time variable, where the server counts from the latest
+#' period: `top(n)` is the n latest, `bottom(n)` the n earliest (verified
+#' against SCB v2 `TAB638`, 2026-10-05). A bound that is not among the
+#' codes falls back to all codes, the safe overestimate.
+#' @param sel A `<px_selection>`.
+#' @param all_codes Character vector of the variable's codes, in order.
+#' @param is_time Whether the variable is the time variable.
+#' @return Character vector of codes.
+#' @noRd
+selection_codes <- function(sel, all_codes, is_time = FALSE) {
+  n_all <- length(all_codes)
+  if (n_all == 0) return(all_codes)
+  first_n <- function(n) utils::head(all_codes, n)
+  last_n <- function(n) utils::tail(all_codes, n)
+  count <- function() min(suppressWarnings(as.integer(sel$values[1])), n_all)
+  at <- function(code) match(code, all_codes)
+  switch(sel$type,
+    top = {
+      n <- count()
+      if (is.na(n)) all_codes else if (is_time) last_n(n) else first_n(n)
+    },
+    bottom = {
+      n <- count()
+      if (is.na(n)) all_codes else if (is_time) first_n(n) else last_n(n)
+    },
+    from = {
+      i <- at(sel$values[1])
+      if (is.na(i)) all_codes else all_codes[i:n_all]
+    },
+    to = {
+      i <- at(sel$values[1])
+      if (is.na(i)) all_codes else all_codes[seq_len(i)]
+    },
+    range = {
+      i <- at(sel$values[1])
+      j <- at(sel$values[2])
+      if (is.na(i) || is.na(j)) all_codes else all_codes[min(i, j):max(i, j)]
+    },
+    all_codes
   )
 }
 
