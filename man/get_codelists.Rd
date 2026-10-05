@@ -16,7 +16,13 @@ get_codelists(api, table_id, variable_code, verbose = FALSE)
 \item{verbose}{Print request details.}
 }
 \value{
-A tibble with columns: \code{id}, \code{text}, \code{type}, \code{values}.
+A tibble with columns: \code{id}, \code{text}, \code{type}, \code{values}. For a v2
+API it also has \code{elimination} and \code{elimination_value_code} (the
+codelist's own, \code{NA} where not stated), and each nested \code{values} tibble
+has, beside \code{code} and \code{text}, the list-column \code{value_map}: the codes of
+the table's variable that the codelist value stands for. For an
+aggregation (municipalities into counties) that is the total-to-parts
+mapping; for a plain value set each code maps to itself.
 }
 \description{
 Codelists provide alternative groupings of variable values

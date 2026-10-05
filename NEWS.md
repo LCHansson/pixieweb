@@ -1,3 +1,15 @@
+# pixieweb 0.1.1.9012
+
+## New features
+
+- **`get_codelists()` keeps the value map.** A v2 codelist says which of
+  the table's values each of its own values stands for (`valueMap`): for
+  an aggregation that is the total-to-parts mapping, the thing that says a
+  county is these municipalities. It was dropped. The nested `values`
+  tibble now has a list-column `value_map` beside `code` and `text`, and
+  the result has the codelist's own `elimination` and
+  `elimination_value_code`. Existing columns are unchanged.
+
 # pixieweb 0.1.1.9011
 
 ## New features

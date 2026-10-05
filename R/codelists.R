@@ -7,7 +7,13 @@
 #' @param table_id Table ID (character).
 #' @param variable_code Variable code (character).
 #' @param verbose Print request details.
-#' @return A tibble with columns: `id`, `text`, `type`, `values`.
+#' @return A tibble with columns: `id`, `text`, `type`, `values`. For a v2
+#'   API it also has `elimination` and `elimination_value_code` (the
+#'   codelist's own, `NA` where not stated), and each nested `values` tibble
+#'   has, beside `code` and `text`, the list-column `value_map`: the codes of
+#'   the table's variable that the codelist value stands for. For an
+#'   aggregation (municipalities into counties) that is the total-to-parts
+#'   mapping; for a plain value set each code maps to itself.
 #' @export
 #' @examples
 #' \donttest{
@@ -57,17 +63,25 @@ get_codelists_v2 <- function(api, table_id, variable_code, verbose) {
     vals <- if (!is.null(raw) && !is.null(raw$values)) {
       tibble::tibble(
         code = vapply(raw$values, function(x) x$code %||% "", character(1)),
-        text = vapply(raw$values, function(x) x$label %||% x$text %||% "", character(1))
+        text = vapply(raw$values, function(x) x$label %||% x$text %||% "", character(1)),
+        # The codes of the table's own variable that each codelist value
+        # stands for: the total-to-parts mapping of an aggregation.
+        value_map = lapply(raw$values, function(x) px_chr(x$valueMap))
       )
     } else {
-      tibble::tibble(code = character(), text = character())
+      tibble::tibble(code = character(), text = character(), value_map = list())
     }
 
     tibble::tibble(
       id = cl_id,
       text = cls$text[i],
       type = cls$type[i] %||% NA_character_,
-      values = list(vals)
+      values = list(vals),
+      elimination = if (is.logical(raw$elimination)) raw$elimination[1] else NA,
+      elimination_value_code = {
+        code <- raw$eliminationValueCode
+        if (is.character(code) && length(code) == 1 && nzchar(code)) code else NA_character_
+      }
     )
   })
 
