@@ -194,3 +194,71 @@ test_that("live: chunking along a top() time selection returns the same periods"
   expect_equal(sort(unique(parts$Tid)), sort(unique(whole$Tid)))
   expect_equal(nrow(parts), nrow(whole))
 })
+
+# A split fetch is whole or it is nothing (review B4, 2026-10-06). The
+# request, the query builder and the parser are replaced; no network.
+run_split <- function(fail_at) {
+  api <- fake_api_v2()
+  api$config <- list(max_calls = 1000, time_window = 0.001)
+  calls <- 0
+  out <- with_mocked_bindings(
+    suppressMessages(execute_chunked(
+      api, "T", list(Region = "*", Tid = "*"), NULL,
+      list(split_var = "Region", split_values = sprintf("%04d", 1:6),
+           values_per_chunk = 2, n_chunks = 3, estimated_cells = 600,
+           max_cells = 200),
+      TRUE, FALSE
+    )),
+    compose_data_query = function(api, table_id, .codelist, ...) {
+      list(url = "u", body = list(...))
+    },
+    execute_query = function(api, url, body = NULL, verbose = FALSE) {
+      calls <<- calls + 1
+      if (calls %in% fail_at) {
+        rlang::warn("PX-Web API returned HTTP 503: (test)")
+        return(NULL)
+      }
+      body
+    },
+    parse_data_v2 = function(raw, table_id, simplify, status = FALSE) {
+      tibble::tibble(Region = raw$Region, value = 1)
+    }
+  )
+  list(out = out, calls = calls)
+}
+
+test_that("a split fetch with every request answered returns all chunks", {
+  r <- run_split(integer(0))
+  expect_equal(r$calls, 3)
+  expect_equal(sort(unique(r$out$Region)), sprintf("%04d", 1:6))
+})
+
+test_that("a split fetch with one failed request stops and names the chunk", {
+  err <- suppressWarnings(tryCatch(run_split(2), error = function(e) e))
+  expect_s3_class(err, "pixieweb_chunks_failed")
+  expect_equal(err$failed, 2L)
+  expect_equal(err$n_chunks, 3L)
+  expect_equal(err$split_var, "Region")
+  msg <- paste(conditionMessage(err), collapse = "\n")
+  expect_match(msg, "1 of 3 requests failed", fixed = TRUE)
+  expect_match(msg, "request 2 of 3: 'Region' 0003 to 0004 (2 values)",
+               fixed = TRUE)
+  expect_match(msg, "No data is returned", fixed = TRUE)
+})
+
+test_that("a split fetch with several failed requests names each of them", {
+  err <- suppressWarnings(tryCatch(run_split(c(1, 3)), error = function(e) e))
+  expect_s3_class(err, "pixieweb_chunks_failed")
+  expect_equal(err$failed, c(1L, 3L))
+  msg <- paste(conditionMessage(err), collapse = "\n")
+  expect_match(msg, "2 of 3 requests failed", fixed = TRUE)
+  expect_match(msg, "request 1 of 3", fixed = TRUE)
+  expect_match(msg, "request 3 of 3", fixed = TRUE)
+})
+
+test_that("the reason each request failed is still warned", {
+  expect_warning(
+    tryCatch(run_split(2), pixieweb_chunks_failed = function(e) NULL),
+    "HTTP 503"
+  )
+})

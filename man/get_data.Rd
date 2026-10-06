@@ -120,6 +120,12 @@ When \code{auto_chunk = TRUE} and the query would exceed the API's cell limit,
 \code{get_data()} automatically splits the request. It picks the variable with
 the most values and batches its values so each request fits under the limit.
 Requests are paced to respect the API's rate limit.
+
+A split fetch is all or nothing. If any of its requests fails (a
+connection error, a rate limit that outlasts the retries, an HTTP error),
+\code{get_data()} stops with an error of class \code{pixieweb_chunks_failed} that
+says how many requests failed and which values of the split variable they
+asked for. The other requests' rows are not returned.
 }
 \section{A name that cannot be masked}{
 

@@ -76,6 +76,12 @@
 #' the most values and batches its values so each request fits under the limit.
 #' Requests are paced to respect the API's rate limit.
 #'
+#' A split fetch is all or nothing. If any of its requests fails (a
+#' connection error, a rate limit that outlasts the retries, an HTTP error),
+#' `get_data()` stops with an error of class `pixieweb_chunks_failed` that
+#' says how many requests failed and which values of the split variable they
+#' asked for. The other requests' rows are not returned.
+#'
 #' @export
 #' @examples
 #' \donttest{
@@ -498,6 +504,7 @@ execute_chunked <- function(api, table_id, selections, .codelist,
   )
 
   results <- list()
+  failed <- integer(0)
   cli::cli_progress_bar(
     "Fetching data",
     total = length(batches),
@@ -516,7 +523,9 @@ execute_chunked <- function(api, table_id, selections, .codelist,
     )
     raw <- execute_query(api, q$url, q$body, verbose = verbose)
 
-    if (!is.null(raw)) {
+    if (is.null(raw)) {
+      failed <- c(failed, i)
+    } else {
       parsed <- if (api$version == "v2") {
         parse_data_v2(raw, table_id, simplify, status = status)
       } else {
@@ -537,9 +546,53 @@ execute_chunked <- function(api, table_id, selections, .codelist,
 
   cli::cli_progress_done(.envir = environment())
 
+  # A split fetch is whole or it is nothing: the chunks that did come back
+  # are never returned as if they were the answer.
+  if (length(failed) > 0) {
+    abort_chunks_failed(failed, batches, split_var, table_id)
+  }
+
   if (length(results) == 0) return(NULL)
 
   dplyr::bind_rows(results)
+}
+
+#' Stop a split fetch in which one or more requests failed
+#'
+#' Names how many requests failed, which ones, and the values of the split
+#' variable each of them asked for. The condition has class
+#' `pixieweb_chunks_failed` and carries `failed` (the request numbers),
+#' `n_chunks` and `split_var`.
+#' @noRd
+abort_chunks_failed <- function(failed, batches, split_var, table_id) {
+  n <- length(batches)
+  span <- function(i) {
+    v <- as.character(unlist(batches[[i]]))
+    if (length(v) == 1) v else paste0(v[1], " to ", v[length(v)])
+  }
+  shown <- utils::head(failed, 10)
+  lines <- vapply(shown, function(i) {
+    paste0("request ", i, " of ", n, ": '", split_var, "' ", span(i),
+           " (", length(unlist(batches[[i]])), " values)")
+  }, character(1))
+  if (length(failed) > length(shown)) {
+    lines <- c(lines, paste0("and ", length(failed) - length(shown), " more"))
+  }
+  abort(
+    c(
+      paste0(
+        length(failed), " of ", n, " requests failed in the split fetch of '",
+        table_id, "'. No data is returned, because the result would lack ",
+        "part of what was asked for."
+      ),
+      stats::setNames(lines, rep("x", length(lines))),
+      i = "The warnings above say why each request failed. Run the call again."
+    ),
+    class = "pixieweb_chunks_failed",
+    failed = failed,
+    n_chunks = n,
+    split_var = split_var
+  )
 }
 
 #' Parse v2 (json-stat2) data response

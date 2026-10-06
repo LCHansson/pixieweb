@@ -1,3 +1,19 @@
+# pixieweb 0.1.1.9014
+
+## Bug fixes
+
+- **`get_data()`: a split fetch is all or nothing.** When a query is too
+  large for one request it is split into several. If one of them failed (a
+  connection error, a rate limit that outlasted the retries, an HTTP
+  error), the rows of the others were bound and returned with only a
+  warning, so the caller got a table that lacked a block of regions or
+  periods and looked whole. `get_data()` now stops with an error of class
+  `pixieweb_chunks_failed` that says how many requests failed, which ones,
+  and the values of the split variable each asked for (also as fields
+  `failed`, `n_chunks`, `split_var`). The warning that says why each
+  request failed is kept. A query that fits in one request is unchanged
+  (`NULL` with a warning on failure).
+
 # pixieweb 0.1.1.9013
 
 ## New features
