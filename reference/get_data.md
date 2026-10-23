@@ -57,8 +57,18 @@ get_data(
     [`px_to()`](https://lchansson.github.io/pixieweb/reference/px_selections.md),
     [`px_range()`](https://lchansson.github.io/pixieweb/reference/px_selections.md)
 
-  - Omitted variables are eliminated if the API allows it Ignored when
-    `query` is provided.
+  - Omitted variables are eliminated if the API allows it
+
+  Only variables whose metadata reports `elimination = TRUE` may be
+  omitted on a v2 API. Omitting a mandatory one (including
+  `ContentsCode` and the time variable) is an error naming the variables
+  to add — the server's own HTTP 400 does not say which variable is
+  missing. Use
+  [`get_variables()`](https://lchansson.github.io/pixieweb/reference/get_variables.md)
+  to see the flag, or let
+  [`prepare_query()`](https://lchansson.github.io/pixieweb/reference/prepare_query.md)
+  fill the mandatory variables for you. Ignored when `query` is
+  provided.
 
 - query:
 
@@ -146,9 +156,11 @@ limit.
 scb <- px_api("scb", lang = "en")
 if (px_available(scb)) {
 
-  # Fetch with explicit selections
+  # Fetch with explicit selections. ContentsCode and Tid are mandatory
+  # in this table (elimination = FALSE); Region is not.
   get_data(scb, "TAB638",
     Region = c("0180", "1480"),
+    ContentsCode = "*",
     Tid = px_top(5)
   )
 
@@ -156,7 +168,6 @@ if (px_available(scb)) {
   q <- prepare_query(scb, "TAB638", Region = c("0180"))
   get_data(scb, query = q)
 }# }
-#> Warning: PX-Web API returned HTTP 400: {"type":"Parameter error","title":"Missing selection for mandantory variable","status":400}
 #> ── Query: TAB638 ──────────────────────────────────────────────────────────────── 
 #>   Estimated cells: 20 / 150000 (0% of limit)
 #> 

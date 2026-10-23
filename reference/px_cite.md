@@ -26,10 +26,9 @@ A character string (formatted citation).
 # \donttest{
 scb <- px_api("scb", lang = "en")
 if (px_available(scb)) {
-  d <- get_data(scb, "TAB638", Region = "0180", Tid = px_top(3))
+  d <- get_data(scb, "TAB638", Region = "0180", ContentsCode = "*",
+                Tid = px_top(3))
   px_cite(d)
 }# }
-#> Warning: PX-Web API returned HTTP 400: {"type":"Parameter error","title":"Missing selection for mandantory variable","status":400}
-#> Warning: No source metadata found. Was this data fetched with get_data()?
-#> [1] NA
+#> [1] "Statistics Sweden (SCB). Table: TAB638. Retrieved via pixieweb on 2026-10-23."
 ```

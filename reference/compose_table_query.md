@@ -35,15 +35,20 @@ compose_table_query(
 
 - page:
 
-  Page number.
+  Page number. A single positive whole number, or `NA` (default) to
+  leave the parameter out.
 
 - per_page:
 
-  Results per page.
+  Results per page. A single positive whole number, or `NA` (default) to
+  leave the parameter out. `Inf` is not a legal page size — use
+  [`get_tables()`](https://lchansson.github.io/pixieweb/reference/get_tables.md),
+  which paginates transparently.
 
 ## Value
 
-A character URL string.
+A character URL string. All parameter values are percent-encoded, so
+multi-word and non-ASCII queries produce a valid URL.
 
 ## Examples
 

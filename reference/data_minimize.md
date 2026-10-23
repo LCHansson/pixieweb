@@ -29,9 +29,17 @@ A tibble.
 # \donttest{
 scb <- px_api("scb", lang = "en")
 if (px_available(scb)) {
-  d <- get_data(scb, "TAB638", Region = "0180", Tid = px_top(3))
+  d <- get_data(scb, "TAB638", Region = "0180", ContentsCode = "*",
+                Tid = px_top(3))
   d |> data_minimize()
 }# }
-#> Warning: PX-Web API returned HTTP 400: {"type":"Parameter error","title":"Missing selection for mandantory variable","status":400}
-#> NULL
+#> # A tibble: 6 × 5
+#>   ContentsCode ContentsCode_text Tid   Tid_text  value
+#>   <chr>        <chr>             <chr> <chr>     <dbl>
+#> 1 BE0101N1     Population        2022  2022     984748
+#> 2 BE0101N1     Population        2023  2023     988943
+#> 3 BE0101N1     Population        2024  2024     995574
+#> 4 BE0101N2     Population growth 2022  2022       5978
+#> 5 BE0101N2     Population growth 2023  2023       4195
+#> 6 BE0101N2     Population growth 2024  2024       6631
 ```

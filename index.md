@@ -44,6 +44,7 @@ information.
 pixieweb is on CRAN. To install it, run the following code in R:
 
 ``` r
+
 install.packages("pixieweb")
 ```
 
@@ -51,6 +52,7 @@ To install the latest development version from GitHub, use the `remotes`
 package:
 
 ``` r
+
 library("remotes")
 remotes::install_github("LCHansson/pixieweb")
 ```
@@ -58,6 +60,7 @@ remotes::install_github("LCHansson/pixieweb")
 ## Quick start
 
 ``` r
+
 library(pixieweb)
 
 # Connect to Statistics Sweden
@@ -69,8 +72,12 @@ tables <- get_tables(scb, query = "population")
 # Inspect variables in a table
 vars <- get_variables(scb, tables$id[1])
 
-# Download data
-data <- get_data(scb, tables$id[1])
+# Download data. Every variable with `elimination = FALSE` in `vars` must be
+# given a selection; the rest are aggregated away by the API.
+data <- get_data(scb, tables$id[1],
+  ContentsCode = "*",
+  Tid = px_top(5)
+)
 ```
 
 ## Features
@@ -106,6 +113,7 @@ and other functions can write to a shared SQLite file instead of
 per-session `.rds` files:
 
 ``` r
+
 # install.packages("devtools")
 devtools::install_github("LCHansson/nordstatExtras")
 
@@ -118,6 +126,8 @@ scb <- px_api("scb")
 tables <- get_tables(scb, cache = TRUE, cache_location = handle)
 data <- get_data(scb, "TAB638",
   Region = c("0180", "1480"),
+  ContentsCode = "*",
+  Tid = px_top(5),
   cache = TRUE, cache_location = handle
 )
 

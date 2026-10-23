@@ -26,9 +26,9 @@ A tibble with columns `variable`, `value`, `comment`, or `NULL`.
 # \donttest{
 scb <- px_api("scb", lang = "en")
 if (px_available(scb)) {
-  d <- get_data(scb, "TAB638", Region = "0180", Tid = px_top(3), .comments = TRUE)
+  d <- get_data(scb, "TAB638", Region = "0180", ContentsCode = "*",
+                Tid = px_top(3), .comments = TRUE)
   data_comments(d)
 }# }
-#> Warning: PX-Web API returned HTTP 400: {"type":"Parameter error","title":"Missing selection for mandantory variable","status":400}
 #> NULL
 ```

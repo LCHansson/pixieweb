@@ -38,8 +38,8 @@ Parsed JSON as a list, or `NULL` on failure.
 # \donttest{
 scb <- px_api("scb", lang = "en")
 if (px_available(scb)) {
-  q <- compose_data_query(scb, "TAB638", Region = "0180", Tid = px_top(3))
+  q <- compose_data_query(scb, "TAB638", Region = "0180",
+                          ContentsCode = "*", Tid = px_top(3))
   raw <- execute_query(scb, q$url, q$body)
 }# }
-#> Warning: PX-Web API returned HTTP 400: {"type":"Parameter error","title":"Missing selection for mandantory variable","status":400}
 ```

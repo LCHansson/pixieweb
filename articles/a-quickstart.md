@@ -6,6 +6,7 @@ the `pixieweb` package, see [Introduction to
 pixieweb](https://lchansson.github.io/pixieweb/articles/introduction-to-pixieweb.md).
 
 ``` r
+
 library("pixieweb")
 ```
 
@@ -28,6 +29,7 @@ accepts either a known alias (such as `"scb"`, `"ssb"`, `"statfi"`) or a
 full base URL.
 
 ``` r
+
 scb <- px_api("scb", lang = "en")
 scb
 ```
@@ -45,6 +47,7 @@ PX-Web organises data into **tables**. Use
 to search the catalogue (server-side on v2 APIs, folder walk on v1):
 
 ``` r
+
 tables <- get_tables(scb, query = "population")
 
 dplyr::glimpse(tables)
@@ -73,6 +76,7 @@ and inspect candidate tables with
 [`table_describe()`](https://lchansson.github.io/pixieweb/reference/table_describe.md):
 
 ``` r
+
 tables |>
   table_search("municipal") |>
   table_describe(max_n = 2, format = "md", heading_level = 4)
@@ -90,6 +94,7 @@ Once you have a table ID, inspect what variables (dimensions) it has.
 returns a tibble with one row per variable:
 
 ``` r
+
 vars <- get_variables(scb, "TAB638")
 vars |> variable_describe()
 ```
@@ -125,6 +130,7 @@ You can inspect the available values for any single variable with
 [`variable_values()`](https://lchansson.github.io/pixieweb/reference/variable_values.md):
 
 ``` r
+
 vars |> variable_values("Region")
 ```
 
@@ -165,6 +171,7 @@ Pass your selections to
   want “the latest N periods” or “everything from 2020 onward”.
 
 ``` r
+
 pop <- get_data(scb, "TAB638",
   Region = c("0180", "1480", "1280"),
   ContentsCode = "*",
@@ -196,6 +203,7 @@ display and plotting; use the raw codes for filtering and joining.
 Finally, time to plot our data:
 
 ``` r
+
 library("ggplot2")
 
 pop_plot <- pop |>

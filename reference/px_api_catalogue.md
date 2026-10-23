@@ -18,7 +18,7 @@ A tibble with columns: `alias`, `description`, `url`, `url_v1`,
 
 ``` r
 px_api_catalogue()
-#> # A tibble: 13 × 7
+#> # A tibble: 14 × 7
 #>    alias    description                 url   url_v1 versions langs default_lang
 #>    <chr>    <chr>                       <chr> <chr>  <list>   <lis> <chr>       
 #>  1 scb      Statistics Sweden (SCB)     http… https… <chr>    <chr> sv          
@@ -34,4 +34,5 @@ px_api_catalogue()
 #> 11 konj     National Institute of Econ… http… https… <chr>    <chr> sv          
 #> 12 msb      Swedish Civil Contingencie… http… https… <chr>    <chr> sv          
 #> 13 slu      Swedish University of Agri… http… https… <chr>    <chr> sv          
+#> 14 tva      Swedish Agency for Growth … http… https… <chr>    <chr> sv          
 ```

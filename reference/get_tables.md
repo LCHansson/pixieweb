@@ -30,10 +30,17 @@ get_tables(
   APIs (e.g. SCB) the server-side search is an **exact token match** by
   default — `query = "befolk"` will not find tables with "befolkning" in
   the title. Use explicit wildcards (`query = "befolk*"`) for prefix
-  matching. Wildcards can also appear mid-term (e.g. `*arbets*`). This
-  is a property of the PX-Web server, not pixieweb; behaviour may vary
-  by agency. Case-insensitive. Non-ASCII characters (å/ä/ö etc.) are
-  URL-encoded automatically.
+  matching. Only *trailing* wildcards are reliably supported: SCB's v2
+  search rejects a wildcard at the start of a term (`*arbets*`) with an
+  HTTP 500, and pixieweb raises an informative error when that happens.
+  For contains-style matching, fetch a broader set and filter
+  client-side with
+  [`table_search()`](https://lchansson.github.io/pixieweb/reference/table_search.md).
+  This is a property of the PX-Web server, not pixieweb; behaviour may
+  vary by agency. Case-insensitive. Non-ASCII characters (å/ä/ö etc.)
+  are URL-encoded automatically. Note also that v2 search does not index
+  legacy subject-area codes ("MI0107"): search in clear text and filter
+  on the `subject_code` column instead.
 
 - id:
 
@@ -89,20 +96,20 @@ if (px_available(scb)) {
   # Tables updated in the last 30 days
   get_tables(scb, updated_since = 30)
 }# }
-#> # A tibble: 322 × 13
+#> # A tibble: 357 × 13
 #>    id      title description category updated first_period last_period time_unit
 #>    <chr>   <chr> <chr>       <chr>    <chr>   <chr>        <chr>       <chr>    
-#>  1 TAB1872 Indu… ""          public   2026-0… 2000M01      2026M02     Monthly  
-#>  2 TAB4370 Pres… ""          public   2026-0… 2013         2023        Annual   
-#>  3 TAB1710 Orde… ""          public   2026-0… 2000M01      2026M02     Monthly  
-#>  4 TAB1693 Turn… ""          public   2026-0… 2000M01      2026M02     Monthly  
-#>  5 TAB4894 Prod… ""          public   2026-0… 2010M01      2026M02     Monthly  
-#>  6 TAB4810 Prod… ""          public   2026-0… 2010K1       2025K4      Quarterly
-#>  7 TAB4248 Part… ""          public   2026-0… 2017         2025        Annual   
-#>  8 TAB2612 Part… ""          public   2026-0… 2017         2025        Annual   
-#>  9 TAB3789 Part… ""          public   2026-0… 2017         2025        Annual   
-#> 10 TAB4203 Part… ""          public   2026-0… 2017         2025        Annual   
-#> # ℹ 312 more rows
+#>  1 TAB6964 Expo… ""          public   2026-0… 2026M01      2026M07     Monthly  
+#>  2 TAB6966 Impo… ""          public   2026-0… 2026M01      2026M07     Monthly  
+#>  3 TAB6990 Trad… ""          public   2026-1… 2025         2025        Annual   
+#>  4 TAB1872 Indu… ""          public   2026-1… 2000M01      2026M08     Monthly  
+#>  5 TAB1710 Orde… ""          public   2026-1… 2000M01      2026M08     Monthly  
+#>  6 TAB1693 Turn… ""          public   2026-1… 2000M01      2026M08     Monthly  
+#>  7 TAB4894 Prod… ""          public   2026-1… 2010M01      2026M08     Monthly  
+#>  8 TAB4335 Inco… ""          public   2026-1… 2012         2024        Annual   
+#>  9 TAB4366 Inco… ""          public   2026-1… 2012         2024        Annual   
+#> 10 TAB4379 Inco… ""          public   2026-1… 2012         2024        Annual   
+#> # ℹ 347 more rows
 #> # ℹ 5 more variables: variables <list>, subject_code <chr>, subject_path <chr>,
 #> #   source <chr>, discontinued <lgl>
 ```

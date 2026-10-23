@@ -18,10 +18,12 @@ results.
 ## Available APIs
 
 ``` r
+
 library("pixieweb")
 ```
 
 ``` r
+
 px_api_catalogue()
 ```
 
@@ -48,6 +50,7 @@ connect to any PX-Web API by providing a full URL.
 ## Connecting to multiple agencies
 
 ``` r
+
 scb <- px_api("scb", lang = "en")      # Sweden (v2)
 ssb <- px_api("ssb", lang = "en")      # Norway (v2)
 statfi <- px_api("statfi", lang = "en") # Finland (v1)
@@ -57,6 +60,7 @@ Each API object stores the base URL, language, API version, and
 configuration (cell limits, rate limits):
 
 ``` r
+
 scb
 #> PX-Web API: Statistics Sweden (SCB) (v2, en)
 #>   Max cells: 150000 | Rate limit: 30/10s
@@ -87,6 +91,7 @@ The table IDs and variable codes will differ, but the workflow is
 identical:
 
 ``` r
+
 library("dplyr")
 
 # Find population tables in each country
@@ -105,6 +110,7 @@ elsewhere). Always run
 on each table before building your query:
 
 ``` r
+
 # Fetch data using prepare_query() for quick exploration
 scb_q <- prepare_query(scb, "TAB638",
   Region = "00",       # "Riket" (whole country)
@@ -125,6 +131,7 @@ returns standard tibbles with a `table_id` attribute, you can bind
 results from different APIs:
 
 ``` r
+
 results <- list(
   sweden = get_data(scb, query = scb_q),
   norway = get_data(ssb, "05803",

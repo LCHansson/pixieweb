@@ -63,6 +63,7 @@ By default the caption shows the API and table that the data came from,
 and — if `var_df` is supplied — the variables included in the table with
 both a human-readable label and the raw code, e.g.
 
+
     Source: Statistics Sweden (SCB), table TAB638
     Region (Region) | Marital status (Civilstand) | Year (Tid)
 
@@ -77,12 +78,12 @@ prefix.
 scb <- px_api("scb", lang = "en")
 if (px_available(scb)) {
   vars <- get_variables(scb, "TAB638")
-  d <- get_data(scb, "TAB638", Region = "0180", Tid = px_top(3))
+  d <- get_data(scb, "TAB638", Region = "0180", ContentsCode = "*",
+                Tid = px_top(3))
   data_legend(d, vars)
   data_legend(d, vars, lang = "SV")
   data_legend(d, vars, omit_varname = TRUE)
   data_legend(d, vars, omit_desc = TRUE)
 }# }
-#> Warning: PX-Web API returned HTTP 400: {"type":"Parameter error","title":"Missing selection for mandantory variable","status":400}
-#> [1] "Region | Civilstand | Alder | Kon | ContentsCode | Tid"
+#> [1] "Source: Statistics Sweden (SCB), table TAB638\nRegion | Civilstand | Alder | Kon | ContentsCode | Tid"
 ```

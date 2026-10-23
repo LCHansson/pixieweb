@@ -27,6 +27,7 @@ use `dplyr`, `tidyr`, and `ggplot2` for data wrangling and
 visualisation:
 
 ``` r
+
 install.packages("pixieweb")
 ```
 
@@ -58,6 +59,7 @@ However, you can also use the `pixieweb` package to explore data without
 prior knowledge of the database.
 
 ``` r
+
 library("pixieweb")
 ```
 
@@ -99,13 +101,13 @@ NUTS-2 regions.
 
 `pixieweb` provides a function family for each of these concepts:
 
-| Level        | Discover                                                                                   | Search                                                                                   | Describe                                                                                     | Extract                                                                                            | Values                                                                                   |
-|--------------|--------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------|
-| API instance | [`px_api_catalogue()`](https://lchansson.github.io/pixieweb/reference/px_api_catalogue.md) | —                                                                                        | —                                                                                            | —                                                                                                  | —                                                                                        |
-| Table        | [`get_tables()`](https://lchansson.github.io/pixieweb/reference/get_tables.md)             | [`table_search()`](https://lchansson.github.io/pixieweb/reference/table_search.md)       | [`table_describe()`](https://lchansson.github.io/pixieweb/reference/table_describe.md)       | [`table_extract_ids()`](https://lchansson.github.io/pixieweb/reference/table_extract_ids.md)       | —                                                                                        |
-| Variable     | [`get_variables()`](https://lchansson.github.io/pixieweb/reference/get_variables.md)       | [`variable_search()`](https://lchansson.github.io/pixieweb/reference/variable_search.md) | [`variable_describe()`](https://lchansson.github.io/pixieweb/reference/variable_describe.md) | [`variable_extract_ids()`](https://lchansson.github.io/pixieweb/reference/variable_extract_ids.md) | [`variable_values()`](https://lchansson.github.io/pixieweb/reference/variable_values.md) |
-| Codelist     | [`get_codelists()`](https://lchansson.github.io/pixieweb/reference/get_codelists.md)       | —                                                                                        | [`codelist_describe()`](https://lchansson.github.io/pixieweb/reference/codelist_describe.md) | [`codelist_extract_ids()`](https://lchansson.github.io/pixieweb/reference/codelist_extract_ids.md) | [`codelist_values()`](https://lchansson.github.io/pixieweb/reference/codelist_values.md) |
-| Data         | [`get_data()`](https://lchansson.github.io/pixieweb/reference/get_data.md)                 | —                                                                                        | —                                                                                            | —                                                                                                  | —                                                                                        |
+| Level | Discover | Search | Describe | Extract | Values |
+|----|----|----|----|----|----|
+| API instance | [`px_api_catalogue()`](https://lchansson.github.io/pixieweb/reference/px_api_catalogue.md) | — | — | — | — |
+| Table | [`get_tables()`](https://lchansson.github.io/pixieweb/reference/get_tables.md) | [`table_search()`](https://lchansson.github.io/pixieweb/reference/table_search.md) | [`table_describe()`](https://lchansson.github.io/pixieweb/reference/table_describe.md) | [`table_extract_ids()`](https://lchansson.github.io/pixieweb/reference/table_extract_ids.md) | — |
+| Variable | [`get_variables()`](https://lchansson.github.io/pixieweb/reference/get_variables.md) | [`variable_search()`](https://lchansson.github.io/pixieweb/reference/variable_search.md) | [`variable_describe()`](https://lchansson.github.io/pixieweb/reference/variable_describe.md) | [`variable_extract_ids()`](https://lchansson.github.io/pixieweb/reference/variable_extract_ids.md) | [`variable_values()`](https://lchansson.github.io/pixieweb/reference/variable_values.md) |
+| Codelist | [`get_codelists()`](https://lchansson.github.io/pixieweb/reference/get_codelists.md) | — | [`codelist_describe()`](https://lchansson.github.io/pixieweb/reference/codelist_describe.md) | [`codelist_extract_ids()`](https://lchansson.github.io/pixieweb/reference/codelist_extract_ids.md) | [`codelist_values()`](https://lchansson.github.io/pixieweb/reference/codelist_values.md) |
+| Data | [`get_data()`](https://lchansson.github.io/pixieweb/reference/get_data.md) | — | — | — | — |
 
 ### Connecting to an API
 
@@ -114,6 +116,7 @@ All `pixieweb` workflows start by connecting to a PX-Web instance.
 accepts a short alias (`"scb"`, `"ssb"`, `"statfi"`, …) or a full URL:
 
 ``` r
+
 # Known aliases
 scb <- px_api("scb", lang = "en")
 ssb <- px_api("ssb", lang = "en")
@@ -155,6 +158,7 @@ In both cases the result is a tibble with rich metadata, one row per
 table:
 
 ``` r
+
 # Search the SCB catalogue for population-related tables
 tables <- get_tables(scb, query = "population")
 
@@ -179,6 +183,7 @@ and data source — all of which are searchable by
 (a client-side filter, analogous to `kpi_search()` in `rKolada`).
 
 ``` r
+
 # Narrow down to tables about municipalities
 tables |>
   table_search("municipal") |>
@@ -199,6 +204,7 @@ Once you have chosen a table, inspect its variables with
 [`get_variables()`](https://lchansson.github.io/pixieweb/reference/get_variables.md):
 
 ``` r
+
 vars <- get_variables(scb, "TAB638")
 vars |> variable_describe()
 ```
@@ -249,6 +255,7 @@ To inspect the available values for a specific variable, use
 [`variable_values()`](https://lchansson.github.io/pixieweb/reference/variable_values.md):
 
 ``` r
+
 vars |> variable_values("Region")
 ```
 
@@ -274,6 +281,7 @@ is the workhorse function. Provide an API object, a table ID, and one
 argument per variable you want to include in the query:
 
 ``` r
+
 pop <- get_data(scb, "TAB638",
   Region = c("0180", "1480", "1280"),
   ContentsCode = "*",
@@ -324,6 +332,7 @@ inspects the table’s variable metadata and builds a query with sensible
 defaults, so that you only need to specify the variables you care about:
 
 ``` r
+
 q <- prepare_query(scb, "TAB638",
   Region = c("0180", "1480", "1280")
 )
@@ -360,6 +369,7 @@ API’s cell limit. Once you’re happy, pass the validated query to
 [`get_data()`](https://lchansson.github.io/pixieweb/reference/get_data.md):
 
 ``` r
+
 pop <- get_data(scb, query = q)
 ```
 
@@ -372,6 +382,7 @@ municipalities might have a codelist that groups them into 21 counties
 (`vs_RegionLän07`):
 
 ``` r
+
 cls <- get_codelists(scb, "TAB638", "Region")
 cls |> codelist_describe(max_n = 3)
 ```
@@ -394,6 +405,7 @@ cls |> codelist_describe(max_n = 3)
 Apply a codelist in a query via the `.codelist` argument:
 
 ``` r
+
 # Fetch data aggregated to counties instead of municipalities
 get_data(scb, "TAB638",
   Region = "*",
@@ -412,6 +424,7 @@ separate columns — useful when you want to compute with several measures
 (e.g. death rate = Deaths / Population):
 
 ``` r
+
 demo <- get_data(scb, "TAB638",
   Region = "0180",
   Tid = px_top(5),
@@ -442,6 +455,7 @@ for any time-series analysis across all three sibling packages
 (`rKolada`, `pixieweb`, `rTrafa`):
 
 ``` r
+
 library("ggplot2")
 
 pop_plot <- pop |>
@@ -482,6 +496,7 @@ you need to inspect/modify the exact query before sending it — use the
 low-level query composers:
 
 ``` r
+
 q <- compose_data_query(scb, "TAB638",
   Region = c("0180"),
   ContentsCode = "*",
@@ -502,6 +517,7 @@ PX-Web v2 supports server-side stored queries — useful for recurring
 reports. Save a query once, then retrieve it by ID later:
 
 ``` r
+
 # Save a query
 id <- save_query(scb, "TAB638",
   Region = "0180",
@@ -521,6 +537,7 @@ generates a citation string from the metadata attached to a downloaded
 data frame:
 
 ``` r
+
 px_cite(pop)
 ```
 
