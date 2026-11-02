@@ -1,3 +1,17 @@
+# pixieweb 0.1.1.9017
+
+## Bug fixes
+
+- **A rate limit stops with an error, after a longer wait.** When the API
+  answered "too many requests" (HTTP 429) after three short retries (1, 2
+  and 4 seconds), the call warned and returned `NULL`, which a caller could
+  take for a real answer without rows. A request now waits longer first:
+  five retries, for as long as the server's `Retry-After` header asks (at
+  most 60 seconds) or for 2, 4, 8, 16 and 32 seconds. If the API still
+  refuses, the call stops with an error of class `pixieweb_rate_limited`
+  that names the address. In a split fetch the error stops the fetch at
+  once, and no rows are returned.
+
 # pixieweb 0.1.1.9016
 
 ## Bug fixes

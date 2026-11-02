@@ -122,10 +122,16 @@ the most values and batches its values so each request fits under the limit.
 Requests are paced to respect the API's rate limit.
 
 A split fetch is all or nothing. If any of its requests fails (a
-connection error, a rate limit that outlasts the retries, an HTTP error),
-\code{get_data()} stops with an error of class \code{pixieweb_chunks_failed} that
-says how many requests failed and which values of the split variable they
-asked for. The other requests' rows are not returned.
+connection error, an HTTP error), \code{get_data()} stops with an error of
+class \code{pixieweb_chunks_failed} that says how many requests failed and
+which values of the split variable they asked for. The other requests'
+rows are not returned.
+
+When the API answers that requests come too fast (HTTP 429), a request
+waits and tries again, five times, for as long as the server asks or for
+2, 4, 8, 16 and 32 seconds. If the API still refuses, \code{get_data()} (and
+every other call that reads the API) stops with an error of class
+\code{pixieweb_rate_limited}. It never returns an empty answer for it.
 }
 \section{A name that cannot be masked}{
 

@@ -5,7 +5,7 @@
 #' @param verbose Print request details.
 #' @return Parsed JSON as list, or NULL on failure.
 #' @noRd
-px_get <- function(url, verbose = FALSE, .retry = 0L, .max_retries = 3L) {
+px_get <- function(url, verbose = FALSE, .retry = 0L, .max_retries = 5L) {
   if (verbose) inform(paste("GET", url))
 
   res <- tryCatch(
@@ -22,13 +22,7 @@ px_get <- function(url, verbose = FALSE, .retry = 0L, .max_retries = 3L) {
 
   status <- httr2::resp_status(res)
   if (status == 429) {
-    if (.retry >= .max_retries) {
-      warn(paste0("Rate limited by PX-Web API after ", .max_retries, " retries: ", url))
-      return(NULL)
-    }
-    delay <- 2^.retry
-    if (verbose) inform(paste0("Rate limited (429). Retrying in ", delay, "s..."))
-    Sys.sleep(delay)
+    px_wait_rate_limited(res, url, .retry, .max_retries, verbose)
     return(px_get(url, verbose = verbose, .retry = .retry + 1L, .max_retries = .max_retries))
   }
   if (status >= 400) {
@@ -45,7 +39,7 @@ px_get <- function(url, verbose = FALSE, .retry = 0L, .max_retries = 3L) {
 #' @param verbose Print request details.
 #' @return Parsed JSON as list, or NULL on failure.
 #' @noRd
-px_post <- function(url, body, verbose = FALSE, .retry = 0L, .max_retries = 3L) {
+px_post <- function(url, body, verbose = FALSE, .retry = 0L, .max_retries = 5L) {
   if (verbose) {
     inform(paste("POST", url))
     inform(paste("Body:", jsonlite::toJSON(body, auto_unbox = TRUE)))
@@ -66,13 +60,7 @@ px_post <- function(url, body, verbose = FALSE, .retry = 0L, .max_retries = 3L) 
 
   status <- httr2::resp_status(res)
   if (status == 429) {
-    if (.retry >= .max_retries) {
-      warn(paste0("Rate limited by PX-Web API after ", .max_retries, " retries: ", url))
-      return(NULL)
-    }
-    delay <- 2^.retry
-    if (verbose) inform(paste0("Rate limited (429). Retrying in ", delay, "s..."))
-    Sys.sleep(delay)
+    px_wait_rate_limited(res, url, .retry, .max_retries, verbose)
     return(px_post(url, body, verbose = verbose, .retry = .retry + 1L, .max_retries = .max_retries))
   }
   if (status >= 400) {
@@ -83,6 +71,47 @@ px_post <- function(url, body, verbose = FALSE, .retry = 0L, .max_retries = 3L) 
 
   parse_json_response(res)
 }
+
+#' Wait before retrying a request the API refused as too fast (HTTP 429)
+#'
+#' Waits as long as the server's `Retry-After` header asks (at most 60
+#' seconds), or else 2, 4, 8, 16, 32 seconds on the five retries. When the
+#' retries are used up it stops with an error of class
+#' `pixieweb_rate_limited`: a rate limit is never returned as an empty
+#' answer, which could pass for a table without rows.
+#' @noRd
+px_wait_rate_limited <- function(res, url, retry, max_retries, verbose = FALSE) {
+  if (retry >= max_retries) {
+    abort(
+      c(
+        paste0("The PX-Web API kept answering \"too many requests\" (HTTP 429) after ",
+               max_retries, " retries."),
+        x = url,
+        i = "No data is returned. Wait a minute and run the call again."
+      ),
+      class = "pixieweb_rate_limited",
+      url = url,
+      retries = max_retries
+    )
+  }
+  delay <- px_retry_after(res) %||% 2^(retry + 1)
+  if (verbose) inform(paste0("Rate limited (429). Retrying in ", delay, "s..."))
+  px_sleep(delay)
+  invisible(delay)
+}
+
+#' Seconds asked for by a `Retry-After` header, capped at 60; NULL if absent
+#' @noRd
+px_retry_after <- function(res) {
+  h <- tryCatch(httr2::resp_header(res, "Retry-After"), error = function(e) NULL)
+  s <- suppressWarnings(as.numeric(h))
+  if (length(s) != 1 || is.na(s) || s < 0) return(NULL)
+  min(s, 60)
+}
+
+#' Sys.sleep, separate so tests can skip the wait
+#' @noRd
+px_sleep <- function(seconds) Sys.sleep(seconds)
 
 #' Parse a JSON response, handling servers that return wrong content-type
 #'
