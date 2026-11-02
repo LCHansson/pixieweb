@@ -876,7 +876,9 @@ parse_data_v1 <- function(raw, table_id, simplify, status = FALSE) {
 #' example in the `*_Cont.px` tables of Energimyndigheten). The column name
 #' is kept, for the sake of stored specs that read it, and the name the
 #' source uses is put in the attribute `px_contents_variable` so the mapping
-#' can be read rather than discovered.
+#' can be read rather than discovered. The same codes and labels are also
+#' given under the source's name (`<var>`, `<var>_text`), so a caller that
+#' takes its variable names from `get_variables()` finds its column.
 #' @param result Parsed tibble.
 #' @param vars Variable metadata tibble, or NULL.
 #' @param selected Names of the variables the caller selected.
@@ -905,8 +907,29 @@ label_v1_result <- function(result, vars, selected = character(), simplify = TRU
   }
 
   if ("ContentsCode" %in% names(result) && !"ContentsCode" %in% vars$code) {
-    folded <- setdiff(intersect(selected, vars$code), names(result))
-    if (length(folded) == 1) attr(result, "px_contents_variable") <- folded
+    # A variable that cannot be eliminated is always in the response, also
+    # when the caller left it out and the query asked for all its values.
+    candidates <- selected
+    if ("elimination" %in% names(vars)) {
+      candidates <- union(candidates, vars$code[vars$elimination %in% FALSE])
+    }
+    folded <- setdiff(intersect(candidates, vars$code), names(result))
+    if (length(folded) == 1) {
+      # Also under the source's own name, so a caller that reads the
+      # variables from the metadata finds its column (EN_IND5-4E_CONT.px:
+      # `Drivmedelskategori` went in, only `ContentsCode` came out).
+      pos <- match("ContentsCode", names(result))
+      alias <- list(result$ContentsCode)
+      names(alias) <- folded
+      if ("ContentsCode_text" %in% names(result)) {
+        alias[[paste0(folded, "_text")]] <- result$ContentsCode_text
+      }
+      cols <- as.list(result)
+      result <- tibble::as_tibble(c(
+        cols[seq_len(pos - 1)], alias, cols[pos:length(cols)]
+      ))
+      attr(result, "px_contents_variable") <- folded
+    }
   }
 
   result
@@ -919,9 +942,11 @@ pivot_data_wide <- function(df) {
   if ("ContentsCode" %in% names(df)) {
     value_cols <- grep("^value", names(df), value = TRUE)
     if (length(value_cols) > 0) {
+      folded <- attr(df, "px_contents_variable")
+      alias <- if (length(folded) == 1) c(folded, paste0(folded, "_text"))
       id_cols <- setdiff(
         names(df),
-        c("ContentsCode", "ContentsCode_text", value_cols)
+        c("ContentsCode", "ContentsCode_text", alias, value_cols)
       )
       df <- df |>
         tidyr::pivot_wider(

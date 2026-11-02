@@ -74,12 +74,15 @@ test_that("the folded contents variable is named in an attribute", {
                         ContentsCode_text = c("Price", "Tax"), value = c(1, 2))
   out <- label_v1_result(res, vars_fixture()[2:3, ], c("Measure", "Year"))
   expect_equal(attr(out, "px_contents_variable"), "Measure")
-  expect_equal(names(out), names(res))
+  expect_equal(names(out), c("table_id", "Year", "Year_text", "Measure",
+                               "Measure_text", "ContentsCode",
+                               "ContentsCode_text", "value"))
   # An eliminated (unselected) variable is not mistaken for the folded one
   out2 <- label_v1_result(res, vars_fixture(), c("Measure", "Year"))
   expect_equal(attr(out2, "px_contents_variable"), "Measure")
   out3 <- label_v1_result(res, vars_fixture(), "Year")
   expect_null(attr(out3, "px_contents_variable"))
+  expect_equal(names(out3), names(res))
 })
 
 test_that("live v1: labels and the folded variable name (energi)", {
@@ -110,4 +113,49 @@ test_that("live v1: labels and the folded variable name (energi)", {
   skip_if(is.null(dc), "No data returned")
   expect_true("ContentsCode" %in% names(dc))
   expect_equal(attr(dc, "px_contents_variable"), cv$code[!cv$time][1])
+})
+
+# AE order 20261020081923-803r0p: a catalogue fetch of EN_IND5-4E_CONT.px
+# selected `Drivmedelskategori`, the response folded it into ContentsCode,
+# and the adapter, reading the column by the metadata's name, wrote no
+# dimension column (DuckDB: Referenced column "dim_drivmedelskategori" not
+# found).
+test_that("the folded contents variable also comes under its own name", {
+  res <- tibble::tibble(table_id = "T", Year = "2024", Year_text = "2024",
+                        ContentsCode = c("0", "1"),
+                        ContentsCode_text = c("Petrol", "Diesel"),
+                        value = c(1, 2))
+  vars <- vars_fixture()[c(1, 3), ]
+  vars$elimination <- c(FALSE, FALSE)
+  # Nothing selected: the variable cannot be eliminated, so it was fetched
+  out <- label_v1_result(res, vars, character())
+  expect_equal(attr(out, "px_contents_variable"), "Fuel")
+  expect_equal(out$Fuel, out$ContentsCode)
+  expect_equal(out$Fuel_text, c("Petrol", "Diesel"))
+  expect_equal(out$ContentsCode, res$ContentsCode)
+  # No _text columns asked for: only the code column is added
+  bare <- res[, c("table_id", "Year", "ContentsCode", "value")]
+  out2 <- label_v1_result(bare, vars, "Fuel", simplify = FALSE)
+  expect_equal(names(out2), c("table_id", "Year", "Fuel", "ContentsCode", "value"))
+  # Wide output pivots on ContentsCode and does not keep the alias as an id
+  wide <- pivot_data_wide(out)
+  expect_equal(nrow(wide), 1L)
+  expect_false(any(c("Fuel", "Fuel_text") %in% names(wide)))
+})
+
+test_that("live v1: EN_IND5-4E_CONT.px has a column per variable (energi)", {
+  skip_on_cran()
+  en <- px_api("energi")
+  skip_if_not(px_available(en), "Energimyndigheten API not reachable")
+  tid <- paste0("Energimyndighetens_statistikdatabas/Energiindikatorer/",
+                "5/5.4/EN_IND5-4E_CONT.px")
+  vars <- get_variables(en, tid)
+  skip_if(is.null(vars), "No metadata returned")
+  Sys.sleep(1)
+  sel <- stats::setNames(list("*", px_top(2)), c("Drivmedelskategori", "År"))
+  d <- suppressWarnings(do.call(get_data, c(list(en, tid), sel)))
+  skip_if(is.null(d), "No data returned")
+  expect_true(all(vars$code %in% names(d)))
+  expect_equal(attr(d, "px_contents_variable"), "Drivmedelskategori")
+  expect_false(all(d$Drivmedelskategori_text == d$Drivmedelskategori))
 })

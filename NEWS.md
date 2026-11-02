@@ -1,3 +1,19 @@
+# pixieweb 0.1.1.9015
+
+## Bug fixes
+
+- **A v1 contents variable also comes under its own name.** In tables such
+  as `EN_IND5-4E_CONT.px` (Energimyndigheten) the variable
+  `Drivmedelskategori` is the contents variable: the caller selects it by
+  that name, and the response folded it into `ContentsCode` only. A caller
+  that takes its column names from `get_variables()` found no such column
+  (AE's catalogue fetch wrote no dimension and stopped with a DuckDB binder
+  error). `get_data()` now also gives the codes and labels as `<var>` and
+  `<var>_text`, beside `ContentsCode`, which is unchanged for the specs that
+  read it. `attr(x, "px_contents_variable")` is now set also when the
+  variable was left out of the call (a variable that cannot be eliminated
+  is always fetched). Wide output still pivots on `ContentsCode`.
+
 # pixieweb 0.1.1.9014
 
 ## Bug fixes
