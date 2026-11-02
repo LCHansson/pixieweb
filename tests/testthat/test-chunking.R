@@ -262,3 +262,69 @@ test_that("the reason each request failed is still warned", {
     "HTTP 503"
   )
 })
+
+# AE order 20261020081923-3yog8l: a request answered with something that is
+# not a table (no table fields) was dropped with a warning, and the other
+# parts came back as the answer. The real v1 parser is used here; only the
+# request and the query builder are replaced.
+run_split_v1 <- function(answer) {
+  api <- fake_api_v2()
+  api$version <- "v1"
+  api$config <- list(max_calls = 1000, time_window = 0.001)
+  calls <- 0
+  with_mocked_bindings(
+    suppressMessages(execute_chunked(
+      api, "T", list(Region = "*", Tid = "*"), NULL,
+      list(split_var = "Region", split_values = sprintf("%04d", 1:6),
+           values_per_chunk = 2, n_chunks = 3, estimated_cells = 600,
+           max_cells = 200),
+      TRUE, FALSE
+    )),
+    compose_data_query = function(api, table_id, .codelist, ...) {
+      list(url = "u", body = list(...))
+    },
+    execute_query = function(api, url, body = NULL, verbose = FALSE) {
+      calls <<- calls + 1
+      answer(calls, body)
+    }
+  )
+}
+
+v1_table <- function(regions) {
+  list(
+    columns = list(list(code = "Region", text = "Region", type = "d"),
+                   list(code = "Tid", text = "Tid", type = "t"),
+                   list(code = "V", text = "Value", type = "c")),
+    data = lapply(regions, function(r) list(key = list(r, "2024"), values = list("1")))
+  )
+}
+
+test_that("an answer without the table fields counts as a failed request", {
+  answer <- function(i, body) {
+    if (i == 2) list(error = "not a table") else v1_table(body$Region)
+  }
+  err <- suppressWarnings(tryCatch(run_split_v1(answer), error = function(e) e))
+  expect_s3_class(err, "pixieweb_chunks_failed")
+  expect_equal(err$failed, 2L)
+  expect_warning(
+    tryCatch(run_split_v1(answer), pixieweb_chunks_failed = function(e) NULL),
+    "Unexpected v1 API response format"
+  )
+})
+
+test_that("an answer with the table fields and no rows stays legitimate", {
+  answer <- function(i, body) {
+    if (i == 2) v1_table(character(0)) else v1_table(body$Region)
+  }
+  out <- suppressWarnings(run_split_v1(answer))
+  expect_equal(sort(unique(out$Region)), sprintf("%04d", c(1:2, 5:6)))
+})
+
+test_that("answered_without_rows tells an empty table from a non-table", {
+  expect_true(answered_without_rows(list(columns = list(), data = list()), "v1"))
+  expect_false(answered_without_rows(list(error = "x"), "v1"))
+  expect_false(answered_without_rows(NULL, "v1"))
+  expect_false(answered_without_rows(v1_table("0001"), "v1"))
+  expect_true(answered_without_rows(list(dimension = list(), value = list()), "v2"))
+  expect_false(answered_without_rows(list(dimension = list()), "v2"))
+})

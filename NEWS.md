@@ -1,3 +1,16 @@
+# pixieweb 0.1.1.9016
+
+## Bug fixes
+
+- **`get_data()`: in a split fetch, an answer that is not a table is a
+  failed request.** When one request of a split fetch was answered with
+  something without the table fields (an error page, a message, an empty
+  body), the parser warned and returned nothing, and the other parts came
+  back as if they were the whole answer. Such an answer now counts as a
+  failed request, so the fetch stops with `pixieweb_chunks_failed` like any
+  other failure. An answer with the table fields and no rows is still a
+  legitimate empty part.
+
 # pixieweb 0.1.1.9015
 
 ## Bug fixes

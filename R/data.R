@@ -533,6 +533,11 @@ execute_chunked <- function(api, table_id, selections, .codelist,
       }
       if (!is.null(parsed)) {
         results <- c(results, list(parsed))
+      } else if (!answered_without_rows(raw, api$version)) {
+        # An answer without the table fields is not a table: the request
+        # failed, even though the server answered. An answer with the
+        # fields and no rows is a legitimate empty part.
+        failed <- c(failed, i)
       }
     }
 
@@ -555,6 +560,24 @@ execute_chunked <- function(api, table_id, selections, .codelist,
   if (length(results) == 0) return(NULL)
 
   dplyr::bind_rows(results)
+}
+
+#' Is a data answer a table with no rows?
+#'
+#' The parsers return `NULL` both for an answer that is not a table (no
+#' table fields: an error page, an empty body, a message) and for a v1
+#' table with no rows. Only the second is a legitimate part of a split
+#' fetch.
+#' @param raw Parsed JSON answer.
+#' @param version API version, `"v1"` or `"v2"`.
+#' @return `TRUE` when the answer has its table fields and no rows.
+#' @noRd
+answered_without_rows <- function(raw, version) {
+  if (!is.list(raw)) return(FALSE)
+  tabular <- !is.null(raw$columns) && !is.null(raw$data) && length(raw$data) == 0
+  if (version != "v2") return(tabular)
+  dims <- raw$dimension %||% raw$dimensions
+  tabular || (!is.null(dims) && !is.null(raw$value) && length(raw$value) == 0)
 }
 
 #' Stop a split fetch in which one or more requests failed
