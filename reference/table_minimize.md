@@ -34,9 +34,9 @@ if (px_available(scb)) {
 #> # A tibble: 613 × 10
 #>    id    title updated first_period last_period time_unit variables subject_code
 #>    <chr> <chr> <chr>   <chr>        <chr>       <chr>     <list>    <chr>       
-#>  1 TAB6… Popu… 2026-1… 2025M01      2026M08     Monthly   <list>    BE          
+#>  1 TAB6… Popu… 2026-1… 2025M01      2026M09     Monthly   <list>    BE          
 #>  2 TAB1… Popu… 2025-0… 2000M01      2024M12     Monthly   <list>    BE          
-#>  3 TAB6… Popu… 2026-0… 2025         2026        Annual    <list>    BE          
+#>  3 TAB6… Popu… 2026-1… 2025         2026        Annual    <list>    BE          
 #>  4 TAB5… Popu… 2025-0… 2000         2024        Annual    <list>    BE          
 #>  5 TAB4… Popu… 2026-0… 1960         2024        Annual    <list>    MI          
 #>  6 TAB4… Popu… 2026-0… 2000         2024        Annual    <list>    MI          

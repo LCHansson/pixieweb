@@ -105,11 +105,11 @@ if (px_available(scb)) {
 #> Fetching metadata ■■■■■■■■■■■■■                     40% | ETA:  2s
 #> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■         80% | ETA:  1s
 #> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% | ETA:  0s
-#> ── TAB6473: Population statistics by region and sex.  Month 2025M01-2026M08 ───── 
+#> ── TAB6473: Population statistics by region and sex.  Month 2025M01-2026M09 ───── 
 #>   Contents: Population
 #>   Subject: Population
-#>   Period: 2025M01 – 2026M08 (Monthly)
-#>   Updated: 2026-10-07T06:00:00Z
+#>   Period: 2025M01 – 2026M09 (Monthly)
+#>   Updated: 2026-11-11T07:00:00Z
 #>   Category: public
 #>   Variables: region, population changes, sex, observations, month
 #>   Source: Statistics Sweden
@@ -191,7 +191,7 @@ if (px_available(scb)) {
 #>   Contents: Population statistics number of persons
 #>   Subject: Population
 #>   Period: 2025 – 2026 (Annual)
-#>   Updated: 2026-08-21T06:00:00Z
+#>   Updated: 2026-11-11T07:00:00Z
 #>   Category: public
 #>   Variables: region, population changes, period, sex, observations, year
 #>   Source: Statistics Sweden
@@ -290,158 +290,182 @@ if (px_available(scb)) {
 #> ℹ Enriching 613 table(s) with metadata.
 #> Fetching metadata ■                                  0% | ETA:  4m
 #> Fetching metadata ■                                  1% | ETA:  6m
-#> Fetching metadata ■■                                 2% | ETA:  7m
+#> Fetching metadata ■                                  2% | ETA:  7m
 #> Fetching metadata ■■                                 2% | ETA:  7m
 #> Fetching metadata ■■                                 3% | ETA:  7m
-#> Fetching metadata ■■                                 4% | ETA:  6m
-#> Fetching metadata ■■                                 5% | ETA:  6m
-#> Fetching metadata ■■■                                6% | ETA:  6m
-#> Fetching metadata ■■■                                6% | ETA:  6m
-#> Fetching metadata ■■■                                7% | ETA:  6m
-#> Fetching metadata ■■■                                8% | ETA:  6m
-#> Fetching metadata ■■■                                8% | ETA:  6m
-#> Fetching metadata ■■■■                               9% | ETA:  6m
-#> Fetching metadata ■■■■                              10% | ETA:  6m
-#> Fetching metadata ■■■■                              11% | ETA:  6m
-#> Fetching metadata ■■■■                              11% | ETA:  6m
-#> Fetching metadata ■■■■■                             12% | ETA:  6m
-#> Fetching metadata ■■■■■                             13% | ETA:  6m
-#> Fetching metadata ■■■■■                             14% | ETA:  6m
-#> Fetching metadata ■■■■■                             14% | ETA:  6m
-#> Fetching metadata ■■■■■                             15% | ETA:  6m
-#> Fetching metadata ■■■■■■                            16% | ETA:  6m
-#> Fetching metadata ■■■■■■                            16% | ETA:  6m
-#> Fetching metadata ■■■■■■                            17% | ETA:  6m
-#> Fetching metadata ■■■■■■                            18% | ETA:  6m
-#> Fetching metadata ■■■■■■■                           18% | ETA:  6m
+#> Fetching metadata ■■                                 3% | ETA:  8m
+#> Fetching metadata ■■                                 4% | ETA:  8m
+#> Fetching metadata ■■                                 5% | ETA:  8m
+#> Fetching metadata ■■■                                5% | ETA:  8m
+#> Fetching metadata ■■■                                6% | ETA:  8m
+#> Fetching metadata ■■■                                6% | ETA:  8m
+#> Fetching metadata ■■■                                7% | ETA:  8m
+#> Fetching metadata ■■■                                7% | ETA:  8m
+#> Fetching metadata ■■■                                8% | ETA:  8m
+#> Fetching metadata ■■■                                8% | ETA:  8m
+#> Fetching metadata ■■■■                               9% | ETA:  8m
+#> Fetching metadata ■■■■                              10% | ETA:  8m
+#> Fetching metadata ■■■■                              10% | ETA:  7m
+#> Fetching metadata ■■■■                              11% | ETA:  7m
+#> Fetching metadata ■■■■                              12% | ETA:  7m
+#> Fetching metadata ■■■■■                             12% | ETA:  7m
+#> Fetching metadata ■■■■■                             13% | ETA:  7m
+#> Fetching metadata ■■■■■                             14% | ETA:  7m
+#> Fetching metadata ■■■■■                             14% | ETA:  7m
+#> Fetching metadata ■■■■■■                            15% | ETA:  7m
+#> Fetching metadata ■■■■■■                            16% | ETA:  7m
+#> Fetching metadata ■■■■■■                            16% | ETA:  7m
+#> Fetching metadata ■■■■■■                            17% | ETA:  7m
+#> Fetching metadata ■■■■■■                            18% | ETA:  7m
+#> Fetching metadata ■■■■■■■                           18% | ETA:  7m
 #> Fetching metadata ■■■■■■■                           19% | ETA:  6m
 #> Fetching metadata ■■■■■■■                           20% | ETA:  6m
 #> Fetching metadata ■■■■■■■                           20% | ETA:  6m
-#> Fetching metadata ■■■■■■■                           20% | ETA:  6m
-#> Fetching metadata ■■■■■■■                           21% | ETA:  6m
-#> Fetching metadata ■■■■■■■                           21% | ETA:  6m
-#> Fetching metadata ■■■■■■■■                          22% | ETA:  6m
-#> Fetching metadata ■■■■■■■■                          23% | ETA:  6m
-#> Fetching metadata ■■■■■■■■                          23% | ETA:  6m
+#> Fetching metadata ■■■■■■■                           20% | ETA:  7m
+#> Fetching metadata ■■■■■■■                           21% | ETA:  7m
+#> Fetching metadata ■■■■■■■                           21% | ETA:  7m
+#> Fetching metadata ■■■■■■■                           21% | ETA:  7m
+#> Fetching metadata ■■■■■■■■                          22% | ETA:  7m
+#> Fetching metadata ■■■■■■■■                          22% | ETA:  7m
+#> Fetching metadata ■■■■■■■■                          23% | ETA:  7m
+#> Fetching metadata ■■■■■■■■                          24% | ETA:  6m
 #> Fetching metadata ■■■■■■■■                          24% | ETA:  6m
 #> Fetching metadata ■■■■■■■■                          25% | ETA:  6m
-#> Fetching metadata ■■■■■■■■■                         25% | ETA:  5m
-#> Fetching metadata ■■■■■■■■■                         26% | ETA:  5m
-#> Fetching metadata ■■■■■■■■■                         27% | ETA:  5m
-#> Fetching metadata ■■■■■■■■■                         27% | ETA:  5m
-#> Fetching metadata ■■■■■■■■■                         28% | ETA:  5m
-#> Fetching metadata ■■■■■■■■■                         28% | ETA:  5m
-#> Fetching metadata ■■■■■■■■■■                        29% | ETA:  5m
-#> Fetching metadata ■■■■■■■■■■                        30% | ETA:  5m
-#> Fetching metadata ■■■■■■■■■■                        30% | ETA:  5m
-#> Fetching metadata ■■■■■■■■■■                        31% | ETA:  5m
-#> Fetching metadata ■■■■■■■■■■                        32% | ETA:  5m
-#> Fetching metadata ■■■■■■■■■■■                       32% | ETA:  5m
-#> Fetching metadata ■■■■■■■■■■■                       33% | ETA:  5m
-#> Fetching metadata ■■■■■■■■■■■                       34% | ETA:  5m
-#> Fetching metadata ■■■■■■■■■■■                       35% | ETA:  5m
+#> Fetching metadata ■■■■■■■■■                         25% | ETA:  6m
+#> Fetching metadata ■■■■■■■■■                         26% | ETA:  6m
+#> Fetching metadata ■■■■■■■■■                         26% | ETA:  6m
+#> Fetching metadata ■■■■■■■■■                         27% | ETA:  6m
+#> Fetching metadata ■■■■■■■■■                         27% | ETA:  6m
+#> Fetching metadata ■■■■■■■■■                         28% | ETA:  6m
+#> Fetching metadata ■■■■■■■■■■                        28% | ETA:  6m
+#> Fetching metadata ■■■■■■■■■■                        29% | ETA:  6m
+#> Fetching metadata ■■■■■■■■■■                        30% | ETA:  6m
+#> Fetching metadata ■■■■■■■■■■                        31% | ETA:  6m
+#> Fetching metadata ■■■■■■■■■■                        31% | ETA:  6m
+#> Fetching metadata ■■■■■■■■■■                        31% | ETA:  6m
+#> Fetching metadata ■■■■■■■■■■■                       32% | ETA:  6m
+#> Fetching metadata ■■■■■■■■■■■                       33% | ETA:  6m
+#> Fetching metadata ■■■■■■■■■■■                       33% | ETA:  6m
+#> Fetching metadata ■■■■■■■■■■■                       34% | ETA:  6m
+#> Fetching metadata ■■■■■■■■■■■■                      35% | ETA:  6m
 #> Fetching metadata ■■■■■■■■■■■■                      36% | ETA:  5m
 #> Fetching metadata ■■■■■■■■■■■■                      36% | ETA:  5m
 #> Fetching metadata ■■■■■■■■■■■■                      37% | ETA:  5m
 #> Fetching metadata ■■■■■■■■■■■■                      38% | ETA:  5m
-#> Fetching metadata ■■■■■■■■■■■■■                     39% | ETA:  4m
-#> Fetching metadata ■■■■■■■■■■■■■                     40% | ETA:  4m
-#> Fetching metadata ■■■■■■■■■■■■■                     40% | ETA:  4m
-#> Fetching metadata ■■■■■■■■■■■■■                     41% | ETA:  4m
-#> Fetching metadata ■■■■■■■■■■■■■■                    42% | ETA:  4m
-#> Fetching metadata ■■■■■■■■■■■■■■                    43% | ETA:  4m
-#> Fetching metadata ■■■■■■■■■■■■■■                    43% | ETA:  4m
-#> Fetching metadata ■■■■■■■■■■■■■■                    44% | ETA:  4m
-#> Fetching metadata ■■■■■■■■■■■■■■                    45% | ETA:  4m
-#> Fetching metadata ■■■■■■■■■■■■■■■                   45% | ETA:  4m
-#> Fetching metadata ■■■■■■■■■■■■■■■                   46% | ETA:  4m
-#> Fetching metadata ■■■■■■■■■■■■■■■                   46% | ETA:  4m
-#> Fetching metadata ■■■■■■■■■■■■■■■                   47% | ETA:  4m
+#> Fetching metadata ■■■■■■■■■■■■■                     38% | ETA:  5m
+#> Fetching metadata ■■■■■■■■■■■■■                     39% | ETA:  5m
+#> Fetching metadata ■■■■■■■■■■■■■                     39% | ETA:  5m
+#> Fetching metadata ■■■■■■■■■■■■■                     40% | ETA:  5m
+#> Fetching metadata ■■■■■■■■■■■■■                     40% | ETA:  5m
+#> Fetching metadata ■■■■■■■■■■■■■                     41% | ETA:  5m
+#> Fetching metadata ■■■■■■■■■■■■■■                    42% | ETA:  5m
+#> Fetching metadata ■■■■■■■■■■■■■■                    42% | ETA:  5m
+#> Fetching metadata ■■■■■■■■■■■■■■                    43% | ETA:  5m
+#> Fetching metadata ■■■■■■■■■■■■■■                    43% | ETA:  5m
+#> Fetching metadata ■■■■■■■■■■■■■■                    44% | ETA:  5m
+#> Fetching metadata ■■■■■■■■■■■■■■                    44% | ETA:  5m
+#> Fetching metadata ■■■■■■■■■■■■■■                    45% | ETA:  5m
+#> Fetching metadata ■■■■■■■■■■■■■■■                   46% | ETA:  5m
+#> Fetching metadata ■■■■■■■■■■■■■■■                   46% | ETA:  5m
+#> Fetching metadata ■■■■■■■■■■■■■■■                   47% | ETA:  5m
 #> Fetching metadata ■■■■■■■■■■■■■■■                   47% | ETA:  4m
 #> Fetching metadata ■■■■■■■■■■■■■■■                   48% | ETA:  4m
-#> Fetching metadata ■■■■■■■■■■■■■■■■                  49% | ETA:  4m
+#> Fetching metadata ■■■■■■■■■■■■■■■                   48% | ETA:  4m
 #> Fetching metadata ■■■■■■■■■■■■■■■■                  49% | ETA:  4m
 #> Fetching metadata ■■■■■■■■■■■■■■■■                  50% | ETA:  4m
+#> Fetching metadata ■■■■■■■■■■■■■■■■                  50% | ETA:  4m
 #> Fetching metadata ■■■■■■■■■■■■■■■■                  51% | ETA:  4m
-#> Fetching metadata ■■■■■■■■■■■■■■■■■                 52% | ETA:  3m
-#> Fetching metadata ■■■■■■■■■■■■■■■■■                 53% | ETA:  3m
-#> Fetching metadata ■■■■■■■■■■■■■■■■■                 53% | ETA:  3m
-#> Fetching metadata ■■■■■■■■■■■■■■■■■                 54% | ETA:  3m
-#> Fetching metadata ■■■■■■■■■■■■■■■■■                 55% | ETA:  3m
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■                55% | ETA:  3m
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■                56% | ETA:  3m
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■                56% | ETA:  3m
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■                57% | ETA:  3m
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■                58% | ETA:  3m
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■                58% | ETA:  3m
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■               59% | ETA:  3m
+#> Fetching metadata ■■■■■■■■■■■■■■■■                  52% | ETA:  4m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■                 52% | ETA:  4m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■                 53% | ETA:  4m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■                 53% | ETA:  4m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■                 54% | ETA:  4m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■                 54% | ETA:  4m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■                 55% | ETA:  4m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■                55% | ETA:  4m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■                56% | ETA:  4m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■                56% | ETA:  4m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■                57% | ETA:  4m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■                57% | ETA:  4m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■                58% | ETA:  4m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■                58% | ETA:  4m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■               59% | ETA:  4m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■               59% | ETA:  4m
 #> Fetching metadata ■■■■■■■■■■■■■■■■■■■               60% | ETA:  3m
 #> Fetching metadata ■■■■■■■■■■■■■■■■■■■               60% | ETA:  3m
 #> Fetching metadata ■■■■■■■■■■■■■■■■■■■               61% | ETA:  3m
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■               62% | ETA:  3m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■               61% | ETA:  3m
 #> Fetching metadata ■■■■■■■■■■■■■■■■■■■■              62% | ETA:  3m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■              62% | ETA:  3m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■              63% | ETA:  3m
 #> Fetching metadata ■■■■■■■■■■■■■■■■■■■■              63% | ETA:  3m
 #> Fetching metadata ■■■■■■■■■■■■■■■■■■■■              64% | ETA:  3m
 #> Fetching metadata ■■■■■■■■■■■■■■■■■■■■              64% | ETA:  3m
 #> Fetching metadata ■■■■■■■■■■■■■■■■■■■■              65% | ETA:  3m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■             65% | ETA:  3m
 #> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■             66% | ETA:  3m
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■             66% | ETA:  2m
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■             67% | ETA:  2m
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■             68% | ETA:  2m
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■            69% | ETA:  2m
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■            69% | ETA:  2m
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■            70% | ETA:  2m
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■            70% | ETA:  2m
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■            71% | ETA:  2m
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■            72% | ETA:  2m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■             66% | ETA:  3m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■             67% | ETA:  3m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■             67% | ETA:  3m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■             68% | ETA:  3m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■             68% | ETA:  3m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■            69% | ETA:  3m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■            69% | ETA:  3m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■            70% | ETA:  3m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■            70% | ETA:  3m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■            71% | ETA:  3m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■            71% | ETA:  3m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■           72% | ETA:  3m
 #> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■           72% | ETA:  2m
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■           73% | ETA:  2m
 #> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■           73% | ETA:  2m
 #> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■           74% | ETA:  2m
 #> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■           75% | ETA:  2m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■          75% | ETA:  2m
 #> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■          76% | ETA:  2m
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■          76% | ETA:  2m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■          77% | ETA:  2m
 #> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■          77% | ETA:  2m
 #> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■          78% | ETA:  2m
 #> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■         79% | ETA:  2m
 #> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■         79% | ETA:  2m
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■         80% | ETA:  1m
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■         81% | ETA:  1m
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■         82% | ETA:  1m
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■        82% | ETA:  1m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■         80% | ETA:  2m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■         81% | ETA:  2m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■         81% | ETA:  2m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■        82% | ETA:  2m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■        82% | ETA:  2m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■        83% | ETA:  2m
 #> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■        83% | ETA:  1m
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■        84% | ETA:  1m
 #> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■        84% | ETA:  1m
 #> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■        85% | ETA:  1m
 #> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■       85% | ETA:  1m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■       85% | ETA:  1m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■       86% | ETA:  1m
 #> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■       86% | ETA:  1m
 #> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■       86% | ETA:  1m
 #> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■       87% | ETA:  1m
 #> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■       87% | ETA:  1m
 #> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■       88% | ETA:  1m
 #> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■      89% | ETA:  1m
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■      89% | ETA: 49s
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■      90% | ETA: 47s
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■      90% | ETA: 45s
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■      91% | ETA: 42s
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■      91% | ETA: 40s
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■      92% | ETA: 38s
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■     92% | ETA: 36s
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■     92% | ETA: 35s
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■     93% | ETA: 33s
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■     93% | ETA: 30s
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■     94% | ETA: 28s
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■     94% | ETA: 26s
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■     95% | ETA: 24s
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■    95% | ETA: 22s
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■    96% | ETA: 20s
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■      89% | ETA:  1m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■      90% | ETA:  1m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■      90% | ETA:  1m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■      91% | ETA: 49s
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■      91% | ETA: 47s
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■      92% | ETA: 45s
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■     92% | ETA: 43s
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■     92% | ETA: 40s
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■     93% | ETA: 36s
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■     94% | ETA: 34s
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■     94% | ETA: 30s
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■     95% | ETA: 28s
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■     95% | ETA: 27s
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■    95% | ETA: 24s
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■    96% | ETA: 22s
 #> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■    96% | ETA: 19s
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■    96% | ETA: 17s
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■    97% | ETA: 14s
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■    97% | ETA: 15s
 #> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■    98% | ETA: 11s
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■    98% | ETA:  8s
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■   99% | ETA:  6s
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■   99% | ETA:  3s
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■   99% | ETA:  8s
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■   99% | ETA:  4s
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% | ETA:  1s
 #> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% | ETA:  0s
 #> ℹ Enriching 613 table(s) with metadata.
 #> Warning: Unknown or uninitialised column: `description`.
@@ -453,7 +477,7 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■                                  0% | ETA:  5m
+#> Fetching metadata ■                                  0% | ETA:  4m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -469,7 +493,7 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■                                  1% | ETA:  6m
+#> Fetching metadata ■                                  1% | ETA:  5m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -482,20 +506,19 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■                                 2% | ETA:  6m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■                                 2% | ETA:  5m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■                                 3% | ETA:  6m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -508,10 +531,10 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■                                 3% | ETA:  5m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■                                 3% | ETA:  6m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -530,7 +553,7 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■                                 4% | ETA:  6m
+#> Fetching metadata ■■                                 4% | ETA:  5m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -543,13 +566,13 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■                                5% | ETA:  6m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■                                5% | ETA:  5m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -559,7 +582,6 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■                                6% | ETA:  6m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -569,7 +591,7 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■                                6% | ETA:  6m
+#> Fetching metadata ■■■                                6% | ETA:  5m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -582,20 +604,19 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■                                7% | ETA:  6m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■                                7% | ETA:  5m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■                                8% | ETA:  6m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -608,7 +629,7 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■                                8% | ETA:  6m
+#> Fetching metadata ■■■                                8% | ETA:  5m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -624,10 +645,10 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■                               9% | ETA:  6m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■                               9% | ETA:  4m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -640,7 +661,6 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■                              10% | ETA:  6m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -650,13 +670,13 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■                              10% | ETA:  4m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■                              11% | ETA:  6m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -669,7 +689,7 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■                              11% | ETA:  6m
+#> Fetching metadata ■■■■                              11% | ETA:  4m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -682,13 +702,13 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■                             12% | ETA:  6m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■                             12% | ETA:  4m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -698,7 +718,6 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■                             13% | ETA:  6m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -708,10 +727,10 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■                             13% | ETA:  4m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■                             14% | ETA:  6m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -727,7 +746,7 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■                             14% | ETA:  6m
+#> Fetching metadata ■■■■■                             14% | ETA:  4m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -740,13 +759,13 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■                            15% | ETA:  6m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■                            15% | ETA:  4m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -756,7 +775,6 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■                            16% | ETA:  6m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -766,10 +784,10 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■                            16% | ETA:  4m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■                            16% | ETA:  6m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -782,17 +800,16 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■                            17% | ETA:  6m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■                            17% | ETA:  4m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■                            18% | ETA:  6m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -808,7 +825,7 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■                           18% | ETA:  6m
+#> Fetching metadata ■■■■■■■                           18% | ETA:  4m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -824,10 +841,10 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■                           19% | ETA:  6m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■                           19% | ETA:  4m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -837,34 +854,32 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■                           20% | ETA:  6m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■                           20% | ETA:  6m
+#> Fetching metadata ■■■■■■■                           20% | ETA:  4m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■                           21% | ETA:  6m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■                           21% | ETA:  4m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■                           21% | ETA:  6m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -877,10 +892,10 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■                          22% | ETA:  4m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■                          22% | ETA:  6m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -893,17 +908,16 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■                          23% | ETA:  6m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■                          23% | ETA:  4m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■                          23% | ETA:  6m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -916,7 +930,7 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■                          24% | ETA:  6m
+#> Fetching metadata ■■■■■■■■                          24% | ETA:  4m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -932,17 +946,16 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■                          25% | ETA:  5m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■                          25% | ETA:  4m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■                         25% | ETA:  5m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -958,7 +971,7 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■                         26% | ETA:  5m
+#> Fetching metadata ■■■■■■■■■                         26% | ETA:  4m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -971,20 +984,19 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■                         27% | ETA:  5m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■                         27% | ETA:  4m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■                         27% | ETA:  5m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -994,10 +1006,10 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■                         28% | ETA:  5m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■                         28% | ETA:  4m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1007,7 +1019,6 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■                        28% | ETA:  5m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1017,10 +1028,10 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■                        29% | ETA:  4m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■                        29% | ETA:  5m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1036,7 +1047,7 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■                        30% | ETA:  5m
+#> Fetching metadata ■■■■■■■■■■                        30% | ETA:  4m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1049,20 +1060,19 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■                        31% | ETA:  5m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■                        31% | ETA:  3m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■                        31% | ETA:  5m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1075,10 +1085,10 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■                       32% | ETA:  3m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■                       32% | ETA:  5m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1091,13 +1101,13 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■                       33% | ETA:  5m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■                       33% | ETA:  3m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1107,7 +1117,6 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■                       33% | ETA:  5m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1117,13 +1126,13 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■                       34% | ETA:  3m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■                       34% | ETA:  5m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1136,10 +1145,10 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■                       35% | ETA:  3m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■                      35% | ETA:  5m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1155,7 +1164,7 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■                      36% | ETA:  5m
+#> Fetching metadata ■■■■■■■■■■■■                      36% | ETA:  3m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1171,10 +1180,10 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■                      37% | ETA:  5m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■                      37% | ETA:  3m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1190,10 +1199,10 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■                      38% | ETA:  4m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■                      38% | ETA:  3m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1203,7 +1212,6 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■                     38% | ETA:  4m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1216,13 +1224,13 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■                     39% | ETA:  3m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■                     39% | ETA:  4m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1235,10 +1243,10 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■                     40% | ETA:  3m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■                     40% | ETA:  4m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1254,7 +1262,7 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■                     41% | ETA:  4m
+#> Fetching metadata ■■■■■■■■■■■■■                     41% | ETA:  3m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1270,10 +1278,10 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■                    42% | ETA:  4m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■■                    42% | ETA:  3m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1286,20 +1294,19 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■                    43% | ETA:  4m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■■                    43% | ETA:  3m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■                    43% | ETA:  4m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1312,10 +1319,10 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■■                    44% | ETA:  3m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■                    44% | ETA:  4m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1328,10 +1335,10 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■                    45% | ETA:  4m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■■                    45% | ETA:  3m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1341,7 +1348,6 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■                   45% | ETA:  4m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1351,10 +1357,10 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■■■                   46% | ETA:  3m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■                   46% | ETA:  4m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1367,10 +1373,10 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■                   47% | ETA:  4m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■■■                   47% | ETA:  3m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1383,7 +1389,6 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■                   47% | ETA:  4m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1393,10 +1398,10 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■■■                   48% | ETA:  3m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■                   48% | ETA:  4m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1409,10 +1414,10 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■                  49% | ETA:  4m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■■■■                  49% | ETA:  3m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1422,7 +1427,6 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■                  49% | ETA:  4m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1432,10 +1436,10 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■■■■                  50% | ETA:  3m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■                  50% | ETA:  4m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1451,7 +1455,7 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■                  51% | ETA:  3m
+#> Fetching metadata ■■■■■■■■■■■■■■■■                  51% | ETA:  2m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1467,10 +1471,10 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■                 52% | ETA:  3m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■■■■■                 52% | ETA:  2m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1483,13 +1487,13 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■                 53% | ETA:  3m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■■■■■                 53% | ETA:  2m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1499,7 +1503,6 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■                 53% | ETA:  3m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1512,7 +1515,7 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■                 54% | ETA:  3m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■                 54% | ETA:  2m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1525,20 +1528,19 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■                 55% | ETA:  3m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■■■■■                 55% | ETA:  2m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■                55% | ETA:  3m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1548,14 +1550,13 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■                56% | ETA:  3m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■                56% | ETA:  2m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■                56% | ETA:  3m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1568,10 +1569,10 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■                57% | ETA:  2m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■                57% | ETA:  3m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1584,20 +1585,19 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■                58% | ETA:  3m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■                58% | ETA:  2m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■                58% | ETA:  3m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1607,7 +1607,7 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■               59% | ETA:  3m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■               59% | ETA:  2m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1620,20 +1620,19 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■               59% | ETA:  3m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■               60% | ETA:  2m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■               60% | ETA:  3m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1643,10 +1642,10 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■               61% | ETA:  3m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■               61% | ETA:  2m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1659,13 +1658,13 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■               61% | ETA:  3m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■               62% | ETA:  2m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1675,7 +1674,6 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■              62% | ETA:  3m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1685,10 +1683,10 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■              63% | ETA:  2m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■              63% | ETA:  3m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1704,20 +1702,13 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■              64% | ETA:  3m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■              64% | ETA:  2m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Warning: Unknown or uninitialised column: `description`.
-#> Warning: Unknown or uninitialised column: `id`.
-#> Warning: Unknown or uninitialised column: `title`.
-#> Warning: Unknown or uninitialised column: `description`.
-#> Warning: Unknown or uninitialised column: `id`.
-#> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■              64% | ETA:  3m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1743,6 +1734,12 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Warning: Unknown or uninitialised column: `description`.
+#> Warning: Unknown or uninitialised column: `id`.
+#> Warning: Unknown or uninitialised column: `title`.
+#> Warning: Unknown or uninitialised column: `description`.
+#> Warning: Unknown or uninitialised column: `id`.
+#> Warning: Unknown or uninitialised column: `title`.
 #> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■             66% | ETA:  2m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
@@ -1750,10 +1747,6 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Warning: Unknown or uninitialised column: `description`.
-#> Warning: Unknown or uninitialised column: `id`.
-#> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■             66% | ETA:  2m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1782,6 +1775,9 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Warning: Unknown or uninitialised column: `description`.
+#> Warning: Unknown or uninitialised column: `id`.
+#> Warning: Unknown or uninitialised column: `title`.
 #> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■             68% | ETA:  2m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
@@ -1798,10 +1794,13 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■            68% | ETA:  2m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Warning: Unknown or uninitialised column: `description`.
+#> Warning: Unknown or uninitialised column: `id`.
+#> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■            69% | ETA:  2m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1840,19 +1839,6 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■            70% | ETA:  2m
-#> Warning: Unknown or uninitialised column: `description`.
-#> Warning: Unknown or uninitialised column: `id`.
-#> Warning: Unknown or uninitialised column: `title`.
-#> Warning: Unknown or uninitialised column: `description`.
-#> Warning: Unknown or uninitialised column: `id`.
-#> Warning: Unknown or uninitialised column: `title`.
-#> Warning: Unknown or uninitialised column: `description`.
-#> Warning: Unknown or uninitialised column: `id`.
-#> Warning: Unknown or uninitialised column: `title`.
-#> Warning: Unknown or uninitialised column: `description`.
-#> Warning: Unknown or uninitialised column: `id`.
-#> Warning: Unknown or uninitialised column: `title`.
 #> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■            71% | ETA:  2m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
@@ -1863,7 +1849,7 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■            72% | ETA:  2m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■            71% | ETA:  1m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1873,36 +1859,14 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■           72% | ETA:  2m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■            72% | ETA:  1m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Warning: Unknown or uninitialised column: `description`.
-#> Warning: Unknown or uninitialised column: `id`.
-#> Warning: Unknown or uninitialised column: `title`.
-#> Warning: Unknown or uninitialised column: `description`.
-#> Warning: Unknown or uninitialised column: `id`.
-#> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■           73% | ETA:  2m
-#> Warning: Unknown or uninitialised column: `description`.
-#> Warning: Unknown or uninitialised column: `id`.
-#> Warning: Unknown or uninitialised column: `title`.
-#> Warning: Unknown or uninitialised column: `description`.
-#> Warning: Unknown or uninitialised column: `id`.
-#> Warning: Unknown or uninitialised column: `title`.
-#> Warning: Unknown or uninitialised column: `description`.
-#> Warning: Unknown or uninitialised column: `id`.
-#> Warning: Unknown or uninitialised column: `title`.
-#> Warning: Unknown or uninitialised column: `description`.
-#> Warning: Unknown or uninitialised column: `id`.
-#> Warning: Unknown or uninitialised column: `title`.
-#> Warning: Unknown or uninitialised column: `description`.
-#> Warning: Unknown or uninitialised column: `id`.
-#> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■           74% | ETA:  2m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■           72% | ETA:  1m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1915,13 +1879,7 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Warning: Unknown or uninitialised column: `description`.
-#> Warning: Unknown or uninitialised column: `id`.
-#> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■           74% | ETA:  2m
-#> Warning: Unknown or uninitialised column: `description`.
-#> Warning: Unknown or uninitialised column: `id`.
-#> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■           73% | ETA:  1m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1931,7 +1889,7 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■          75% | ETA:  2m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■           73% | ETA:  1m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1947,7 +1905,7 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■          76% | ETA:  2m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■           74% | ETA:  1m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1960,7 +1918,33 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■          77% | ETA:  2m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■           75% | ETA:  1m
+#> Warning: Unknown or uninitialised column: `description`.
+#> Warning: Unknown or uninitialised column: `id`.
+#> Warning: Unknown or uninitialised column: `title`.
+#> Warning: Unknown or uninitialised column: `description`.
+#> Warning: Unknown or uninitialised column: `id`.
+#> Warning: Unknown or uninitialised column: `title`.
+#> Warning: Unknown or uninitialised column: `description`.
+#> Warning: Unknown or uninitialised column: `id`.
+#> Warning: Unknown or uninitialised column: `title`.
+#> Warning: Unknown or uninitialised column: `description`.
+#> Warning: Unknown or uninitialised column: `id`.
+#> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■          75% | ETA:  1m
+#> Warning: Unknown or uninitialised column: `description`.
+#> Warning: Unknown or uninitialised column: `id`.
+#> Warning: Unknown or uninitialised column: `title`.
+#> Warning: Unknown or uninitialised column: `description`.
+#> Warning: Unknown or uninitialised column: `id`.
+#> Warning: Unknown or uninitialised column: `title`.
+#> Warning: Unknown or uninitialised column: `description`.
+#> Warning: Unknown or uninitialised column: `id`.
+#> Warning: Unknown or uninitialised column: `title`.
+#> Warning: Unknown or uninitialised column: `description`.
+#> Warning: Unknown or uninitialised column: `id`.
+#> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■          76% | ETA:  1m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1976,7 +1960,7 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■          77% | ETA:  2m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■          77% | ETA:  1m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -1989,13 +1973,7 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Warning: Unknown or uninitialised column: `description`.
-#> Warning: Unknown or uninitialised column: `id`.
-#> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■          78% | ETA:  2m
-#> Warning: Unknown or uninitialised column: `description`.
-#> Warning: Unknown or uninitialised column: `id`.
-#> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■          77% | ETA:  1m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -2005,7 +1983,10 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■         79% | ETA:  2m
+#> Warning: Unknown or uninitialised column: `description`.
+#> Warning: Unknown or uninitialised column: `id`.
+#> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■          78% | ETA:  1m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -2034,7 +2015,20 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■         79% | ETA:  1m
+#> Warning: Unknown or uninitialised column: `description`.
+#> Warning: Unknown or uninitialised column: `id`.
+#> Warning: Unknown or uninitialised column: `title`.
+#> Warning: Unknown or uninitialised column: `description`.
+#> Warning: Unknown or uninitialised column: `id`.
+#> Warning: Unknown or uninitialised column: `title`.
+#> Warning: Unknown or uninitialised column: `description`.
+#> Warning: Unknown or uninitialised column: `id`.
+#> Warning: Unknown or uninitialised column: `title`.
 #> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■         80% | ETA:  1m
+#> Warning: Unknown or uninitialised column: `description`.
+#> Warning: Unknown or uninitialised column: `id`.
+#> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -2060,13 +2054,7 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■         82% | ETA:  1m
-#> Warning: Unknown or uninitialised column: `description`.
-#> Warning: Unknown or uninitialised column: `id`.
-#> Warning: Unknown or uninitialised column: `title`.
-#> Warning: Unknown or uninitialised column: `description`.
-#> Warning: Unknown or uninitialised column: `id`.
-#> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■         81% | ETA:  1m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -2080,6 +2068,16 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Warning: Unknown or uninitialised column: `description`.
+#> Warning: Unknown or uninitialised column: `id`.
+#> Warning: Unknown or uninitialised column: `title`.
+#> Warning: Unknown or uninitialised column: `description`.
+#> Warning: Unknown or uninitialised column: `id`.
+#> Warning: Unknown or uninitialised column: `title`.
+#> Warning: Unknown or uninitialised column: `description`.
+#> Warning: Unknown or uninitialised column: `id`.
+#> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■        83% | ETA:  1m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -2134,7 +2132,7 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■       85% | ETA:  1m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■       85% | ETA: 49s
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -2144,7 +2142,7 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■       86% | ETA:  1m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■       86% | ETA: 48s
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -2154,7 +2152,7 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■       86% | ETA:  1m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■       86% | ETA: 46s
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -2164,20 +2162,20 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■       87% | ETA:  1m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■       87% | ETA: 44s
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■       87% | ETA:  1m
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■       87% | ETA: 43s
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -2187,7 +2185,7 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■       88% | ETA:  1m
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■       88% | ETA: 41s
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -2203,17 +2201,17 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■      89% | ETA: 49s
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■      89% | ETA: 38s
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■      89% | ETA: 47s
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■      89% | ETA: 37s
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -2223,24 +2221,23 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■      90% | ETA: 45s
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■      90% | ETA: 35s
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■      90% | ETA: 43s
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■      90% | ETA: 33s
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■      91% | ETA: 41s
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -2250,97 +2247,97 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■      91% | ETA: 39s
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■      91% | ETA: 31s
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■      91% | ETA: 38s
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■      92% | ETA: 30s
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■     92% | ETA: 36s
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■     92% | ETA: 28s
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■     92% | ETA: 34s
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■     92% | ETA: 26s
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■     93% | ETA: 32s
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■     93% | ETA: 25s
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■     93% | ETA: 30s
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■     93% | ETA: 23s
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■     94% | ETA: 27s
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■     94% | ETA: 21s
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■     94% | ETA: 25s
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■     95% | ETA: 19s
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■     95% | ETA: 23s
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■    95% | ETA: 17s
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■    95% | ETA: 20s
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■    95% | ETA: 16s
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -2350,20 +2347,10 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■    96% | ETA: 18s
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■    96% | ETA: 15s
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Warning: Unknown or uninitialised column: `description`.
-#> Warning: Unknown or uninitialised column: `id`.
-#> Warning: Unknown or uninitialised column: `title`.
-#> Warning: Unknown or uninitialised column: `description`.
-#> Warning: Unknown or uninitialised column: `id`.
-#> Warning: Unknown or uninitialised column: `title`.
-#> Warning: Unknown or uninitialised column: `description`.
-#> Warning: Unknown or uninitialised column: `id`.
-#> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■    97% | ETA: 15s
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -2389,7 +2376,7 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■    98% | ETA:  9s
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■    97% | ETA:  9s
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -2402,7 +2389,7 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■   99% | ETA:  7s
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■    98% | ETA:  7s
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -2412,7 +2399,7 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■   99% | ETA:  4s
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■   99% | ETA:  5s
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -2425,10 +2412,19 @@ if (px_available(scb)) {
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
+#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■   99% | ETA:  3s
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
-#> Fetching metadata ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% | ETA:  1s
+#> Warning: Unknown or uninitialised column: `description`.
+#> Warning: Unknown or uninitialised column: `id`.
+#> Warning: Unknown or uninitialised column: `title`.
+#> Warning: Unknown or uninitialised column: `description`.
+#> Warning: Unknown or uninitialised column: `id`.
+#> Warning: Unknown or uninitialised column: `title`.
+#> Warning: Unknown or uninitialised column: `description`.
+#> Warning: Unknown or uninitialised column: `id`.
+#> Warning: Unknown or uninitialised column: `title`.
 #> Warning: Unknown or uninitialised column: `description`.
 #> Warning: Unknown or uninitialised column: `id`.
 #> Warning: Unknown or uninitialised column: `title`.
@@ -2436,9 +2432,9 @@ if (px_available(scb)) {
 #> # A tibble: 613 × 18
 #>    id      title description category updated first_period last_period time_unit
 #>    <chr>   <chr> <chr>       <chr>    <chr>   <chr>        <chr>       <chr>    
-#>  1 TAB6473 Popu… ""          public   2026-1… 2025M01      2026M08     Monthly  
+#>  1 TAB6473 Popu… ""          public   2026-1… 2025M01      2026M09     Monthly  
 #>  2 TAB1625 Popu… ""          public   2025-0… 2000M01      2024M12     Monthly  
-#>  3 TAB6481 Popu… ""          public   2026-0… 2025         2026        Annual   
+#>  3 TAB6481 Popu… ""          public   2026-1… 2025         2026        Annual   
 #>  4 TAB5169 Popu… ""          public   2025-0… 2000         2024        Annual   
 #>  5 TAB4552 Popu… ""          public   2026-0… 1960         2024        Annual   
 #>  6 TAB4562 Popu… ""          public   2026-0… 2000         2024        Annual   

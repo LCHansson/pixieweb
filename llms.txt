@@ -218,6 +218,8 @@ Examine dimensions and available values within a table.
 
 - [`get_variables()`](https://lchansson.github.io/pixieweb/reference/get_variables.md)
   : Get variables (dimensions) for a table
+- [`get_contents()`](https://lchansson.github.io/pixieweb/reference/get_contents.md)
+  : Get the unit and measurement properties of a table's contents
 - [`variable_search()`](https://lchansson.github.io/pixieweb/reference/variable_search.md)
   : Client-side search on a variable tibble
 - [`variable_describe()`](https://lchansson.github.io/pixieweb/reference/variable_describe.md)
@@ -251,7 +253,8 @@ Build queries with smart defaults and download data.
 - [`prepare_query()`](https://lchansson.github.io/pixieweb/reference/prepare_query.md)
   [`print(`*`<px_query>`*`)`](https://lchansson.github.io/pixieweb/reference/prepare_query.md)
   : Prepare a data query with smart defaults
-- [`get_data()`](https://lchansson.github.io/pixieweb/reference/get_data.md)
+- [`px_get_data()`](https://lchansson.github.io/pixieweb/reference/get_data.md)
+  [`get_data()`](https://lchansson.github.io/pixieweb/reference/get_data.md)
   : Fetch data from a PX-Web table
 - [`px_all()`](https://lchansson.github.io/pixieweb/reference/px_selections.md)
   [`px_top()`](https://lchansson.github.io/pixieweb/reference/px_selections.md)

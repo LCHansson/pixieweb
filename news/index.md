@@ -1,5 +1,208 @@
 # Changelog
 
+## pixieweb 0.1.1.9017
+
+### Bug fixes
+
+- **A rate limit stops with an error, after a longer wait.** When the
+  API answered “too many requests” (HTTP 429) after three short retries
+  (1, 2 and 4 seconds), the call warned and returned `NULL`, which a
+  caller could take for a real answer without rows. A request now waits
+  longer first: five retries, for as long as the server’s `Retry-After`
+  header asks (at most 60 seconds) or for 2, 4, 8, 16 and 32 seconds. If
+  the API still refuses, the call stops with an error of class
+  `pixieweb_rate_limited` that names the address. In a split fetch the
+  error stops the fetch at once, and no rows are returned.
+
+## pixieweb 0.1.1.9016
+
+### Bug fixes
+
+- **[`get_data()`](https://lchansson.github.io/pixieweb/reference/get_data.md):
+  in a split fetch, an answer that is not a table is a failed request.**
+  When one request of a split fetch was answered with something without
+  the table fields (an error page, a message, an empty body), the parser
+  warned and returned nothing, and the other parts came back as if they
+  were the whole answer. Such an answer now counts as a failed request,
+  so the fetch stops with `pixieweb_chunks_failed` like any other
+  failure. An answer with the table fields and no rows is still a
+  legitimate empty part.
+
+## pixieweb 0.1.1.9015
+
+### Bug fixes
+
+- **A v1 contents variable also comes under its own name.** In tables
+  such as `EN_IND5-4E_CONT.px` (Energimyndigheten) the variable
+  `Drivmedelskategori` is the contents variable: the caller selects it
+  by that name, and the response folded it into `ContentsCode` only. A
+  caller that takes its column names from
+  [`get_variables()`](https://lchansson.github.io/pixieweb/reference/get_variables.md)
+  found no such column (AE’s catalogue fetch wrote no dimension and
+  stopped with a DuckDB binder error).
+  [`get_data()`](https://lchansson.github.io/pixieweb/reference/get_data.md)
+  now also gives the codes and labels as `<var>` and `<var>_text`,
+  beside `ContentsCode`, which is unchanged for the specs that read it.
+  `attr(x, "px_contents_variable")` is now set also when the variable
+  was left out of the call (a variable that cannot be eliminated is
+  always fetched). Wide output still pivots on `ContentsCode`.
+
+## pixieweb 0.1.1.9014
+
+### Bug fixes
+
+- **[`get_data()`](https://lchansson.github.io/pixieweb/reference/get_data.md):
+  a split fetch is all or nothing.** When a query is too large for one
+  request it is split into several. If one of them failed (a connection
+  error, a rate limit that outlasted the retries, an HTTP error), the
+  rows of the others were bound and returned with only a warning, so the
+  caller got a table that lacked a block of regions or periods and
+  looked whole.
+  [`get_data()`](https://lchansson.github.io/pixieweb/reference/get_data.md)
+  now stops with an error of class `pixieweb_chunks_failed` that says
+  how many requests failed, which ones, and the values of the split
+  variable each asked for (also as fields `failed`, `n_chunks`,
+  `split_var`). The warning that says why each request failed is kept. A
+  query that fits in one request is unchanged (`NULL` with a warning on
+  failure).
+
+## pixieweb 0.1.1.9013
+
+### New features
+
+- **[`px_get_data()`](https://lchansson.github.io/pixieweb/reference/get_data.md):
+  [`get_data()`](https://lchansson.github.io/pixieweb/reference/get_data.md)
+  under a name that cannot be masked.** rTrafa exports a
+  [`get_data()`](https://lchansson.github.io/pixieweb/reference/get_data.md)
+  too, so in a script that attaches both packages the one attached last
+  masks the other, and every call to the masked one fails on the wrong
+  argument check.
+  [`px_get_data()`](https://lchansson.github.io/pixieweb/reference/get_data.md)
+  forwards to
+  [`get_data()`](https://lchansson.github.io/pixieweb/reference/get_data.md)
+  unchanged (rTrafa gains `trafa_get_data()`), and attaching pixieweb
+  while rTrafa is attached now prints a one-line note naming the two
+  safe calls.
+  [`get_data()`](https://lchansson.github.io/pixieweb/reference/get_data.md)
+  itself is unchanged.
+
+## pixieweb 0.1.1.9012
+
+### New features
+
+- **[`get_codelists()`](https://lchansson.github.io/pixieweb/reference/get_codelists.md)
+  keeps the value map.** A v2 codelist says which of the table’s values
+  each of its own values stands for (`valueMap`): for an aggregation
+  that is the total-to-parts mapping, the thing that says a county is
+  these municipalities. It was dropped. The nested `values` tibble now
+  has a list-column `value_map` beside `code` and `text`, and the result
+  has the codelist’s own `elimination` and `elimination_value_code`.
+  Existing columns are unchanged.
+
+## pixieweb 0.1.1.9011
+
+### New features
+
+- **[`get_contents()`](https://lchansson.github.io/pixieweb/reference/get_contents.md)
+  returns the unit of every measure in a table.** The unit (`tkr` or
+  `mnkr`?) never reached the caller:
+  [`get_variables()`](https://lchansson.github.io/pixieweb/reference/get_variables.md)
+  reads the labels of the contents variable and drops the `unit` block
+  beside them, along with the measuring type (stock or flow), price type
+  (current or fixed), adjustment and reference period.
+  `get_contents(api, table_id)` returns one row per measure with those
+  fields. For v2 it is one metadata request. A v1 API states no unit in
+  its metadata but does in a json-stat2 data response, so for v1 the
+  function asks for a single cell in that form, and once more for all
+  values of the contents variable: at most two small data requests.
+  [`get_variables()`](https://lchansson.github.io/pixieweb/reference/get_variables.md)
+  is unchanged.
+
+## pixieweb 0.1.1.9010
+
+### Bug fixes
+
+- **v1 results carry labels in `<var>_text`.** A v1 data response holds
+  codes only, so the twin column repeated the code (`Bränsle_text` was
+  `"0"`, `"1"` in the tables of Energimyndigheten) while a pivoted
+  contents column did get a real label: the column existed but meant
+  different things per table.
+  [`get_data()`](https://lchansson.github.io/pixieweb/reference/get_data.md)
+  now fills it from the variable metadata it has already fetched,
+  wherever the twin still equals the code.
+- **[`get_variables()`](https://lchansson.github.io/pixieweb/reference/get_variables.md)
+  returns plain character `code`/`text` for v1.** The nested `values`
+  tibble held list-columns for v1 and character columns for v2, so
+  `setNames(vals$text, vals$code)` gave an unusable lookup without an
+  error. Both versions now give character columns.
+- **The contents variable a v1 response folds into `ContentsCode` is
+  named.** For `*_Cont.px` tables the variable is called `Mått` going in
+  and `ContentsCode` coming out. The column name is unchanged (stored
+  specs read it); the name the source uses is now in
+  `attr(x, "px_contents_variable")`.
+
+## pixieweb 0.1.1.9009
+
+### Bug fixes
+
+- **v1 fetches are paced by the instance’s own limits.**
+  [`px_api()`](https://lchansson.github.io/pixieweb/reference/px_api.md)
+  read the limits only for v2, so every v1 instance was paced by the
+  package default of 30 calls per 10 s. Konjunkturinstitutet allows 10
+  per 10 s: a chunked fetch ran three times too tight and risked
+  HTTP 429.
+  [`px_api()`](https://lchansson.github.io/pixieweb/reference/px_api.md)
+  now also asks a v1 instance (`<base>/<lang>/?config`) and fills
+  `api$config` with `max_cells`, `max_calls` and `time_window`, memoized
+  for 24 h like the v2 config. An instance that does not answer leaves
+  `config` `NULL`, silently, and the defaults apply as before.
+- **The chunk planner counts a ranged selection by its own size.**
+  [`px_from()`](https://lchansson.github.io/pixieweb/reference/px_selections.md),
+  [`px_to()`](https://lchansson.github.io/pixieweb/reference/px_selections.md)
+  and
+  [`px_range()`](https://lchansson.github.io/pixieweb/reference/px_selections.md)
+  were estimated as *all* values of the variable. A query with
+  `Tid = px_range("2015")` was therefore split more often than needed,
+  and when the split ran along the time variable the batches listed
+  every period code, fetching periods outside the range. The planner now
+  resolves each helper to the codes it stands for.
+- **A split along a
+  [`px_top()`](https://lchansson.github.io/pixieweb/reference/px_selections.md)/[`px_bottom()`](https://lchansson.github.io/pixieweb/reference/px_selections.md)
+  time selection keeps the right periods.** For the time variable the
+  server counts from the latest period (`px_top(3)` is the three
+  latest), but the planner took the first three codes, so a chunked
+  fetch returned the earliest periods instead.
+
+## pixieweb 0.1.1.9008
+
+### Bug fixes
+
+- **[`table_search()`](https://lchansson.github.io/pixieweb/reference/table_search.md)
+  says what is wrong when it is handed an api object.**
+  `table_search(px_api("scb"), "utsläpp")` died inside the shared search
+  helper with “missing value where TRUE/FALSE needed”. It filters a
+  tibble from
+  [`get_tables()`](https://lchansson.github.io/pixieweb/reference/get_tables.md);
+  given a `<px_api>` (or anything else that is not a data frame) it now
+  errors with the two calls that do work: `get_tables(api, query = ...)`
+  and `get_tables(api) |> table_search(...)`.
+
+## pixieweb 0.1.1.9007
+
+### New features
+
+- **`get_data(.status = TRUE)` keeps the source’s status symbol.**
+  PX-Web marks a cell it withholds or cannot give with a symbol such as
+  `".."` (not available or suppressed) or `"."` (not applicable). Both
+  arrived as a plain `NA` in `value`, so a caller could not tell “the
+  source withholds this” from “no value”. With `.status = TRUE` the
+  result gains a character column `status` after `value`: the symbol
+  exactly as sent, `NA` where the cell has a value. Works for v2
+  (json-stat2 `status`, in its object, array and single-string forms)
+  and v1 (the symbol is the cell’s own string), also across chunked
+  fetches. Opt-in: the default result is unchanged. Long output only;
+  the SQLite cell cache is bypassed for such a call.
+
 ## pixieweb 0.1.1.9006
 
 ### Bug fixes

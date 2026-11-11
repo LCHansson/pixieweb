@@ -8,6 +8,8 @@ from
 ## Usage
 
 ``` r
+px_get_data(...)
+
 get_data(
   api,
   table_id,
@@ -21,22 +23,12 @@ get_data(
   max_results = NULL,
   cache = FALSE,
   cache_location = NULL,
-  verbose = FALSE
+  verbose = FALSE,
+  .status = FALSE
 )
 ```
 
 ## Arguments
-
-- api:
-
-  A `<px_api>` object.
-
-- table_id:
-
-  A single table ID (character). Vectors are not supported; use
-  [`purrr::map()`](https://purrr.tidyverse.org/reference/map.html) +
-  [`dplyr::bind_rows()`](https://dplyr.tidyverse.org/reference/bind_rows.html)
-  for multiple tables. Ignored when `query` is provided.
 
 - ...:
 
@@ -69,6 +61,17 @@ get_data(
   [`prepare_query()`](https://lchansson.github.io/pixieweb/reference/prepare_query.md)
   fill the mandatory variables for you. Ignored when `query` is
   provided.
+
+- api:
+
+  A `<px_api>` object.
+
+- table_id:
+
+  A single table ID (character). Vectors are not supported; use
+  [`purrr::map()`](https://purrr.tidyverse.org/reference/map.html) +
+  [`dplyr::bind_rows()`](https://dplyr.tidyverse.org/reference/bind_rows.html)
+  for multiple tables. Ignored when `query` is provided.
 
 - query:
 
@@ -124,6 +127,19 @@ get_data(
 
   Print request details.
 
+- .status:
+
+  Keep the source's status symbol for cells without a value. PX-Web
+  marks a cell it withholds or cannot give with a symbol such as `".."`
+  (not available or suppressed) or `"."` (not applicable); by default
+  such a cell is simply `NA` in `value`, indistinguishable from a cell
+  the response does not carry. With `.status = TRUE` the result gains a
+  character column `status`, placed after `value`: the symbol exactly as
+  the source sent it, and `NA` where the cell has a value (or no
+  symbol). Default `FALSE` leaves the result unchanged. Only for
+  `.output = "long"`; the SQLite cell cache is bypassed, since it stores
+  numeric cells only.
+
 ## Value
 
 A tibble of data. See Details for column structure.
@@ -143,11 +159,37 @@ When `simplify = FALSE`, only raw codes and `value` are returned.
 When `.output = "wide"`, content variables are pivoted into separate
 columns.
 
+A v1 API returns the values of a contents variable as separate content
+columns, and they are folded into a column named `ContentsCode` even
+when the table metadata calls the variable something else (as in the
+`*_Cont.px` tables of Energimyndigheten). When that happens the result
+carries the name the source uses in `attr(x, "px_contents_variable")`.
+
 When `auto_chunk = TRUE` and the query would exceed the API's cell
 limit, `get_data()` automatically splits the request. It picks the
 variable with the most values and batches its values so each request
 fits under the limit. Requests are paced to respect the API's rate
 limit.
+
+A split fetch is all or nothing. If any of its requests fails (a
+connection error, an HTTP error), `get_data()` stops with an error of
+class `pixieweb_chunks_failed` that says how many requests failed and
+which values of the split variable they asked for. The other requests'
+rows are not returned.
+
+When the API answers that requests come too fast (HTTP 429), a request
+waits and tries again, five times, for as long as the server asks or for
+2, 4, 8, 16 and 32 seconds. If the API still refuses, `get_data()` (and
+every other call that reads the API) stops with an error of class
+`pixieweb_rate_limited`. It never returns an empty answer for it.
+
+## A name that cannot be masked
+
+`px_get_data()` is `get_data()` under a name no sister package exports.
+rTrafa also exports a `get_data()`, so in a script that attaches both,
+the package attached last masks the other and its calls fail on the
+wrong argument check. Use `px_get_data()` here and
+`rTrafa::trafa_get_data()` there, or prefix every call with its package.
 
 ## Examples
 

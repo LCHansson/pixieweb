@@ -39,10 +39,10 @@ scb <- px_api("scb", lang = "en")
 if (px_available(scb)) {
   get_tables(scb, query = "population") |> table_describe(max_n = 3)
 }# }
-#> ── TAB6473: Population statistics by region and sex.  Month 2025M01-2026M08 ───── 
+#> ── TAB6473: Population statistics by region and sex.  Month 2025M01-2026M09 ───── 
 #>   Subject: Population > Population statistics > Summary of vital events
-#>   Period: 2025M01 – 2026M08 (Monthly)
-#>   Updated: 2026-10-07T06:00:00Z
+#>   Period: 2025M01 – 2026M09 (Monthly)
+#>   Updated: 2026-11-11T07:00:00Z
 #>   Category: public
 #>   Variables: region, population changes, sex, observations, month
 #>   Source: Statistics Sweden 
@@ -58,7 +58,7 @@ if (px_available(scb)) {
 #> ── TAB6481: Population statistics per quarter/half year/year by region and sex.  Year 2025-2026  
 #>   Subject: Population > Population statistics > Summary of vital events
 #>   Period: 2025 – 2026 (Annual)
-#>   Updated: 2026-08-21T06:00:00Z
+#>   Updated: 2026-11-11T07:00:00Z
 #>   Category: public
 #>   Variables: region, population changes, period, sex, observations, year
 #>   Source: Statistics Sweden 

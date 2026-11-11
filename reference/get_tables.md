@@ -99,16 +99,16 @@ if (px_available(scb)) {
 #> # A tibble: 357 × 13
 #>    id      title description category updated first_period last_period time_unit
 #>    <chr>   <chr> <chr>       <chr>    <chr>   <chr>        <chr>       <chr>    
-#>  1 TAB6964 Expo… ""          public   2026-0… 2026M01      2026M07     Monthly  
-#>  2 TAB6966 Impo… ""          public   2026-0… 2026M01      2026M07     Monthly  
+#>  1 TAB6964 Expo… ""          public   2026-1… 2026M01      2026M08     Monthly  
+#>  2 TAB6966 Impo… ""          public   2026-1… 2026M01      2026M08     Monthly  
 #>  3 TAB6990 Trad… ""          public   2026-1… 2025         2025        Annual   
-#>  4 TAB1872 Indu… ""          public   2026-1… 2000M01      2026M08     Monthly  
-#>  5 TAB1710 Orde… ""          public   2026-1… 2000M01      2026M08     Monthly  
-#>  6 TAB1693 Turn… ""          public   2026-1… 2000M01      2026M08     Monthly  
-#>  7 TAB4894 Prod… ""          public   2026-1… 2010M01      2026M08     Monthly  
-#>  8 TAB4335 Inco… ""          public   2026-1… 2012         2024        Annual   
-#>  9 TAB4366 Inco… ""          public   2026-1… 2012         2024        Annual   
-#> 10 TAB4379 Inco… ""          public   2026-1… 2012         2024        Annual   
+#>  4 TAB6814 Use … ""          public   2026-1… 2026         2026        Annual   
+#>  5 TAB6991 Use … ""          public   2026-1… 2026         2026        Annual   
+#>  6 TAB6992 Cons… ""          public   2026-1… 2026         2026        Annual   
+#>  7 TAB6993 Use … ""          public   2026-1… 2026         2026        Annual   
+#>  8 TAB7010 Purc… ""          public   2026-1… 2026         2026        Annual   
+#>  9 TAB7001 ICT … ""          public   2026-1… 2026         2026        Annual   
+#> 10 TAB7002 Info… ""          public   2026-1… 2026         2026        Annual   
 #> # ℹ 347 more rows
 #> # ℹ 5 more variables: variables <list>, subject_code <chr>, subject_path <chr>,
 #> #   source <chr>, discontinued <lgl>

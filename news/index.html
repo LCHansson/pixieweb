@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">pixieweb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9006</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9017</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,6 +38,102 @@
       <small>Source: <a href="https://github.com/lchansson/pixieweb/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.1.9017" id="pixieweb-0119017">pixieweb 0.1.1.9017<a class="anchor" aria-label="anchor" href="#pixieweb-0119017"></a></h2>
+<div class="section level3">
+<h3 id="bug-fixes-0-1-1-9017">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-1-9017"></a></h3>
+<ul><li>
+<strong>A rate limit stops with an error, after a longer wait.</strong> When the API answered “too many requests” (HTTP 429) after three short retries (1, 2 and 4 seconds), the call warned and returned <code>NULL</code>, which a caller could take for a real answer without rows. A request now waits longer first: five retries, for as long as the server’s <code>Retry-After</code> header asks (at most 60 seconds) or for 2, 4, 8, 16 and 32 seconds. If the API still refuses, the call stops with an error of class <code>pixieweb_rate_limited</code> that names the address. In a split fetch the error stops the fetch at once, and no rows are returned.</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.1.9016" id="pixieweb-0119016">pixieweb 0.1.1.9016<a class="anchor" aria-label="anchor" href="#pixieweb-0119016"></a></h2>
+<div class="section level3">
+<h3 id="bug-fixes-0-1-1-9016">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-1-9016"></a></h3>
+<ul><li>
+<strong><code><a href="../reference/get_data.html">get_data()</a></code>: in a split fetch, an answer that is not a table is a failed request.</strong> When one request of a split fetch was answered with something without the table fields (an error page, a message, an empty body), the parser warned and returned nothing, and the other parts came back as if they were the whole answer. Such an answer now counts as a failed request, so the fetch stops with <code>pixieweb_chunks_failed</code> like any other failure. An answer with the table fields and no rows is still a legitimate empty part.</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.1.9015" id="pixieweb-0119015">pixieweb 0.1.1.9015<a class="anchor" aria-label="anchor" href="#pixieweb-0119015"></a></h2>
+<div class="section level3">
+<h3 id="bug-fixes-0-1-1-9015">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-1-9015"></a></h3>
+<ul><li>
+<strong>A v1 contents variable also comes under its own name.</strong> In tables such as <code>EN_IND5-4E_CONT.px</code> (Energimyndigheten) the variable <code>Drivmedelskategori</code> is the contents variable: the caller selects it by that name, and the response folded it into <code>ContentsCode</code> only. A caller that takes its column names from <code><a href="../reference/get_variables.html">get_variables()</a></code> found no such column (AE’s catalogue fetch wrote no dimension and stopped with a DuckDB binder error). <code><a href="../reference/get_data.html">get_data()</a></code> now also gives the codes and labels as <code>&lt;var&gt;</code> and <code>&lt;var&gt;_text</code>, beside <code>ContentsCode</code>, which is unchanged for the specs that read it. <code>attr(x, "px_contents_variable")</code> is now set also when the variable was left out of the call (a variable that cannot be eliminated is always fetched). Wide output still pivots on <code>ContentsCode</code>.</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.1.9014" id="pixieweb-0119014">pixieweb 0.1.1.9014<a class="anchor" aria-label="anchor" href="#pixieweb-0119014"></a></h2>
+<div class="section level3">
+<h3 id="bug-fixes-0-1-1-9014">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-1-9014"></a></h3>
+<ul><li>
+<strong><code><a href="../reference/get_data.html">get_data()</a></code>: a split fetch is all or nothing.</strong> When a query is too large for one request it is split into several. If one of them failed (a connection error, a rate limit that outlasted the retries, an HTTP error), the rows of the others were bound and returned with only a warning, so the caller got a table that lacked a block of regions or periods and looked whole. <code><a href="../reference/get_data.html">get_data()</a></code> now stops with an error of class <code>pixieweb_chunks_failed</code> that says how many requests failed, which ones, and the values of the split variable each asked for (also as fields <code>failed</code>, <code>n_chunks</code>, <code>split_var</code>). The warning that says why each request failed is kept. A query that fits in one request is unchanged (<code>NULL</code> with a warning on failure).</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.1.9013" id="pixieweb-0119013">pixieweb 0.1.1.9013<a class="anchor" aria-label="anchor" href="#pixieweb-0119013"></a></h2>
+<div class="section level3">
+<h3 id="new-features-0-1-1-9013">New features<a class="anchor" aria-label="anchor" href="#new-features-0-1-1-9013"></a></h3>
+<ul><li>
+<strong><code><a href="../reference/get_data.html">px_get_data()</a></code>: <code><a href="../reference/get_data.html">get_data()</a></code> under a name that cannot be masked.</strong> rTrafa exports a <code><a href="../reference/get_data.html">get_data()</a></code> too, so in a script that attaches both packages the one attached last masks the other, and every call to the masked one fails on the wrong argument check. <code><a href="../reference/get_data.html">px_get_data()</a></code> forwards to <code><a href="../reference/get_data.html">get_data()</a></code> unchanged (rTrafa gains <code>trafa_get_data()</code>), and attaching pixieweb while rTrafa is attached now prints a one-line note naming the two safe calls. <code><a href="../reference/get_data.html">get_data()</a></code> itself is unchanged.</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.1.9012" id="pixieweb-0119012">pixieweb 0.1.1.9012<a class="anchor" aria-label="anchor" href="#pixieweb-0119012"></a></h2>
+<div class="section level3">
+<h3 id="new-features-0-1-1-9012">New features<a class="anchor" aria-label="anchor" href="#new-features-0-1-1-9012"></a></h3>
+<ul><li>
+<strong><code><a href="../reference/get_codelists.html">get_codelists()</a></code> keeps the value map.</strong> A v2 codelist says which of the table’s values each of its own values stands for (<code>valueMap</code>): for an aggregation that is the total-to-parts mapping, the thing that says a county is these municipalities. It was dropped. The nested <code>values</code> tibble now has a list-column <code>value_map</code> beside <code>code</code> and <code>text</code>, and the result has the codelist’s own <code>elimination</code> and <code>elimination_value_code</code>. Existing columns are unchanged.</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.1.9011" id="pixieweb-0119011">pixieweb 0.1.1.9011<a class="anchor" aria-label="anchor" href="#pixieweb-0119011"></a></h2>
+<div class="section level3">
+<h3 id="new-features-0-1-1-9011">New features<a class="anchor" aria-label="anchor" href="#new-features-0-1-1-9011"></a></h3>
+<ul><li>
+<strong><code><a href="../reference/get_contents.html">get_contents()</a></code> returns the unit of every measure in a table.</strong> The unit (<code>tkr</code> or <code>mnkr</code>?) never reached the caller: <code><a href="../reference/get_variables.html">get_variables()</a></code> reads the labels of the contents variable and drops the <code>unit</code> block beside them, along with the measuring type (stock or flow), price type (current or fixed), adjustment and reference period. <code>get_contents(api, table_id)</code> returns one row per measure with those fields. For v2 it is one metadata request. A v1 API states no unit in its metadata but does in a json-stat2 data response, so for v1 the function asks for a single cell in that form, and once more for all values of the contents variable: at most two small data requests. <code><a href="../reference/get_variables.html">get_variables()</a></code> is unchanged.</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.1.9010" id="pixieweb-0119010">pixieweb 0.1.1.9010<a class="anchor" aria-label="anchor" href="#pixieweb-0119010"></a></h2>
+<div class="section level3">
+<h3 id="bug-fixes-0-1-1-9010">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-1-9010"></a></h3>
+<ul><li>
+<strong>v1 results carry labels in <code>&lt;var&gt;_text</code>.</strong> A v1 data response holds codes only, so the twin column repeated the code (<code>Bränsle_text</code> was <code>"0"</code>, <code>"1"</code> in the tables of Energimyndigheten) while a pivoted contents column did get a real label: the column existed but meant different things per table. <code><a href="../reference/get_data.html">get_data()</a></code> now fills it from the variable metadata it has already fetched, wherever the twin still equals the code.</li>
+<li>
+<strong><code><a href="../reference/get_variables.html">get_variables()</a></code> returns plain character <code>code</code>/<code>text</code> for v1.</strong> The nested <code>values</code> tibble held list-columns for v1 and character columns for v2, so <code>setNames(vals$text, vals$code)</code> gave an unusable lookup without an error. Both versions now give character columns.</li>
+<li>
+<strong>The contents variable a v1 response folds into <code>ContentsCode</code> is named.</strong> For <code>*_Cont.px</code> tables the variable is called <code>Mått</code> going in and <code>ContentsCode</code> coming out. The column name is unchanged (stored specs read it); the name the source uses is now in <code>attr(x, "px_contents_variable")</code>.</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.1.9009" id="pixieweb-0119009">pixieweb 0.1.1.9009<a class="anchor" aria-label="anchor" href="#pixieweb-0119009"></a></h2>
+<div class="section level3">
+<h3 id="bug-fixes-0-1-1-9009">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-1-9009"></a></h3>
+<ul><li>
+<strong>v1 fetches are paced by the instance’s own limits.</strong> <code><a href="../reference/px_api.html">px_api()</a></code> read the limits only for v2, so every v1 instance was paced by the package default of 30 calls per 10 s. Konjunkturinstitutet allows 10 per 10 s: a chunked fetch ran three times too tight and risked HTTP 429. <code><a href="../reference/px_api.html">px_api()</a></code> now also asks a v1 instance (<code>&lt;base&gt;/&lt;lang&gt;/?config</code>) and fills <code>api$config</code> with <code>max_cells</code>, <code>max_calls</code> and <code>time_window</code>, memoized for 24 h like the v2 config. An instance that does not answer leaves <code>config</code> <code>NULL</code>, silently, and the defaults apply as before.</li>
+<li>
+<strong>The chunk planner counts a ranged selection by its own size.</strong> <code><a href="../reference/px_selections.html">px_from()</a></code>, <code><a href="../reference/px_selections.html">px_to()</a></code> and <code><a href="../reference/px_selections.html">px_range()</a></code> were estimated as <em>all</em> values of the variable. A query with <code>Tid = px_range("2015")</code> was therefore split more often than needed, and when the split ran along the time variable the batches listed every period code, fetching periods outside the range. The planner now resolves each helper to the codes it stands for.</li>
+<li>
+<strong>A split along a <code><a href="../reference/px_selections.html">px_top()</a></code>/<code><a href="../reference/px_selections.html">px_bottom()</a></code> time selection keeps the right periods.</strong> For the time variable the server counts from the latest period (<code>px_top(3)</code> is the three latest), but the planner took the first three codes, so a chunked fetch returned the earliest periods instead.</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.1.9008" id="pixieweb-0119008">pixieweb 0.1.1.9008<a class="anchor" aria-label="anchor" href="#pixieweb-0119008"></a></h2>
+<div class="section level3">
+<h3 id="bug-fixes-0-1-1-9008">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-1-9008"></a></h3>
+<ul><li>
+<strong><code><a href="../reference/table_search.html">table_search()</a></code> says what is wrong when it is handed an api object.</strong> <code>table_search(px_api("scb"), "utsläpp")</code> died inside the shared search helper with “missing value where TRUE/FALSE needed”. It filters a tibble from <code><a href="../reference/get_tables.html">get_tables()</a></code>; given a <code>&lt;px_api&gt;</code> (or anything else that is not a data frame) it now errors with the two calls that do work: <code>get_tables(api, query = ...)</code> and <code>get_tables(api) |&gt; table_search(...)</code>.</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.1.9007" id="pixieweb-0119007">pixieweb 0.1.1.9007<a class="anchor" aria-label="anchor" href="#pixieweb-0119007"></a></h2>
+<div class="section level3">
+<h3 id="new-features-0-1-1-9007">New features<a class="anchor" aria-label="anchor" href="#new-features-0-1-1-9007"></a></h3>
+<ul><li>
+<strong><code>get_data(.status = TRUE)</code> keeps the source’s status symbol.</strong> PX-Web marks a cell it withholds or cannot give with a symbol such as <code>".."</code> (not available or suppressed) or <code>"."</code> (not applicable). Both arrived as a plain <code>NA</code> in <code>value</code>, so a caller could not tell “the source withholds this” from “no value”. With <code>.status = TRUE</code> the result gains a character column <code>status</code> after <code>value</code>: the symbol exactly as sent, <code>NA</code> where the cell has a value. Works for v2 (json-stat2 <code>status</code>, in its object, array and single-string forms) and v1 (the symbol is the cell’s own string), also across chunked fetches. Opt-in: the default result is unchanged. Long output only; the SQLite cell cache is bypassed for such a call.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.1.9006" id="pixieweb-0119006">pixieweb 0.1.1.9006<a class="anchor" aria-label="anchor" href="#pixieweb-0119006"></a></h2>
 <div class="section level3">

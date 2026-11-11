@@ -9,7 +9,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">pixieweb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9006</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9017</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -73,7 +73,13 @@
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A tibble with columns: <code>id</code>, <code>text</code>, <code>type</code>, <code>values</code>.</p>
+    <p>A tibble with columns: <code>id</code>, <code>text</code>, <code>type</code>, <code>values</code>. For a v2
+API it also has <code>elimination</code> and <code>elimination_value_code</code> (the
+codelist's own, <code>NA</code> where not stated), and each nested <code>values</code> tibble
+has, beside <code>code</code> and <code>text</code>, the list-column <code>value_map</code>: the codes of
+the table's variable that the codelist value stands for. For an
+aggregation (municipalities into counties) that is the total-to-parts
+mapping; for a plain value set each code maps to itself.</p>
     </div>
 
     <div class="section level2">
@@ -83,27 +89,27 @@
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="px_available.html">px_available</a></span><span class="op">(</span><span class="va">scb</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="fu">get_codelists</span><span class="op">(</span><span class="va">scb</span>, <span class="st">"TAB638"</span>, <span class="st">"Region"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span><span class="co"># }</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 18 × 4</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    id                           text                         type       values  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> agg_RegionA-region_2         A-regions                    Aggregati… <span style="color: #949494;">&lt;tibble&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> agg_RegionLA1998             Local labour markets 1998    Aggregati… <span style="color: #949494;">&lt;tibble&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> agg_RegionLA2003_1           Local labour markets 2003    Aggregati… <span style="color: #949494;">&lt;tibble&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> agg_RegionLA2008             Local labour markets 2008    Aggregati… <span style="color: #949494;">&lt;tibble&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> agg_RegionLA2013             Local labour markets 2013    Aggregati… <span style="color: #949494;">&lt;tibble&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> agg_RegionLA2018             Local labour markets 2018    Aggregati… <span style="color: #949494;">&lt;tibble&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> agg_RegionStoromr-04_2       Metropolitan areas -2004     Aggregati… <span style="color: #949494;">&lt;tibble&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> agg_RegionStoromr05-_1       Metropolitan areas 2005-     Aggregati… <span style="color: #949494;">&lt;tibble&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> agg_RegionNUTS1_2008         NUTS 1 level 2008-           Aggregati… <span style="color: #949494;">&lt;tibble&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> agg_RegionNUTS2_2008         NUTS 2 level 2008-           Aggregati… <span style="color: #949494;">&lt;tibble&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">11</span> agg_RegionNUTS3_2008         NUTS 3 level 2008-           Aggregati… <span style="color: #949494;">&lt;tibble&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">12</span> agg_RegionKommungrupp2005-_1 Types of municipalities 2005 Aggregati… <span style="color: #949494;">&lt;tibble&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">13</span> agg_RegionKommungrupp2011-   Types of municipalities 2011 Aggregati… <span style="color: #949494;">&lt;tibble&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">14</span> agg_RegionKommungrupp2017-   Types of municipalities 2017 Aggregati… <span style="color: #949494;">&lt;tibble&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">15</span> agg_RegionKommungrupp2023-   Types of municipalities 2023 Aggregati… <span style="color: #949494;">&lt;tibble&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">16</span> vs_RegionKommun07            Municipalities               Valueset   <span style="color: #949494;">&lt;tibble&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">17</span> vs_RegionLän07               County                       Valueset   <span style="color: #949494;">&lt;tibble&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">18</span> vs_RegionRiket99             Sweden                       Valueset   <span style="color: #949494;">&lt;tibble&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 18 × 6</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    id                    text  type  values   elimination elimination_value_code</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> agg_RegionA-region_2  A-re… Aggr… <span style="color: #949494;">&lt;tibble&gt;</span> FALSE       <span style="color: #BB0000;">NA</span>                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> agg_RegionLA1998      Loca… Aggr… <span style="color: #949494;">&lt;tibble&gt;</span> FALSE       <span style="color: #BB0000;">NA</span>                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> agg_RegionLA2003_1    Loca… Aggr… <span style="color: #949494;">&lt;tibble&gt;</span> FALSE       <span style="color: #BB0000;">NA</span>                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> agg_RegionLA2008      Loca… Aggr… <span style="color: #949494;">&lt;tibble&gt;</span> FALSE       <span style="color: #BB0000;">NA</span>                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> agg_RegionLA2013      Loca… Aggr… <span style="color: #949494;">&lt;tibble&gt;</span> FALSE       <span style="color: #BB0000;">NA</span>                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> agg_RegionLA2018      Loca… Aggr… <span style="color: #949494;">&lt;tibble&gt;</span> FALSE       <span style="color: #BB0000;">NA</span>                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> agg_RegionStoromr-04… Metr… Aggr… <span style="color: #949494;">&lt;tibble&gt;</span> FALSE       <span style="color: #BB0000;">NA</span>                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> agg_RegionStoromr05-… Metr… Aggr… <span style="color: #949494;">&lt;tibble&gt;</span> FALSE       <span style="color: #BB0000;">NA</span>                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> agg_RegionNUTS1_2008  NUTS… Aggr… <span style="color: #949494;">&lt;tibble&gt;</span> FALSE       <span style="color: #BB0000;">NA</span>                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> agg_RegionNUTS2_2008  NUTS… Aggr… <span style="color: #949494;">&lt;tibble&gt;</span> FALSE       <span style="color: #BB0000;">NA</span>                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">11</span> agg_RegionNUTS3_2008  NUTS… Aggr… <span style="color: #949494;">&lt;tibble&gt;</span> FALSE       <span style="color: #BB0000;">NA</span>                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">12</span> agg_RegionKommungrup… Type… Aggr… <span style="color: #949494;">&lt;tibble&gt;</span> FALSE       <span style="color: #BB0000;">NA</span>                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">13</span> agg_RegionKommungrup… Type… Aggr… <span style="color: #949494;">&lt;tibble&gt;</span> FALSE       <span style="color: #BB0000;">NA</span>                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">14</span> agg_RegionKommungrup… Type… Aggr… <span style="color: #949494;">&lt;tibble&gt;</span> FALSE       <span style="color: #BB0000;">NA</span>                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">15</span> agg_RegionKommungrup… Type… Aggr… <span style="color: #949494;">&lt;tibble&gt;</span> FALSE       <span style="color: #BB0000;">NA</span>                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">16</span> vs_RegionKommun07     Muni… Valu… <span style="color: #949494;">&lt;tibble&gt;</span> FALSE       <span style="color: #BB0000;">NA</span>                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">17</span> vs_RegionLän07        Coun… Valu… <span style="color: #949494;">&lt;tibble&gt;</span> FALSE       <span style="color: #BB0000;">NA</span>                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">18</span> vs_RegionRiket99      Swed… Valu… <span style="color: #949494;">&lt;tibble&gt;</span> TRUE        00                    </span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
