@@ -4,7 +4,7 @@
 library(httr2)
 library(jsonlite)
 
-base <- "https://api.scb.se/ov0104/v2beta/api/v2"
+base <- "https://statistikdatabasen.scb.se/api/v2"
 
 # ── 1. get_tables (search) ──────────────────────────────────────────────
 cat("=== GET /tables?query=... ===\n")
