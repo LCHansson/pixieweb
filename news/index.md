@@ -1,5 +1,20 @@
 # Changelog
 
+## pixieweb 0.1.1.9018
+
+### Changes
+
+- **SCB’s v2 API at its current address.** `px_api("scb")` now uses
+  `https://statistikdatabasen.scb.se/api/v2` instead of the beta address
+  `https://api.scb.se/ov0104/v2beta/api/v2`. On 2026-11-12 the beta
+  address’s table listing
+  ([`get_tables()`](https://lchansson.github.io/pixieweb/reference/get_tables.md))
+  was a day behind: tables SCB released that morning still showed the
+  previous period there. Apart from that delay, both addresses gave the
+  same tables, titles, periods and folder paths, and
+  [`get_data()`](https://lchansson.github.io/pixieweb/reference/get_data.md)
+  gave the same values.
+
 ## pixieweb 0.1.1.9017
 
 ### Bug fixes

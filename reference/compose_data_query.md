@@ -43,7 +43,7 @@ if (px_available(scb)) {
   str(q$url)
   str(q$body)
 }# }
-#>  chr "https://api.scb.se/ov0104/v2beta/api/v2/tables/TAB638/data?lang=en&outputFormat=json-stat2"
+#>  chr "https://statistikdatabasen.scb.se/api/v2/tables/TAB638/data?lang=en&outputFormat=json-stat2"
 #> List of 1
 #>  $ selection:List of 3
 #>   ..$ :List of 2

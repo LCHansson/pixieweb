@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">pixieweb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9017</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9018</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,6 +38,14 @@
       <small>Source: <a href="https://github.com/lchansson/pixieweb/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.1.9018" id="pixieweb-0119018">pixieweb 0.1.1.9018<a class="anchor" aria-label="anchor" href="#pixieweb-0119018"></a></h2>
+<div class="section level3">
+<h3 id="changes-0-1-1-9018">Changes<a class="anchor" aria-label="anchor" href="#changes-0-1-1-9018"></a></h3>
+<ul><li>
+<strong>SCB’s v2 API at its current address.</strong> <code>px_api("scb")</code> now uses <code>https://statistikdatabasen.scb.se/api/v2</code> instead of the beta address <code>https://api.scb.se/ov0104/v2beta/api/v2</code>. On 2026-11-12 the beta address’s table listing (<code><a href="../reference/get_tables.html">get_tables()</a></code>) was a day behind: tables SCB released that morning still showed the previous period there. Apart from that delay, both addresses gave the same tables, titles, periods and folder paths, and <code><a href="../reference/get_data.html">get_data()</a></code> gave the same values.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.1.9017" id="pixieweb-0119017">pixieweb 0.1.1.9017<a class="anchor" aria-label="anchor" href="#pixieweb-0119017"></a></h2>
 <div class="section level3">

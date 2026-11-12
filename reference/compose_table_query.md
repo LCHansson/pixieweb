@@ -58,5 +58,5 @@ scb <- px_api("scb", lang = "en")
 if (px_available(scb)) {
   compose_table_query(scb, query = "population")
 }# }
-#> [1] "https://api.scb.se/ov0104/v2beta/api/v2/tables?lang=en&query=population"
+#> [1] "https://statistikdatabasen.scb.se/api/v2/tables?lang=en&query=population"
 ```

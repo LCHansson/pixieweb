@@ -40,20 +40,25 @@ if (px_available(scb)) {
   # Further filter by regex
   tables |> table_search("municipality")
 }# }
-#> # A tibble: 26 × 13
+#> # A tibble: 16 × 13
 #>    id      title description category updated first_period last_period time_unit
 #>    <chr>   <chr> <chr>       <chr>    <chr>   <chr>        <chr>       <chr>    
-#>  1 TAB6574 Popu… ""          public   2026-0… 2010         2025        Annual   
-#>  2 TAB6570 Popu… ""          public   2026-0… 2010         2025        Annual   
-#>  3 TAB6572 Popu… ""          public   2026-0… 2010         2025        Annual   
-#>  4 TAB6569 Popu… ""          public   2026-0… 2010         2025        Annual   
-#>  5 TAB6571 Popu… ""          public   2026-0… 2010         2025        Annual   
-#>  6 TAB6534 Popu… ""          public   2026-0… 2024         2025        Annual   
-#>  7 TAB5956 Popu… ""          public   2024-0… 2015         2023        Annual   
-#>  8 TAB683  Popu… ""          public   2020-1… 2018         2018        Annual   
-#>  9 TAB5880 Popu… ""          public   2022-1… 2019         2021        Annual   
-#> 10 TAB660  Gain… ""          public   2020-1… 2018         2018        Annual   
-#> # ℹ 16 more rows
+#>  1 TAB683  Popu… ""          public   2020-1… 2018         2018        Annual   
+#>  2 TAB6574 Popu… ""          public   2026-0… 2010         2025        Annual   
+#>  3 TAB6570 Popu… ""          public   2026-0… 2010         2025        Annual   
+#>  4 TAB6572 Popu… ""          public   2026-0… 2010         2025        Annual   
+#>  5 TAB6569 Popu… ""          public   2026-0… 2010         2025        Annual   
+#>  6 TAB6571 Popu… ""          public   2026-0… 2010         2025        Annual   
+#>  7 TAB5880 Popu… ""          public   2022-1… 2019         2021        Annual   
+#>  8 TAB6534 Popu… ""          public   2026-0… 2024         2025        Annual   
+#>  9 TAB660  Gain… ""          public   2020-1… 2018         2018        Annual   
+#> 10 TAB682  Gain… ""          public   2020-1… 2018         2018        Annual   
+#> 11 TAB5843 Gain… ""          public   2022-1… 2019         2021        Annual   
+#> 12 TAB6091 Pass… ""          public   2024-0… 2015         2023        Annual   
+#> 13 TAB6589 Pass… ""          public   2026-0… 2024         2025        Annual   
+#> 14 TAB5956 Popu… ""          public   2024-0… 2015         2023        Annual   
+#> 15 TAB5842 Gain… ""          public   2022-1… 2019         2021        Annual   
+#> 16 TAB4594 Muni… ""          public   2025-1… 2015         2024        Annual   
 #> # ℹ 5 more variables: variables <list>, subject_code <chr>, subject_path <chr>,
 #> #   source <chr>, discontinued <lgl>
 ```

@@ -30,5 +30,5 @@ if (px_available(scb)) {
                 Tid = px_top(3))
   px_cite(d)
 }# }
-#> [1] "Statistics Sweden (SCB). Table: TAB638. Retrieved via pixieweb on 2026-11-11."
+#> [1] "Statistics Sweden (SCB). Table: TAB638. Retrieved via pixieweb on 2026-11-12."
 ```

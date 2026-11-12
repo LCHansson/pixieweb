@@ -96,7 +96,7 @@ if (px_available(scb)) {
   # Tables updated in the last 30 days
   get_tables(scb, updated_since = 30)
 }# }
-#> # A tibble: 357 × 13
+#> # A tibble: 365 × 13
 #>    id      title description category updated first_period last_period time_unit
 #>    <chr>   <chr> <chr>       <chr>    <chr>   <chr>        <chr>       <chr>    
 #>  1 TAB6964 Expo… ""          public   2026-1… 2026M01      2026M08     Monthly  
@@ -109,7 +109,7 @@ if (px_available(scb)) {
 #>  8 TAB7010 Purc… ""          public   2026-1… 2026         2026        Annual   
 #>  9 TAB7001 ICT … ""          public   2026-1… 2026         2026        Annual   
 #> 10 TAB7002 Info… ""          public   2026-1… 2026         2026        Annual   
-#> # ℹ 347 more rows
+#> # ℹ 355 more rows
 #> # ℹ 5 more variables: variables <list>, subject_code <chr>, subject_path <chr>,
 #> #   source <chr>, discontinued <lgl>
 ```

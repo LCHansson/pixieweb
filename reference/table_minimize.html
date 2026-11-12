@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">pixieweb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9017</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9018</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -72,20 +72,20 @@
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="px_available.html">px_available</a></span><span class="op">(</span><span class="va">scb</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="get_tables.html">get_tables</a></span><span class="op">(</span><span class="va">scb</span>, query <span class="op">=</span> <span class="st">"population"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">table_minimize</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span><span class="co"># }</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 613 × 10</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 319 × 10</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    id    title updated first_period last_period time_unit variables subject_code</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> TAB6… Popu… 2026-1… 2025M01      2026M09     Monthly   <span style="color: #949494;">&lt;list&gt;</span>    BE          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> TAB1… Popu… 2025-0… 2000M01      2024M12     Monthly   <span style="color: #949494;">&lt;list&gt;</span>    BE          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> TAB6… Popu… 2026-1… 2025         2026        Annual    <span style="color: #949494;">&lt;list&gt;</span>    BE          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> TAB5… Popu… 2025-0… 2000         2024        Annual    <span style="color: #949494;">&lt;list&gt;</span>    BE          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> TAB4… Popu… 2026-0… 1960         2024        Annual    <span style="color: #949494;">&lt;list&gt;</span>    MI          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> TAB4… Popu… 2026-0… 1960         2024        Annual    <span style="color: #949494;">&lt;list&gt;</span>    MI          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> TAB6… Popu… 2026-1… 2025M01      2026M09     Monthly   <span style="color: #949494;">&lt;list&gt;</span>    BE          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> TAB1… Popu… 2025-0… 2000M01      2024M12     Monthly   <span style="color: #949494;">&lt;list&gt;</span>    BE          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> TAB6… Popu… 2026-1… 2025         2026        Annual    <span style="color: #949494;">&lt;list&gt;</span>    BE          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> TAB5… Popu… 2025-0… 2000         2024        Annual    <span style="color: #949494;">&lt;list&gt;</span>    BE          </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> TAB4… Popu… 2026-0… 2000         2024        Annual    <span style="color: #949494;">&lt;list&gt;</span>    MI          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> TAB4… Popu… 2026-0… 2013         2025        Annual    <span style="color: #949494;">&lt;list&gt;</span>    MI          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> TAB4… Gain… 2022-0… 2015         2020        Annual    <span style="color: #949494;">&lt;list&gt;</span>    MI          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> TAB4… Popu… 2026-0… 2000         2024        Annual    <span style="color: #949494;">&lt;list&gt;</span>    MI          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> TAB4… Popu… 2022-1… 2000         2020        Annual    <span style="color: #949494;">&lt;list&gt;</span>    MI          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 603 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> TAB4… Gain… 2022-0… 2015         2020        Annual    <span style="color: #949494;">&lt;list&gt;</span>    MI          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> TAB4… Popu… 2026-0… 2000         2024        Annual    <span style="color: #949494;">&lt;list&gt;</span>    MI          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> TAB4… Popu… 2022-1… 2000         2020        Annual    <span style="color: #949494;">&lt;list&gt;</span>    MI          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> TAB3… Popu… 2025-1… 1993         2024        Annual    <span style="color: #949494;">&lt;list&gt;</span>    UF          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 309 more rows</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 2 more variables: subject_path &lt;chr&gt;, source &lt;chr&gt;</span></span>
 </code></pre></div>
     </div>
